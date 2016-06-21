@@ -1,9 +1,8 @@
 <?
-$prefix		= 'cdb_';
-$user		= 'user';
+$prefix		= 'my_';
 
-$dbId		= 'usercentre';
-$configFile	= array( ConfigDir.'/Db/usercentre.master.config.php' );
+$dbId		= 'my';
+$configFile	= array( ConfigDir.'/Db/my.master.config.php' );
 
 $tbl['sessions'] = array(
 	'name'		=> $prefix.'user_sessions',
@@ -65,28 +64,6 @@ $tbl['userproposer'] = array(
 
 $tbl['newtrade'] = array(
     'name'        => $prefix.'new_trademark',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
-
-
-$tbl['collectstatus'] = array(
-    'name'        => $user.'CollectStatus',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
-$tbl['collectstatus'] = array(
-    'name'        => $user.'CollectStatus',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
-$tbl['mytrademark'] = array(
-    'name'        => $user.'MyTrademark',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
-$tbl['mytradestatus'] = array(
-    'name'        => $user.'MytradeStatus',
     'dbId'        => $dbId, 
     'configFile'=> $configFile,
 );

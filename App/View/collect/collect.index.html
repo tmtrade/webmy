@@ -1,0 +1,352 @@
+<? require(ViewDir.'/public/header.html'); ?>
+<section id="main-content">
+
+    <? if($data['total'] == 0) { ?>
+
+    <section class="wrapper" >
+        <section class="panel" >
+        <header class="panel-heading">
+            <span class="float-left">我的收藏</span>
+            <ul class="breadcrumb float-right">
+                <li><a href="#" onclick="history.go(-1)">返回</a></li>
+            </ul>
+        </header>		
+            <section class="panel">
+                <div class="panel-body" style="height:100%; min-height:550px;">
+                    <div class="nodata">
+                        <div class="icon1">暂无数据</div>
+                        <p class="text-muted">你可以在这里管理竞争对手的商标</p>
+                        <a type="button" class="btn btn-primary" href="<?=C('SEARCH_URL') ?>" target="_blank">添加竞手商标</a>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </section>
+    <? }else{ ?>
+    <!----收藏-竞手商标---->
+	
+    <section class="wrapper ">
+        <div class="row">
+            <div class="col-xs-12">
+                <section class="panel">
+                    <header class="form-box">
+                        <form class="form-inline">
+                            <input  type="hidden" id="search-proposer" value="<?=$search['proposer']?>"/>
+                            <input  type="hidden" id="search-class" value="<?=$search['class']?>"/>
+                            <input  type="hidden" id="search-status" value="<?=$search['status']?>"/>
+                            <input  type="hidden" id="source" value="2"/>
+
+                            <div class="form-group">
+                                <div class="task-option">
+                                    <select class="styled" onchange="searchUrl('proposer',this.value)">
+                                        <option value="0" <? if ($search['proposer'] ==0){echo 'selected="selected"'; } ?>>申请人</option>
+                                        <? foreach($proposerList as $p){ ?>
+                                        <option value="<?=$p['newId']?>" <? if($p['newId'] == 0){ echo 'disabled="disabled"';} else{ ?> value="<?=$p['newId']?>" <? if ($search['proposer'] ==$p['newId']){ echo 'selected="selected"'; } }?>><?=$p['name'] ?><? if($p['newId'] == 0){echo '[盲区]';} ?></option>
+                                        <? } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="task-option">
+                                    <select class="styled" onchange="searchUrl('class',this.value)">
+                                        <option value="0"  <? if ($search['class'] ==0){echo 'selected="selected"';} ?>>类别</option>
+                                        <? foreach($classList as $p){ ?>
+                                        <option value="<?=$p ?>"  <? if ($search['class'] == $p){echo 'selected="selected"';} ?>>第<?=$p ?>类</option>
+                                        <? } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="task-option">
+                                    <select class="styled" onchange="searchUrl('status',this.value)">
+                                        <option value="0" <? if ($search['status'] ==0){ echo 'selected="selected"';} ?>>商标状态</option>
+                                        <?
+									foreach($classnew as $k=>$new){
+                                        $newstr = 'status' . $k;
+                                        if(in_array($newstr, $statusList)){
+                                        echo '<option value="'.$k.'"';
+                                        if($search['status'] ==$k){ echo ' selected="selected"';}
+                                        echo '>'.$new.'</option>';
+                                        }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group"> 商标名称/商标号：
+                                <input type="text" name="keywords" id="keywords" value="<?=$search['keyword']?>" class="form-control input-sm" />
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success btn-sm" onclick="searchUrl('','')">搜索</button>
+                            </div>
+                        </form>
+                    </header>
+                    <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                        <div class="form-inline padding">
+                            <div class="form-group">当前筛选结果<span class="red"><?=$data['total'] ?></span>个商标
+                                <a type="submit" class="btn btn-del btn-sm" href="<?=C('SEARCH_URL') ?>" target="_blank">添加收藏</a>
+                                <button type="submit" class="btn btn-excel btn-sm" data-toggle="modal" data-target="#"  onclick="excelexport()">导出Excel</button>
+                            </div>
+                        </div>
+                        <div class="tablebox">
+                            <table class="table table-striped border-top dataTable tab_imgsize">
+                                <tbody>
+                                <? foreach ($data['rows'] as $item){ ?>
+                                <tr id="tr<?=$item['trade']['id']?>">
+                                    <td>
+                                        <a class="fl" href="<?=$item['trade']['shansoo_url']?>" target="_blank">
+                                            <img src="<?=$item['trade']['imgUrl']?>"  onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'" /></a>
+                                        <div class="fl">
+                                            <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>）</p>
+                                            <p>申请人:<?=$item['trade']['proposerName']?></p>
+                                            <p class="gray">
+    										<? foreach($item['second'] as $k=>$v){ ?>
+                                                  <?=$v?>
+    										<? } ?>
+    										申请日 :  <?=$item['trade']['apply_date']?>     注册日 :  <?=$item['trade']['reg_date']?> </p>
+                                        </div>
+                                    </td>
+                                    <td class="valign-middle text-right">
+									<? if($item['isdeal'] == 1){ ?>
+									<button data-placement="bottom"  class="btn btn-sm popovers">已处理</button>
+									<? }else{ ?>
+										<? if($item['butt']['but1'] ==1){	?>
+										<button data-placement="bottom" class="btn btn-info btn-sm popovers"  onclick="showSustain('去撤三','<? echo mbSub($item['trade']['trademark'],0,10) ."(第". $item['trade']['class']. "类)";?>', '<?=$item['trade']['auto']?>')">去异议</button>
+										<? } ?>
+										<? if($item['butt']['but2'] ==1){	?>
+										<button data-content="注册成功满三年可提撤三" data-placement="bottom" data-trigger="hover" class="btn btn-warning btn-sm popovers"
+										onclick="showSustain('去撤三','<? echo mbSub($item['trade']['trademark'],0,10) ."(第". $item['trade']['class']. "类)";?>', '<?=$item['trade']['auto']?>')"
+										>去撤三</button>
+										<? } ?>
+										<? if($item['butt']['but3'] ==1){	?>
+										<button data-content="注册成功5年内，可对恶意注册商标提无效（驰名商标不受五年限制）" data-placement="bottom" data-trigger="hover" class="btn btn-danger btn-sm popovers" onclick="showSustain('去无效','<? echo mbSub($item['trade']['trademark'],0,10) ."(第". $item['trade']['class']. "类)";?>', '<?=$item['trade']['auto']?>')"
+										>去无效</button>
+										<? } ?>
+									<? } ?>
+									<button type="submit" class="btn btn-colorah btn-sm rmBtn" data-toggle="modal" data-target="#batch-remove"  content="第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>" tradeid="<?=$item['trade']['id']?>">删除</button>
+                                        <a type="button" class="btn btn-gray btn-sm" href="<?=$item['trade']['shansoo_url']?>" target="_blank">详情</a></td>
+                                </tr>
+                                <? } ?>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <?=$pageBar ?>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <? } ?>
+
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="batch-remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<?=StaticDir?>workspace/img/close.gif"/></button></div>
+            <div class="modal-body">
+                <div class="modal-center">
+                    <h3><img src="<?=StaticDir?>workspace/img/modal-icon1.gif" /> 你确认删除该项吗？ </h3>
+                    <p class="orange" id="rmBtn"></p>
+                    <input type="hidden" value="" id="hiddenTradeId" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success"  id="subSure">确认</button>
+                <button type="button" class="btn btn-gray" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="sustain" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<?=StaticDir?>workspace/img/close.gif"/></button></div>
+      <div class="modal-body">
+        <div class="modal-form">
+          <form class="form">
+              <div class="tips1">
+                <h4 class="text-center">您即将办理<span class="orange" id="sustaintext">续展</span>业务</h4>
+                <p class="text-center" id="sustaintm">超凡   第42类</p>
+              </div>
+              <div class="tips2"></div>
+            <div class="row">
+              <div class="col-xs-3 text-right">姓名：</div>
+              <div class="col-xs-8">
+                <input type="text" class="form-control" name="username" id="username" >
+              </div>
+              <div class="col-xs-1"><i></i></div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3 text-right"><span class="red">*</span>手机号码：</div>
+              <div class="col-xs-8">
+                <input type="text" class="form-control" name="usertel" id="usertel" >
+              </div>
+              <div class="col-xs-1"><i></i></div>
+            </div>
+            <div class="row">
+              <div class="col-xs-3"></div>
+              <div class="col-xs-8">
+                <button type="button" class="btn btn-success btn-block" onclick="subform()">确认提交</button>
+              </div>
+              <div class="col-xs-1"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <p>我们有专业的知识产权顾问协助你办理此业务</p>
+        <p>一次续展，十年有效，老品牌，莫错过</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<iframe src="" id="iframesrc"  style="display:none;"></iframe>
+
+<script>
+    $(function(){
+        $(".rmBtn").on("click",function(){
+            $("#hiddenTradeId").val($(this).attr("tradeid"));
+            $('#rmBtn').empty().text($(this).attr("content"));
+            $('#batch-remove').modal();
+        })
+        $("#subSure").click(function(){
+            var hiddenTradeId= $("#hiddenTradeId").val();
+
+            var source  = $("#source").val();
+            $.ajax({
+                type: "GET",
+                url: "/collect/deleteCollect/",
+                data: {'id':hiddenTradeId,'source':source},
+                dataType: "html",
+                success: function(data){
+                    $('#batch-remove').modal('hide');
+                    $('#tr'+hiddenTradeId).remove();
+                    return true;
+                }
+            })
+        })
+    });
+    $(document).ready(function(){
+        //提交按钮,所有验证通过方可提交
+        $('.submit').click(function(){
+            if(ok1 && ok2){
+                $('.form').submit();
+            }else{
+                return false;
+            }
+        });
+
+    });
+    //筛选器按钮
+    function searchUrl (type, number){
+        _proposer  = (type == 'proposer') ? number : $("#search-proposer").val();
+        _class = (type == 'class') ? number : $("#search-class").val();
+        _status  = (type == 'status') ? number : $("#search-status").val();
+        //_regdate  = (type == 'regdate') ? number : $("#search-regdate").val();
+        keyword  = $("#keywords").val();
+        //alert(number);
+        _source = $("#source").val();
+        location.href = "/collect/index/?proposer="+_proposer+"&class="+_class+"&status="+_status+"&keyword="+keyword;
+        return true;
+    }
+    function excelexport(){
+        _source  = $("#source").val();
+        _proposer  = $("#search-proposer").val();
+        _class = $("#search-class").val();
+        _status  = $("#search-status").val();
+        //_regdate  = $("#search-regdate").val();
+        keyword  = $("#keywords").val();
+
+        url="/collect/excel/?proposer="+_proposer+"&class="+_class+"&status="+_status+"&keyword="+keyword;
+        $('#iframesrc').attr('src',url);
+        return true;
+    }
+
+
+	
+	var trademarkid = '';
+	var usertext = '';
+	var ok1=false;
+	var ok2=false;
+	function showSustain(value,obj,tmid){
+		$('#sustain').modal('show');
+		ok2 = false;
+		$('input[name="username"]').val('');
+		$('input[name="usertel"]').val('');
+		usertext	= value;
+		trademarkid	= tmid;
+		$('#sustaintext').html(value);
+		$('#sustaintm').html(obj);
+	}
+
+	
+	// 验证姓名
+	$('input[name="username"]').blur(function(){
+		if($(this).val().length >= 2 && $(this).val().length <=10 && $(this).val()!=''){
+			$(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","block");
+			$(".modal-form .tips1").show();
+			$(".modal-form .tips2").hide();
+			ok1=true;
+		}else{
+			$(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","none");
+			$(".modal-form .tips1").hide();
+			$(".modal-form .tips2").text("姓名长度为2-10位").show();
+		}
+	});
+	$('input[name="usertel"]').blur(function(){
+		var isMobile=/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; //手机号码验证规则
+		var phone = $(this).val();
+		if(!isMobile.test(phone)){
+			$(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","none");
+			$(".modal-form .tips1").hide();
+			$(".modal-form .tips2").text("请输入正确的手机号码").show();
+		} else{
+			$(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","block");
+			$(".modal-form .tips1").show();
+			$(".modal-form .tips2").hide();
+			ok2=true;
+		}
+	});
+	function subform(){
+		if(ok1  == false || ok2 == false){ 
+			alert('请正确填写联系信息'); 
+			return false;
+		}
+		if(trademarkid == ''){ 
+			alert('请至少勾选一项'); 
+			return false; 
+		}
+		$.ajax({
+			type: "GET",
+			url: "/mytrade/businessajax/",
+			data: {'tid':trademarkid, 'phone': $("#usertel").val(), 'name':$('#username').val(),'usertext':usertext,source:2},
+			dataType: "html",
+			success: function(data){
+				 if(data ==1){
+					alert('操作成功');
+				 }else{
+					alert('操作失败');
+				 }
+				 window.location.reload();
+			 }
+		})
+	}
+
+</script>
+
+
+<? require(ViewDir.'/public/footer.html'); ?>

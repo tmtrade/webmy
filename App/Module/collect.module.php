@@ -54,7 +54,7 @@ class CollectModule extends AppModule
 		$r['order']		= array('apply_date' => $search['regdate'],'tid' => 'asc');
 		$r['group']		= array('trademark' => 'asc');
 		$r['eq']['source']		= 2;
-		$data			= $this->import('usercollect')->findAll($r);
+		$data			= $this->import('collect')->findAll($r);
 
 		foreach($data['rows'] as $key => $item){
 			$trademark						= $this->load('trademark')->details($item['trademark'],$item['class']);
@@ -97,7 +97,7 @@ class CollectModule extends AppModule
 		$r['eq']['source']	= 1;
 		$r['page']			= 1;
 		$r['limit']			= 10000;
-		$data				= $this->import('usercollect')->findAll($r);
+		$data				= $this->import('collect')->findAll($r);
 		if(empty($data['total']) ) { return array(); }
 		$tidList			= arrayColumn($data['rows'],'tid');
 		$s['in']			= array('tid' => $tidList);

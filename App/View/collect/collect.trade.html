@@ -1,0 +1,206 @@
+<? require(ViewDir.'/public/header.html'); ?>
+<section id="main-content">
+    <? if($data['total'] == 0) { ?>
+	<section class="panel wrapper">		
+		<section class="panel">
+			<div class="panel-body" style="height:100%; min-height:550px;">
+				<div class="nodata">
+					<div class="icon1">暂无数据</div>
+					<p class="text-muted">你可以在这里添加你想购买的商标</p>
+					<a type="button" class="btn btn-success" href="<?=C('WEBSITE_URL') ?>" target="_blank">收藏交易商标</a>
+				</div>
+			</div>
+		</section>
+	</section>
+    <? }else{ ?>
+    <!----收藏-交易商标---->
+    <section class="wrapper">
+        <div class="row">
+            <div class="col-xs-12">
+                <section class="panel">
+                    <header class="form-box">
+                        <form class="form-inline">
+                            <input  type="hidden" id="search-status" value="<?=$search['status']?>"/>
+                            <input  type="hidden" id="source" value="1"/>
+
+							<div class="form-group">
+								<div class="task-option">
+								  <select class="styled" onchange="searchUrl('status',this.value)">
+									<option value="0" <? if ($search['status'] ==0){ echo 'selected="selected"';} ?>>销售状态</option>
+                                        <?
+										foreach($saleStatusList as $k=>$new){
+                                        echo '<option value="'.$k.'"';
+                                        if($search['status'] ==$k){ echo ' selected="selected"';}
+                                        echo '>'.$new.'</option>';
+                                        }
+                                        ?>								  
+								  </select>
+								</div>
+							</div>
+
+                            <div class="form-group"> 商标名称/商标号：
+                                <input type="text" name="keywords" id="keywords" value="<?=$search['keyword']?>" class="form-control input-sm" />
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success btn-sm" onclick="searchUrl('','')">搜索</button>
+                            </div>
+                        </form>
+                    </header>
+                    <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                        <div class="form-inline padding">
+                            <div class="form-group">当前筛选结果<span class="red"><?=$data['total']?></span>个商标
+                                <a class="btn btn-del btn-sm" href="<?=C('WEBSITE_URL') ?>" target="_blank">添加收藏</a>
+                                <button type="submit" class="btn btn-excel btn-sm" data-toggle="modal" data-target="#"  onclick="excelexport()">导出Excel</button>
+                            </div>
+                        </div>
+                        <div class="tablebox">
+                            <table class="table table-striped border-top dataTable tab_imgsize">
+                                <tbody>
+                                <? foreach ($data['rows'] as $item){ ?>
+                                <tr id="tr<?=$item['trade']['id']?>">
+                                    <td>
+                                        <a class="fl" href="<?=$item['trade']['yzc_url']?>" target="_blank">
+                                            <img src="<?=$item['trade']['imgUrl']?>"  onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'" /></a>
+                                        <div class="fl">
+                                            <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>）</p>
+                                            <p>申请人 :  <?=$item['trade']['proposerName']?> </p>
+                                            <p class="gray"><font  class="gray">商标状态：<? echo implode('/', $item['second']);?><font> 申请日：<?=$item['trade']['apply_date']?>   注册日：<?=$item['trade']['reg_date']?></p>
+                                            
+                                            <? if (!empty($item['sale'])) {?>
+                                            <div class="coll_div"><p>授权方式：<?=$item['sale']['priceType']?></p><p>出售价格：<?=$item['sale']['price']?></p></div>
+                                            <? } ?>
+                                        </div>
+                                    </td>
+                                    <td class="valign-middle text-right">
+                                        <button type="button" class="btn btn-colorah btn-sm rmBtn" data-toggle="modal" data-target="#batch-remove" content="第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>" tradeid="<?=$item['trade']['id']?>">删除</button>
+                                        <a type="button" class="btn btn-gray btn-sm" href="<?=$item['trade']['yzc_url']?>" target="_blank">详情</a></td>
+                                </tr>
+                                <? } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <?=$pageBar ?>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <? } ?>
+
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="batch-remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<?=StaticDir?>workspace/img/close.gif"/></button></div>
+            <div class="modal-body">
+                <div class="modal-center">
+                    <h3><img src="<?=StaticDir?>workspace/img/modal-icon1.gif" /> 你确认删除该项吗？ </h3>
+                    <p class="orange" id="rmBtn"></p>
+                    <input type="hidden" value="" id="hiddenTradeId" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success"  id="subSure">确认</button>
+                <button type="button" class="btn btn-gray" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<iframe src="" id="iframesrc"  style="display:none;"></iframe>
+
+<script>
+    $(function(){
+        $(".rmBtn").on("click",function(){
+            $("#hiddenTradeId").val($(this).attr("tradeid"));
+            $('#rmBtn').empty().text($(this).attr("content"));
+            $('#batch-remove').modal();
+
+
+        })
+        $("#subSure").click(function(){
+            var hiddenTradeId= $("#hiddenTradeId").val();
+            var source  = $("#source").val();
+            $.ajax({
+                type: "GET",
+                url: "/collect/deleteCollect/",
+                data: {'id':hiddenTradeId,'source':source},
+                dataType: "html",
+                success: function(data){
+                    $('#batch-remove').modal('hide');
+                    $('#tr'+hiddenTradeId).remove();
+                    return true;
+                }
+            })
+        })
+    });
+    $(document).ready(function(){
+        var ok1=false;
+        var ok2=false;
+        // 验证姓名
+        $('input[name="username"]').blur(function(){
+            if($(this).val().length >= 2 && $(this).val().length <=10 && $(this).val()!=''){
+                $(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","block");
+                $(".modal-form .tips1").show();
+                $(".modal-form .tips2").hide();
+                ok1=true;
+            }else{
+                $(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","none");
+                $(".modal-form .tips1").hide();
+                $(".modal-form .tips2").text("姓名长度为2-10位").show();
+            }
+        });
+        $('input[name="usertel"]').blur(function(){
+            var isMobile=/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; //手机号码验证规则
+            var phone = $('input[name="usertel"]').val();
+            if(!isMobile.test(phone)){
+                $(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","none");
+                $(".modal-form .tips1").hide();
+                $(".modal-form .tips2").text("请输入正确的手机号码").show();
+            } else{
+                $(this).parent(".col-xs-8").next(".col-xs-1").children("i").css("display","block");
+                $(".modal-form .tips1").show();
+                $(".modal-form .tips2").hide();
+                ok2=true;
+            }
+        });
+        //提交按钮,所有验证通过方可提交
+        $('.submit').click(function(){
+            if(ok1 && ok2){
+                $('.form').submit();
+            }else{
+                return false;
+            }
+        });
+
+    });
+    //筛选器按钮
+    function searchUrl (type, number){
+        _status  = (type == 'status') ? number : $("#search-status").val();
+        //_regdate  = (type == 'regdate') ? number : $("#search-regdate").val();
+        keyword  = $("#keywords").val();
+        //alert(number);
+        _source = $("#source").val();
+        location.href = "/collect/trade/?status="+_status+"&keyword="+keyword;
+        return true;
+    }
+    function excelexport(){
+        _tradeStatus = (type == 'tradeStatus') ? number : $("#search-class").val();
+        _status  = $("#search-status").val();
+        //_regdate  = $("#search-regdate").val();
+        keyword  = $("#keywords").val();
+
+        url="/collect/excel/?status="+_status+"&keyword="+keyword;
+        $('#iframesrc').attr('src',url);
+        return true;
+    }
+</script>
+
+
+<? require(ViewDir.'/public/footer.html'); ?>

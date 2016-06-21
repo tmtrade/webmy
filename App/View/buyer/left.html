@@ -1,0 +1,29 @@
+		<link rel="stylesheet" href="<?=StaticDir?>style/management.css"/>
+		<!--left-->
+        <div class="mj-left fl">
+            <div class="mj-left_top">
+                <div class="mj-ltImg">
+                    <p>
+                        <img src="<?=StaticDir?>style/img/img2.png" alt=""/>
+                    </p>
+                    <span><?=$nickname?></span>
+                    <em><i class="uj-icon uj-icon3"></i>新人会员 &nbsp;<a href="/login/logout/" style="color:#666;">[退出]</a></em>
+                </div>
+                <div class="mj-ltBtn">
+                    <a href="/user/main/" class="bgcb">账户管理</a>
+                    <a href="javascript:;" onclick="consultation()" class="bgco">呼叫客服</a>
+                </div>
+            </div>
+            <dl class="mj-left_bottom">
+                <dt>我的管理</dt>
+                <dd><a href="/mytrade/index/"><span><i class="uj-icon uj-icon5"></i></span>我的商标</a></dd>
+                <dd><a href="/buyer/index/"><span><i class="uj-icon uj-icon4"></i></span>我的需求</a></dd>
+                <dd><a href="/collect/index/"><span><i class="uj-icon uj-icon6"></i></span>我的收藏</a></dd>
+                <dd><a href="/buyer/myinfo/"><span><i class="uj-icon uj-icon7"></i></span>我的购买</a></dd>
+                <dd><a href="/buyer/mysell/"><span><i class="uj-icon uj-icon8"></i></span>我的出售</a></dd>
+            </dl>
+        </div>
+        <!--left end-->
+		<script>
+		$('.mj-navLeft > li').eq(2).addClass('on');
+		</script>

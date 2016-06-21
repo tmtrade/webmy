@@ -29,7 +29,8 @@ class CollectAction extends AppAction
 
         $proposerList	= $this->load("collect")->getProposerBuyCollect($userId);
         $classList		= $this->load("collect")->getClassBuyCollect($userId);
-        $statusList		= $this->load("collect")->getStatusBuyCollect($userId);
+        //$statusList		= $this->load("collect")->getStatusBuyCollect($userId);
+        $statusList = array();
 
 		$data			= $this->load("collect")->getPageListCollect($param, $search);
         $pager			= $this->pager($data['total'], $this->rowNum);

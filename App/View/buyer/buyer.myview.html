@@ -1,0 +1,494 @@
+<? require(ViewDir.'/public/header.html'); ?>
+<script>
+    function rollList(liNum,liDate){
+        //liNum=7 交易关闭 fail
+        $(".progressbar").each(function(){
+            $(this).find('li:lt('+liNum+')').removeClass().addClass("succeed");
+            $(this).find("li:eq("+(liNum-1)+")").children('.text').append('<p class="text-center">'+liDate+'</p>');
+            if(liNum==7){
+                $(this).find('li').removeClass().addClass("fail");
+                $(this).find("li:eq(1)").append($("#closeHtml").html());
+                $(".popover").show();
+            }
+        });
+        //
+        $(".progressbar-small").each(function(){
+            $(this).find('li:lt('+liNum+')').removeClass().addClass("succeed");
+            $(this).find("li:eq("+(liNum-1)+")").children('.text').append('<p class="text-center">'+liDate+'</p>');
+            if(liNum==7){
+                $(this).find('li').removeClass().addClass("fail");
+                $(this).find("li:eq(1)").append($("#closeHtml").html());
+                $(".popover").show();
+            }
+        });
+        $(".progressbar2").each(function(){
+            $(this).find('li:lt('+liNum+')').removeClass().addClass("succeed");
+            $(this).find('li:lt('+liNum+')').removeClass().addClass("succeed");
+            $(this).find("li:eq("+(liNum-1)+")").find(".text").append('<p class="text-center">'+liDate+'</p>');
+
+            if(liNum==7){
+                $(this).find('li').removeClass("succeed");
+                $(this).find('li').removeClass("succeed");
+                $(this).find("li:eq(1)").append($("#closeHtml").html());
+                $(".popover").show();
+            }
+        });
+    }
+    function tmCount(t)
+    {
+        if(t==1){
+          $(".progressbar").show();
+        }else{
+          $(".progressbar2").show();
+          $(".tmcount").each(function(){
+              //alert($(this).html());
+            //alert($(this).find('li:gt(4)').html());
+            $(this).find('li:gt(3)').remove();
+          });
+        }
+    }
+</script>
+<!--main content start-->
+<section id="main-content">
+  <section class="wrapper">
+    <section class="panel">
+      <header class="panel-heading"> <span class="float-left">求购信息</span>
+        <ul class="breadcrumb float-right">
+          <li><a href="/buyer/myinfo/">返回</a></li>
+          <!--<li><a href="#">首页</a></li>-->
+        </ul>
+      </header>
+      <!-- tab -->
+      <table class="table to_buy_tab">
+        <thead>
+          <tr>
+            <th width="100">日期</th>
+            <th>类型</th>
+            <th>需求内容</th>
+            <th>状态</th>
+            <th>顾问</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><? echo date('Y-m-d',$buyinfo['dateline']);?></td>
+            <td><?=$buyinfo['pttype']?></td>
+            <td><?=$buyinfo['remarks']?></td>
+            <td><?=$buyinfo['state']?></td>
+            <td><?=$buyinfo['consultant']?></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- tab over-->
+      
+      <div class="progressbar" style="width:600px;display: none">
+        <ul>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>洽谈中</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已匹配</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已成交</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已上报</p>
+            </div></li>
+        </ul>
+      </div>
+
+      
+      <div class="progressbar2" style="width:600px;display: none">
+        <ul>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>洽谈中</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已匹配</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已成交</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已上报</p>
+            </div></li>
+        </ul>
+      </div>
+
+      <div class="progressbar-small">
+      	<div class="progressbar-small-head">
+        	<h4 class="float-left">当前状态:
+                <?if($buyinfo['state']!=""){?>
+                <span class="green">
+                    <?=$buyinfo['state']?>
+                    <font size="1">
+                    <? echo date('Y-m-d',$buyinfo['dateline']);?>
+                    </font>
+                </span>
+                <?}?>
+            </h4>
+            <a class="float-right" data-toggle="modal" href="#progressbar-pic">></a>
+        </div>
+      </div>
+	  <div style="width:100%;border-top:1px solid #ececec;"></div>
+      <?if(count($tm)!=0){?>
+      <?php
+      		$tmNum = 0;
+           foreach($tm as $v){
+            if($v['trademark']>0){
+            	$tmNum = $tmNum+1;
+            }
+           }
+       ?>
+      <!-- num -->
+      <div class="qg_div">
+          <p class="gray">该商标共有<label class="red"><?=$tmNum?></label>条数据</p>
+          <div class="qg_cont">
+              <ul>
+                  <?php
+                   foreach($tm as $v){
+                   	if($v['trademark']>0){
+                   ?>
+                  <li class="qg_tdp">
+                      <p>
+                          商标号：
+                          <span class="qgcolor"><?=$v['trademark']?></span>
+                          [<?=$v['class']?>]
+                          <?if(!empty($v['tminfo'])){?>
+                          <button class="btn btn-primary btn-xs" type="button"><?=$v['tminfo'][0]['status']?></button>
+                          <?}?>
+                      </p>
+                  </li>
+                  <?php
+                  	}
+                  }
+                  ?>
+               </ul>
+          </div>
+          <div class="qg_show">展开查看全部</div>
+          <div class="qg_hide">收起</div>
+      </div>
+      <!--  app -->
+      <div class="qg_div2">
+          <p class="gray">该商标共有<label class="red"><?=count($tm)?></label>条数据</p>
+          <div class="qg_cont">
+              <ul>
+                  <? foreach($tm as $v){?>
+                  <li class="qg_tdp">
+                      <p>
+                          商标号：
+                          <span class="qgcolor"><?=$v['trademark']?></span>
+                          [<?=$v['class']?>]
+                          <?if(!empty($v['tminfo'])){?>
+                          <button class="btn btn-primary btn-xs" type="button"><?=$v['tminfo'][0]['status']?></button>
+                          <?}?>
+                      </p>
+                  </li>
+                  <?}?>
+              </ul>
+          </div>
+          <div class="qg_show">展开查看全部</div>
+          <div class="qg_hide">收起</div>
+      </div>
+      <!--  app end-->
+
+      <!-- num end-->
+
+      <?}?>
+
+
+
+
+
+      <!-- line -->
+      <div class="panel-body process">
+        <p>交易动态</p>
+        <div class="timeline-messages">
+            <? foreach($buyinfo['step'] as $item){  ?>
+            <!-- Comment -->
+            <div class="msg-time-chat">
+                <div class="message-body msg-in"> <span class="arrow"></span>
+                    <div>
+                        <p>【<?=$item['state']?>】<?=$item['contents']?></p>
+                        <p class="gray"><?=$item['date']?></p>
+                    </div>
+                </div>
+            </div>
+            <!-- /comment -->
+            <?}?>
+        </div>
+      </div>
+
+      <div class="progressbar" style="width:600px;display: none">
+        <ul>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>洽谈中</p>
+            </div>
+            
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已匹配</p>
+            </div>
+            
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已成交</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已上报</p>
+            </div></li>
+        </ul>
+      </div>
+
+      
+      <div class="progressbar2" style="width:600px;display: none">
+        <ul>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>洽谈中</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已匹配</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已成交</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已上报</p>
+            </div></li>
+        </ul>
+      </div>
+
+
+
+      <div class="progressbar-small">
+      	<div class="progressbar-small-head">
+        	<h4 class="float-left">当前状态:
+                <?if($buyinfo['state']!=""){?>
+                <span class="green"><?=$buyinfo['state']?>
+                    <font size="1">
+                    <? echo date('Y-m-d',$buyinfo['dateline']);?>
+                    </font>
+                </span>
+                <?}?>
+            </h4>
+            <a class="float-right" data-toggle="modal" href="#progressbar-pic-fail">></a>
+        </div>
+      </div>
+
+
+
+
+      <!-- line end--> 
+    </section>
+  </section>
+  <!--main content end--> 
+</section>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="progressbar-pic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+          <div id="closeHtml" style="display: none">
+              <div class="popover fade top in" role="tooltip">
+                  <div class="arrow"></div>
+                  <div class="popover-content">交易关闭</div>
+              </div>
+          </div>
+          <div class="progressbar-small">
+            <ul>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>洽谈中</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已匹配</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已成交</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已上报</p>
+            </div></li>
+            <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>转让中</p>
+            </div></li>
+            <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>转让完成</p>
+            </div></li>
+        </ul>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="progressbar-pic-fail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+          <div class="progressbar-small">
+            <ul>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>洽谈中</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已匹配</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已成交</p>
+            </div>
+          </li>
+          <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>已上报</p>
+            </div></li>
+            <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>转让中</p>
+            </div></li>
+            <li class="fail">
+            <i class="dian"></i>
+            <span class="xian"></span>
+            <div class="text">
+              <p>转让完成</p>
+            </div></li>
+        </ul>
+          </div>
+          <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<?foreach($state as $k=>$v){?>
+<?if($v=="洽谈中"){?>
+<script>rollList(1,'<?echo substr($dates[$k],0,10)?>');</script>
+<?}?>
+<?if($v=="已匹配"){?>
+<script>rollList(2,'<?echo substr($dates[$k],0,10)?>');</script>
+<?}?>
+<?if($v=="已成交"){?>
+<script>rollList(3,'<?echo substr($dates[$k],0,10)?>');</script>
+<?}?>
+<?if($v=="已立案"){?>
+<script>rollList(4,'<?echo substr($dates[$k],0,10)?>');</script>
+<?}?>
+<?if($v=="转让中"){?>
+<script>rollList(5,'<?echo substr($dates[$k],0,10)?>');</script>
+<?}?>
+<?if($v=="转让完成"){?>
+<script>rollList(6,'<?echo substr($dates[$k],0,10)?>');</script>
+<?}?>
+<?if($v=="交易关闭"){?>
+<script>rollList(7,'<?echo substr($dates[$k],0,10)?>');</script>
+<?}?>
+<?}?>
+
+
+<script>tmCount('<? echo count($tm);?>');</script>
+
+<? require(ViewDir.'/public/footer.html'); ?>

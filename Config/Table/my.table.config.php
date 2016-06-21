@@ -51,11 +51,6 @@ $tbl['collect'] = array(
     'configFile'=> $configFile,
 );
 
-$tbl['usercollect'] = array(
-    'name'        => 'userCollect',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
 $tbl['userproposer'] = array(
     'name'        => $prefix.'proposer',
     'dbId'        => $dbId, 

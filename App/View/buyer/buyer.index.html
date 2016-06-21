@@ -1,0 +1,164 @@
+<? require(ViewDir.'/public/header.html'); ?> 
+<style type="text/css">
+.default{
+color:#e2e2e2;	
+}
+
+.msg-time-chatgd:before{
+	background:#41cac0
+}
+</style>
+<!--main content start-->
+<section id="main-content">
+  <section class="wrapper demand">
+    <section class="panel">
+      <header class="panel-heading"> <span class="float-left">我的需求</span>
+      </header>
+	  <? if( empty($buyinfo)) { ?>
+		<div class="panel-body">
+			<div class="nodata">
+				<div class="icon1">暂无数据</div>
+				<p class="gray">一切咨询或需求我们都将为你实时跟踪</p>
+				<p class="gray">专业顾问将全程为你服务</p>
+				<button class="btn btn-success" type="button" onclick='consultation()'>在线咨询</button>
+			</div>
+		</div>
+		<? } else {?>
+      <div class="row">
+        <div class="col-xs-12">
+          <section class="panel">
+            <header class="padding">
+              <form class="form-inline">
+				<div class="form-group">
+					<div class="task-option">
+					  <select class="styled"  id="type">
+						  <option  value="0">类型</option>
+					<? foreach($crmtype as $key => $item) { ?>
+                        <option value="<?=$key?>"><?=$item?></option>
+					<? } ?>
+					  </select>
+					</div>
+				</div>
+				<!-- select -->
+               
+                <div class="form-group form-inline">
+                  <input type="text" class="form-control input-sm"  id="startdate" value="<?=$param['startdate']?>"  onClick="calendar.show({ id: this })">
+                  <span class="icon-calendar active"></span> 至
+                  <input type="text" class="form-control input-sm" value="<?=$param['enddate']?>" id="enddate"  onClick="calendar.show({ id: this })">
+                  <span class="icon-calendar active"></span> </div>
+                <div class="form-group">
+                  <button type="button" id="submit" class="btn btn-success btn-sm">搜索</button>
+                </div>
+              </form>
+            </header>
+            <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+              <table class="table border-top dataTable">
+                <thead>
+                  <tr role="row">
+                    <th width="15%">日期</th>
+                    <th  width="15%">类型</th>
+                    <th >需求类容</th>
+                    <th width="15%">状态</th>
+                    <th width="15%">顾问</th>
+                    <th width="15%">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+					<? foreach ($buyinfo as $item) { ?>
+                  <tr class="td_bg" click="0">
+                    <td><? echo date('Y-m-d', $item['dateline']);?></td>
+                    <td><?=$item['type']?></td>
+                    <td style="max-width:200px;"><div title="<?=$item['remarks']?>"><? echo mbSub($item['remarks'],0,20); ?></div></td>
+                    <td><? 
+						foreach($item['step'] as $step){ 
+							if($step['state'] == '洽谈中'){echo '已处理';break;}
+							if(in_array($step['state'],$crmstep)){echo $step['state'];break;}
+						}
+						?></td>
+                    <td><?=$item['consultant']?></td>
+                    <td><button type="button" class="btn btn-primary btn-xs unfold" >处理进度</button></td>
+                  </tr>
+                  <tr class="hidden">
+				    <td></td>
+                    <td colspan="5"><div class="panel-body">
+                        <div class ="timeline-messages time_mess_left"> 
+                          <?php
+                          $newstep = $bigArr = array();
+                          foreach($item['step'] as $step) {
+                          	$newstep[$step['state']] = $step;
+                            $bigArr[$step['steps']] = $step['steps'];
+                          }
+                          $max 		= max($bigArr);
+                          $stepArr 	= array('已提交','已受理','已分配','已处理');
+                          krsort($stepArr);
+                          foreach($stepArr as $k => $v){
+                            $default = 'default';
+                          	$date 	 = $contents = '';
+                          	if(array_key_exists($v,$newstep)){
+                            	$date 		= $newstep[$v]['date'];
+                                $contents 	= $newstep[$v]['contents'];
+                                $default 	= '';
+                            }
+                            $before = $k + 1 <=$max ? 'msg-time-chatgd' : '';
+                          ?>	
+						  <!-- Comment -->
+                          <div class="msg-time-chat <?=$before?>">
+                            <div class="message-body msg-in"> <span class="arrow"></span>
+                              <div>
+                                <p class="<?=$default?>">【<?=$v?>】 <?=$contents ?></p>
+                                <p class="gray"><?=$date?>&nbsp;</p>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /comment --> 
+                          <?php
+                          }
+                          ?>
+                        </div>
+                      </div></td>
+                  </tr>
+					<? } ?>
+                </tbody>
+              </table>
+              <div class="row"><?=$pageBar?></div>
+            </div>
+          </section>
+        </div>
+      </div>
+	  <? } ?>
+    </section>
+  </section>
+  <!--main content end--> 
+</section>
+
+<script>
+  	$(document).ready(function(){
+		$(".demand .table tr:odd").each(function(){
+			$(this).click(function(){
+				var i = $(this).attr("click");
+				if(i == 0){
+					$(this).next("tr").removeClass("hidden");
+					$(this).children("td").last().html('<button type="button" class="btn btn-success  btn-xs packup">收拢</button>');
+					$(this).attr("click","1");
+				}else if(i == 1){
+					$(this).next("tr").addClass("hidden");
+					$(this).children("td").last().html('<button type="button" class="btn btn-primary btn-xs unfold">处理进度</button>');
+					$(this).attr("click","0");
+				}
+			});
+		});
+		$(".demand .table tr").each(function(i){
+			var	n = i%4;
+			if(n == 1){
+				$(".demand .table tr").eq(i).addClass("td_bg");
+			}
+		});
+		
+	})
+$('#submit').click(function(){
+	location.href = '/buyer/index/?type='+$('#type').val()+'&startdate='+$('#startdate').val()+'&enddate='+$('#enddate').val();
+})
+
+$("#type").val(<?=$param['type'] ?>);
+</script>
+<? require(ViewDir.'/public/footer.html'); ?>

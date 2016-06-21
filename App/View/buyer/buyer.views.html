@@ -1,0 +1,86 @@
+<? require(ViewDir.'/header.html'); ?>
+<!--content start-->
+<div class="mj-content">
+    <div class="w1180 f-clearfix">
+<? require(ViewDir.'/buyer/left.html'); ?>
+        <div class="mj-right fr">
+            <div class="mj-menu">
+                <span>我的管理</span><em>></em>
+                <span>我的需求</span><em class="coy">></em>
+                <span>需求详情</span>
+            </div>
+            <div class="mj-manDet_main">
+                <h4 class="secTitle bgw seH70">需求详情<a href="/buyer/index/"><label><i class="uj-icon uj-icon15"></i></label></a></h4>
+                <div class="mj-stbg">
+                    <div class="mj-stripes">
+                        <div class="mj-stBg  posA1">
+                            <p>1</p>
+                            <span>已受理</span>
+                        </div>
+                        <div class="mj-stBg  posA2">
+                            <p>2</p>
+                            <span>已分配</span>
+                        </div>
+                        <div class="mj-stBg  posA3">
+                            <p>3</p>
+                            <span>已处理</span>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="mj-manD_title">基本信息</h5>
+                <div class="mj-basInf f-clearfix">
+                    <span class="mj-biLeft"><? echo date('Y-m-d',$buyinfo['dateline']);?></span>
+                    <div class="mj-biRight">
+                        <p>类型：<span><?=$buyinfo['type']?></span></p>
+                        <p>需求：<em><?=$buyinfo['remarks']?></em></p>
+                    </div>
+                </div>
+				
+                <h5 class="mj-manD_title">交易动态</h5>
+                <table class="mj-manD_table">
+                    <caption><div  id="mand-step">
+					   <? 
+						foreach($buyinfo['step'] as $step){ 
+							if($step['state'] == '洽谈中'){echo '已处理';break;}
+							if(in_array($step['state'],$crmstep)){echo $step['state'];break;}
+						}
+						?></div>
+					</caption>
+                    <tbody>
+					<? foreach($buyinfo['step'] as $item){  ?>
+                        <tr>
+                            <td class="tdst"><?=$item['date']?></td>
+                            <td class="pl40"><?=$item['contents']?></td>
+                        </tr>
+					<? } ?>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--content end-->
+<script>
+	var statearr = ["<? echo implode('","',$crmstep);?>"];
+	var state = $.trim($("#mand-step").html());
+	var step = 0;
+	for(i = 0;i < statearr.length; i++){
+		//j = parseInt(i) - 1;
+		if(statearr[i] == state){
+			step = i;
+			//$('.mj-stripes').find('div').eq(j).addClass('bgO');
+		}else{
+		//	$('.mj-stripes').find('div').eq(j).addClass('bgG');
+		}
+	}
+	for(i = 1; i < 4; i++){
+		j = parseInt(i) - 1;
+		if(j < step){
+			$('.mj-stripes').find('div').eq(j).addClass('bgO');
+		}else{
+			$('.mj-stripes').find('div').eq(j).addClass('bgG');
+		}
+	}
+</script>
+<? require(ViewDir.'/footer.html'); ?>

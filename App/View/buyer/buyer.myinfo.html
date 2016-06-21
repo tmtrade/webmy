@@ -1,0 +1,246 @@
+<? require(ViewDir.'/public/header.html'); ?>
+<? require(ViewDir.'/public/notbound.html'); ?> 
+<!--main content start-->
+<section id="main-content">
+  <section class="wrapper">
+    <?if(!empty($buyinfo)){?>
+  	<section class="panel">
+        <header class="panel-heading">
+            <span class="float-left">我的求购</span>
+        </header>
+	
+      <section class="wrapper wrapper tab-container">
+        <div class="row">
+          <div class="col-xs-12">
+            <section class="panel">
+              <header class="form-box to_buy">
+                <form class="form-inline">
+				  <div class="form-group">
+					<div class="task-option">
+                        <select name="" id="state">
+                            <option value="0">请选择</option>
+                            <? foreach($crmstate as $key => $item) { ?>
+                            <option value="<?=$key?>"><?=$item?></option>
+                            <? } ?>
+                        </select>
+					</div>
+				</div>
+                  <div class="form-group form-inline">
+                    <input type="text" class="form-control input-sm" placeholder="" value="<?=$param['startdate']?>"  id="startdate" onClick="calendar.show({ id: this })">
+                                                             <span class="icon-calendar active"></span> 至
+                    <input type="text" class="form-control input-sm" value="<?=$param['enddate']?>"  id="enddate" onClick="calendar.show({ id: this })"> <span class="icon-calendar active"></span>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-success btn-sm" id="submit">搜索</button>
+                    <button class="btn btn-primary btn-sm" data-target="#sell" data-toggle="modal" type="submit">发布求购</button>
+					 <!--<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="" onclick="window.open('<? echo C('WEBSITE_URL');?>')">
+                         发布求购
+                     </button>-->
+                  </div>
+                </form>
+              </header>
+              <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                
+                <table class="table table-striped border-top dataTable">
+                  <thead>
+                    <tr role="row">
+                      <th>日期</th>
+                      <th>求购类型</th>
+                      <th>需求内容</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                  <? foreach ($buyinfo as $item) { ?>
+                  <tr>
+                      <td><? echo date('Y-m-d', $item['dateline']);?></td>
+                      <td><?=$item['pttype']?></td>
+                      <td><? if($item['tel']!='' && strstr($item['remarks'],$item['tel'])){echo $item['remarks'];}else{echo $item['remarks']."&nbsp; 联系电话:".$item['tel'];}?></td>
+                      <td>
+                          <?=$item['state']?>
+                      </td>
+                      <td><a href="/buyer/myview/?id=<?=$item['id'] ?>" type="button" class="btn btn-gray btn-xs">详情</a></td>
+                  </tr>
+                  <? } ?>
+                </tbody>
+                  
+                </table>
+                <div class="row">
+                  <?=$pageBar?>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+	  
+      </section>
+	 <!--  Hot trademark -->
+		<section class="panel">
+        <header class="panel-heading">
+            <span class="float-left">热门商标</span>
+        </header>
+		<ul class="list-inline to_buy_div">
+		<? foreach($saleList['rows'] as $item){ ?>
+			<li><div class="to_buy_img"><a href="<?=$item['trade']['yzc_url'] ?>" target="_blank"><img src="<?=$item['trade']['imgUrl'] ?>" onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'"/></a></div></li>
+		<? } ?>
+		</ul>
+		</section>
+	    <!--  Hot trademark -->
+	</section>
+    <?}else{?>
+        <section class="panel">
+            <header class="panel-heading"> <span class="float-left">我的求购</span>
+               <!--<ul class="breadcrumb float-right">
+                    <li><a href="#">返回</a></li>
+                    <li><a href="#">首页</a></li>
+                </ul>-->
+            </header>
+            <div class="panel-body">
+                <div class="nodata">
+                    <div class="icon1">暂无数据</div>
+                    <button type="button" class="btn btn-primary" onclick="window.open('<? echo C('WEBSITE_URL');?>')">去发布求购</button>
+                    <!--
+                    <button type="button" class="btn btn-success" onclick="window.open('<? echo C('YIZHCHAN_URL');?>')">去商标交易平台</button>
+                    -->
+                </div>
+            </div>
+        </section>
+    <?}?>
+  <!--main content end--> 
+  
+</section>
+<!-- Modal -->
+<div class="modal fade" id="sell" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content to_buy_tc">
+       <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<?=StaticDir?>workspace/img/close.gif"/></button></div>
+		<div class="modal-body"style="padding-right: 28px;">
+			<div class="modal-form">
+			  <form class="form" autocomplete='off'>
+				 <div class="row">
+				 <div class="col-xs-3"></div>
+					<div id="err" class="col-xs-8 form-group text-center text-danger" style="display:none;background:#fff4f3;">
+					  <i class="icon-ban-circle"></i>&nbsp;&nbsp;
+                        <span id="errhtml">请输入正确的手机号码</span>
+					</div>
+					<div class="col-xs-1"><i></i></div>
+				</div>
+				<div class="row">
+				  <div class="col-xs-3 text-right">姓名：</div>
+				  <div class="col-xs-8">
+					<input type="text" class="form-control" name="username">
+				  </div>
+				 <!-- <div class="form-group"><i class="icon-ok-sign text-success"></i></div>-->
+				 <div class="col-xs-1"><i></i></div>
+				  <div class="col-xs-1"><i></i></div>
+				</div>
+				<div class="row">
+				  <div class="col-xs-3 text-right"><span class="red">*</span>手机号码：</div>
+				  <div class="col-xs-8">
+					<input type="text" class="form-control" name="usertel">
+				  </div>
+				  <div class="col-xs-1"><i></i></div>
+				</div>
+				 <div class="row">
+			   <div class="col-xs-3 text-right">特殊要求：</div>
+				<div class="col-xs-8">
+				  <textarea class="form-control" id="req" rows="5" placeholder="例如：买25类，女装商标中英文结合，三个字以内，最好带斯字价格在2-5 或留下其他联系方式"></textarea>
+				</div>
+				<div class="col-xs-1"><i></i></div>
+			  </div>
+				<div class="row">
+				  <div class="col-xs-3"></div>
+				  <div class="col-xs-8">
+					<button type="button" id="submitBuy" class="btn btn-success btn-block">确认发布</button>
+				  </div>
+				  <div class="col-xs-1"></div>
+				</div>
+			  </form>
+			</div>
+		  </div>
+  </div>
+</div>
+</div>
+<script src="<?=StaticDir?>workspace/assets/jquery-knob/js/jquery.knob.js"></script>
+<script>
+      $(".knob").knob();
+      $('#submit').click(function(){
+          if($('#startdate').val()!="" && $('#enddate').val()!="" &&($('#startdate').val()>$('#enddate').val())){
+            alert("日期选择有误！");
+          }else{
+              location.href = '/buyer/myinfo/?state='+$('#state').val()+'&startdate='+$('#startdate').val()+'&enddate='+$('#enddate').val();
+          }
+
+       })
+       $("#submitBuy").click(function(){
+           var usertel = $("input[name='usertel']").val();
+           var username = $("input[name='username']").val();
+           var req = $("#req").val();
+           if(username==""){
+               $("#err").show();
+               $("#errhtml").html('请输入姓名');
+               return false;
+           }
+           if(username.length>20){
+               $("#err").show();
+               $("#errhtml").html('姓名长度不能超过20');
+               return false;
+           }
+           if(req.length>20){
+               $("#err").show();
+               $("#errhtml").html('需求长度不超过100');
+               return false;
+           }
+           if(checkPhone(usertel)){
+               $.ajax({
+                   type		: "post",
+                   url		: "/buyer/addBuy/",
+                   dataType	: "json",
+                   data		: {"tel" : usertel,"name" : username,"remarks" : req},
+                   error		: function(msg){
+                       layter_msg('系统繁忙请稍后在试');
+                   },
+                   success	: function(data){
+                       if(data==1){
+                           layter_msg('添加成功');
+                           window.location.reload();
+                       }else{
+                           layter_msg('添加失败');
+                       }
+                   }
+               });
+           }
+       })
+
+      //判断手机输入框
+      function checkPhone(cont1)
+      {
+          //var reg = /0?(13|14|15|18)[0-9]{9}/;
+          var reg = /(^1[3|4|5|7|8][0-9]{9}$)/;
+          var yz1 = false;
+          //var cont1 = $('#phone').val();
+          $("#mess-phone").html('');
+          var rest = reg.test(cont1);
+          if (cont1=="") {
+              yz1 = false;
+              $("#err").show();
+              $("#errhtml").html('请输入手机号码');
+
+          } else if(rest){
+              //$("#mess_phone").html('<i class="icon-ok text-success"></i>');
+              $("#err").hide();
+              yz1 = true;
+          } else{
+              yz1 = false;
+              $("#err").show();
+              $("#errhtml").html('请输入正确的手机号码！');
+          }
+          return yz1;
+      }
+
+      $("#state").val(<?=$param['state'] ?>);
+</script>
+<? require(ViewDir.'/public/footer.html'); ?>

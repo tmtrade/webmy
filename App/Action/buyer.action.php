@@ -65,7 +65,7 @@ class BuyerAction extends AppAction
 		$id				= $this->input('id','int');
 		$userInfoId		= $this->userInfo['id'];
 		$param			= $this->getFormData('buyerindex');
-		$param['page']	= $this->input('page','int');
+		$param['page']	= $this->input('page','int', 1);
 		$param['limit']	= $this->rowNum;
 		$buyinfo		= $this->load('buyer')->getInfoAll($userInfoId,$id, $param);
 		//$brand			= $this->load('buyer')->getInfoBuyId($userInfoId,$id);
@@ -88,7 +88,7 @@ class BuyerAction extends AppAction
     {
         $userInfoId		= $this->userInfo['id'];
         $param			= $this->getFormData();
-        $param['page']	= $this->input('page','int');
+        $param['page']	= $this->input('page','int', 1);
         $param['limit']	= 30;
         $param['pttype']= '求购';
         $buyinfo		= $this->load('buyer')->getInfoAll($userInfoId, 0, $param);

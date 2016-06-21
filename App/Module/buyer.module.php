@@ -37,7 +37,7 @@ class BuyerModule extends AppModule
             $cacheKey       = 'network_'.md5(serialize($search));
             if ( empty($this->com('redisHtml')->get($cacheKey)) ){
                 $json = $this->importBi('crm')->getNetwork($search);
-                $this->com('redisHtml')->set($cacheKey, $json, 300);
+                $this->com('redisHtml')->set($cacheKey, $json, 600);
             }else{
                 $json = $this->com('redisHtml')->get($cacheKey);
             }			

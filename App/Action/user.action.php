@@ -108,12 +108,6 @@ class UserAction extends AppAction
 			exit;
 		}
 		$data		= $this->load("user")->getInfoById( $userInfoId );
-		$weixin		= $this->load("weixin")->getBinDing($userInfoId);
-		$data		= $this->load("user")->getInfoById( $userInfoId );
-		$weixin['error'] == 1 && $this->load("weixin")->setUserWxId( $userInfoId, $weixin['info']['id']);//设置微信id
-		$this->set('data', $data);
-		$this->set('weixin', $weixin);
-		$this->set('isbinding', $weixin['error'] == 0 ? 0 : 1);
 		$this->set('data', $data);
 		$this->display();
 	}

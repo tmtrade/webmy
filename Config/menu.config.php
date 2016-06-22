@@ -1,7 +1,7 @@
 <?
 return array(
 	0=> array(
-			'name'	=>'商标服务',
+			'name'	=>'我的服务',
 			'icon'	=>'icon-book',
 			'child'	=> array(
 				array('title'=>'我的需求', 'url'=>'/buyer/index/',),
@@ -23,7 +23,7 @@ return array(
 			'icon'	=>'icon-user',
 			'child'	=> array(
 				array(
-					'title'		=>'我的账户', 
+					'title'		=>'基本信息', 
 					'url'		=>'/user/main/',
 					'child'		=> array(
 						'/user/main/',
@@ -32,13 +32,13 @@ return array(
 						'/user/changePhone/',
 					)
 				),
-				array(
-					'title'=>'消息中心', 
-					'url'=>'/message/index/',
-					'child'		=> array(
-						'/message/views/',
-					)
-				),
+				// array(
+				// 	'title'=>'消息中心', 
+				// 	'url'=>'/message/index/',
+				// 	'child'		=> array(
+				// 		'/message/views/',
+				// 	)
+				// ),
 			),
 	),
 	

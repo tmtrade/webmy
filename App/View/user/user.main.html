@@ -52,22 +52,6 @@
                 <td><? if($data['isEmail'] != 1){ echo '邮箱未绑定';}else{ echo $data['email_hide'];} ?></td>
                 <td><a class="btn btn-danger btn-sm" href="/user/changeEmail/"><? if($data['isEmail'] != 1){ echo '绑定';}else{ echo '修改';} ?></a></td>
               </tr>
-              <tr>
-              	<?php
-                        if($isbinding==1){
-                        	$bdingstr = encrypt($weixin['info']['nickname']);
-                            $bdingstr2 = '<button type="submit" id="jbinding" class="btn btn-success btn-sm"  data-toggle="modal" data-target="#batch-remove">解绑</button>';
-                        }else{
-                        	$bdingstr = '未绑定';
-                            $bdingstr2 = '<button type="submit" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#batch-wxwechat">绑定</button>';
-                        }
-                 ?>
-                <td><i class="icon-comments"></i> 微信账号</td>
-                <td><?=$bdingstr?></td>
-                <td>
-                	<?=$bdingstr2?>
-                </td>
-              </tr>
             </table>
           </div>
         </section>

@@ -55,10 +55,7 @@ class RelationModule extends AppModule
 		}
 		$r['limit'] = 10000;
 		$info		= $this->import('relation')->findAll($r);
-		$output		= array();
-		foreach($info['rows'] as $item){
-			$output [] = $item['relationId'];
-		}
+		$output 	= arrayColumn($info['rows'], 'relationId');
 		return $output;
 	}
 

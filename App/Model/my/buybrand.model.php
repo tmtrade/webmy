@@ -22,9 +22,9 @@ class BuyBrandModel extends AppModel
     {
         $data['userId']     = $array['userId'];
         $data['mobile']     = $array['mobile'];
-        $data['tid']     	= $array['tid'];
-        $data['trademark']  = $array['trademark'];
-        $data['class']    	= $array['class'];
+        $data['tid']     	= empty($array['tid']) ? '0' : $array['tid'];
+        $data['trademark']  = empty($array['trademark']) ? '' : $array['trademark'];
+        $data['class']    	= empty($array['class']) ? '0' : $array['class'];
         $data['remarks']    = $array['remarks'];
         $data['name']    	= !empty($array['name']) ? $array['name'] : '';
         $data['aid']    	= $array['aid'];

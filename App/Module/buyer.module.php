@@ -15,8 +15,9 @@ class BuyerModule extends AppModule
      */
     public $models = array(
         'relation'	=> 'relation',
-        'collect'	=> 'collect',
-		
+        'collect'	=> 'collect',		
+        'collect'   => 'collect',
+        'buybrand'  => 'buybrand',
     );
 
 	/**
@@ -41,7 +42,7 @@ class BuyerModule extends AppModule
             }else{
                 $json = $this->com('redisHtml')->get($cacheKey);
             }			
-
+//debug($json);
 			return empty($json['data']) ? array() : $json;
 		}
 		return array();
@@ -188,6 +189,7 @@ class BuyerModule extends AppModule
 	}
 
     public function  addBuy($userId, $arr){
+        $_arr               = $arr;
         $bool				= 0;
         $arr['type']		= 1;
         $arr['pttype']		= "求购";
@@ -195,6 +197,13 @@ class BuyerModule extends AppModule
         $output				= $this->load('network')->networkJoin($arr);
         if($output['code'] == 1 && !empty($output['data']['id'])){
             $this->load('relation')->addRelation($userId,$output['data']['id'] );
+
+            $_arr['subject']    = $_arr['remarks'];
+            $_arr['mobile']     = $_arr['tel'];
+            $_arr['userId']     = $userId;
+            $_arr['aid']        = $output['data']['id'];
+            $this->import('buybrand')->add($_arr);//备份
+
             $bool=1;
         }
         return $bool;

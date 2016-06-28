@@ -55,26 +55,7 @@
     <div class="nav notify-row" id="top_menu"> 
       <!--  notification start -->
       <ul class="nav top-menu">
-        <!-- inbox dropdown start-->
-        <li id="header_inbox_bar" class="dropdown"> 
-        	<a class="dropdown-toggle" href="/message/index/"> 
-            	
-            	<i class="icon-envelope-alt"></i> 
-                <?php
-                $badClass = $mcount = "";
-                if($messagecount>0){
-                	$badClass = "badge";
-                    $mcount   = $messagecount;
-                }
-                ?>
-                <span class="<?=$badClass?> bg-important" id="message-count"><?=$mcount?></span> 
-                
-            </a>
-        </li>
-        <!-- inbox dropdown end --> 
-        <!-- notification dropdown start-->
-        <!--<li id="header_notification_bar" class="dropdown"> <a class="dropdown-toggle" href="#"> <i class="icon-bell-alt"></i> <span class="badge bg-warning">7</span> </a></li>-->
-        <!-- notification dropdown end -->
+      
         <li class="dropdown"> <a data-toggle="dropdown" class="dropdown-toggle user" href="#"> <img alt="" width="29" height="29" src="<?=StaticDir?>workspace/img/chat-avatar2.jpg"> <span class="username"><?=$nickname?></span> <b class="caret"></b> </a>
           <ul class="dropdown-menu" style="border:none;">
             <li><a href="/login/logout/">退出登录</a></li>

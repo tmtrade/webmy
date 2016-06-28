@@ -15,8 +15,7 @@ class BuyerModule extends AppModule
      */
     public $models = array(
         'relation'	=> 'relation',
-        'collect'	=> 'collect',		
-        'collect'   => 'collect',
+        'collect'	=> 'collect',
         'buybrand'  => 'buybrand',
     );
 
@@ -31,22 +30,43 @@ class BuyerModule extends AppModule
 	 */
 	public function getInfoAll($userId , $aid = "", $search=array())
 	{
-		$list				= $this->load('relation')->getRelationList($userId, $aid);
-		if(!empty($list)){
-			$search['id'] 	= $list;
-			$search['type'] = empty($search['type']) ? array() : array($search['type']);
-            $cacheKey       = 'network_'.md5(serialize($search));
-            if ( empty($this->com('redisHtml')->get($cacheKey)) ){
-                $json = $this->importBi('crm')->getNetwork($search);
-                $this->com('redisHtml')->set($cacheKey, $json, 600);
-            }else{
-                $json = $this->com('redisHtml')->get($cacheKey);
-            }			
-//debug($json);
-			return empty($json['data']) ? array() : $json;
-		}
-		return array();
+		$list = $this->load('relation')->getRelationList($userId, $aid);
+		if(empty($list)) return array();
+
+		$search['id'] 	= $list;
+		$search['type'] = empty($search['type']) ? array() : array($search['type']);
+        $cacheKey       = 'network_'.md5(serialize($search));
+        if ( empty($this->com('redisHtml')->get($cacheKey)) ){
+            $json = $this->importBi('crm')->getNetwork($search);
+            $this->com('redisHtml')->set($cacheKey, $json, 600);
+        }else{
+            $json = $this->com('redisHtml')->get($cacheKey);
+        }
+
+		return empty($json['data']) ? array() : $json;
 	}
+
+    public function getBuyList($userId, $params=array(), $page=1, $nums=20)
+    {
+        if ( intval($userId) <= 0 ) return array();
+
+        $r['eq']    = array('userId'=>$userId);
+        $r['raw']   = ' 1 ';
+
+        if ($params['startdate'] && strtotime($params['startdate']) > 0){
+            $r['raw'] .= ' AND `recorddate` >= '.(strtotime($params['startdate']));
+        }
+        if ($params['enddate'] && strtotime($params['enddate']) > 0){
+            $r['raw'] .= ' AND `recorddate` <= '.(strtotime($params['enddate']));
+        }
+
+        $r['order'] = array('id'=>'desc');
+        $r['page']  = $page;
+        $r['limit'] = $nums;
+
+        $data = $this->import('buybrand')->findAll($r);
+        return $data;
+    }
 
 
 	/**

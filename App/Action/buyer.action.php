@@ -10,72 +10,6 @@
 */
 class BuyerAction extends AppAction
 {
-    //public  $debug = true;
-	public $status = array(
-		1 	=> '销售中',
-		2	=> '已下架',
-		3	=> '审核中'
-	);
-	/**
-	* 引用业务模型
-	*/
-	public $models = array(
-		'verify'	=> 'verify',
-        'statusnew'	=> 'statusnew',
-	);
-
-	/**
-	* 我的需求列表
-	* @author	martin
-	* @since	2016/1/26
-	*
-	* @access	public
-	* @return	void
-	*/
-	public function index()
-	{
-		$userInfoId			= $this->userInfo['id'];
-		$param				= $this->getFormData();
-		$param['page']		= $this->input('page','int');
-		$param['limit']		= 30;
-		$param['nottype']	= 5;
-		$buyinfo			= $this->load('buyer')->getInfoAll($userInfoId, 0, $param);
-        $pager				= $this->pager($buyinfo['paging']['total'], 30);
-        $pageBar			= empty($buyinfo['data']) ? '' : getPageBar($pager);
-		$this->set('param',$param);
-		$this->set('buyinfo',$buyinfo['data']);
-		$this->set('crmtype', C('CRMTYPE'));
-		$this->set('crmstep', C('CRMSTEP'));
-		
-		$this->set('pageBar', $pageBar);
-		$this->display();
-	}
-
-
-	/**
-	* 我的需求详情
-	* @author	martin
-	* @since	2016/1/27
-	*
-	* @access	public
-	* @return	void
-	*/
-	public function views()
-	{
-		$id				= $this->input('id','int');
-		$userInfoId		= $this->userInfo['id'];
-		$param			= $this->getFormData('buyerindex');
-		$param['page']	= $this->input('page','int', 1);
-		$param['limit']	= $this->rowNum;
-		$buyinfo		= $this->load('buyer')->getInfoAll($userInfoId,$id, $param);
-		//$brand			= $this->load('buyer')->getInfoBuyId($userInfoId,$id);
-		$this->set('buyinfo',$buyinfo['data'][0]);
-		$this->set('brand',$brand);
-		$this->set('crmstep', C('CRMSTEP'));
-		$this->display();
-	}
-
-
 	/**
 	* 我的求购列表
 	* @author	martin
@@ -86,18 +20,17 @@ class BuyerAction extends AppAction
 	*/
     public function myinfo()
     {
-        $userInfoId		= $this->userInfo['id'];
-        $param			= $this->getFormData();
-        $param['page']	= $this->input('page','int', 1);
-        $param['limit']	= 30;
-        $param['pttype']= '求购';
-        $buyinfo		= $this->load('buyer')->getInfoAll($userInfoId, 0, $param);
-        $pager			= $this->pager($buyinfo['paging']['total'], 30);
-        $pageBar		= empty($buyinfo['data']) ? '' : getPageBar($pager);
-        $saleList		= $this->load('sale')->getSaleListBuyer(8);
+        $userId     = $this->userInfo['id'];
+        $param      = $this->getFormData();
+        $page       = $this->input('page','int', 1);
+//debug($param);
+        $buyinfo    = $this->load('buyer')->getBuyList($userId, $param, $page, 20);
+//debug($buyinfo);
+        $pager      = $this->pager($buyinfo['total'], 20);
+        $pageBar    = empty($buyinfo['rows']) ? '' : getPageBar($pager);
+        $saleList   = $this->load('sale')->getSaleListBuyer(8);
         $this->set('param',$param);
-        $this->set('buyinfo',$buyinfo['data']);
-        $this->set('crmstate', C('CRMSTATE'));
+        $this->set('buyinfo',$buyinfo['rows']);
         $this->set('pageBar', $pageBar);
 		$this->set('saleList',$saleList);
         $this->display();
@@ -137,6 +70,7 @@ class BuyerAction extends AppAction
 		$this->set('brand',$brand);
 		$this->display();
 	}
+
 	/**
 	* 我的出售
 	* @author	haydn
@@ -168,55 +102,7 @@ class BuyerAction extends AppAction
         $this->set('search',$search);
 		$this->display();
 	}
-	/**
-	* 我的出售详细
-	* @author	hyand
-	* @since	2016-03-02
-	* @return	void 
-	*/
-	public function mysellContent()
-	{
-		$saleType	= array('1' => '出售','2' => '许可','3' => '出售+许可' );
-		$number 	= $this->input('number','int');
-		$class		= $this->input('class','string');
-		$userInfoId = $this->userInfo['id'];
-		$search		= array('number' => $number,'class' => $class);
-		$storeNum	= $this->load('collect')->censusBrand($userInfoId,$number);//收藏数
-		$lookNum	= $this->load('browse')->browseCount($number,$class);//浏览数
-		$data		= $this->load('sale')->getSellList($userInfoId,$search);
-		$list		= $this->load('buyer')->getMysellContent($userInfoId,$search);
-		$this->set('data',$data);
-		$this->set('status',$this->status);
-		$this->set('storeNum',$storeNum);
-		$this->set('lookNum',$lookNum);
-		$this->set('saleType',$saleType);
-		$this->set('list',$list);
-		$this->display();
-	}
-	/**
-	 * 已买到商标
-	 * @author	martin
-	 * @since	2016/3/1
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	public function tradeList()
-	{
-		$userId			= $this->userInfo['id'];
-		$param			= $this->getFormData();
-		$param['page']	= $this->input('page','int');
-		$param['limit']	= $this->rowNum;
-		$buyinfo		= $this->load('buyer')->getClinchBrandInfo($userId,$param);
-        $pager			= $this->pager($buyinfo['total'], $this->rowNum);
-        $pageBar		= empty($buyinfo['rows']) ? '' : getPageBar($pager);
-		$this->set('param',$param);
-		$this->set('data',$buyinfo);
-		$this->set('search',$param);
-		$this->set('pageBar',$pageBar);
-		$this->set('crmstate', C('CRMSTATE'));
-		$this->display();
-	}
+
 	/**
 	 * 导出我的出售
 	 * @author	haydn
@@ -241,65 +127,7 @@ class BuyerAction extends AppAction
 		excelForm($http);
 	}
 
-    /**
-     * 删除我的出售
-     * @author	Alexey
-     * @since	2016/4/1
-     * @access	public
-     * @return	void
-     */
-    function delMysell(){
 
-		$data = array(
-			'uid'           => $this->userInfo['id'],
-			'number'        => $this->input('number','text'),
-		);
-        $res = $this->load('buyer')->delMysell($data);
-        echo $res;
-
-    }
-
-	 /**
-     * 修改出售价格
-     * @author	martin
-     * @since	2016/4/5
-     * @access	public
-     * @return	void
-     */
-    public function editPrice()
-	{
-		$params['price']		= $this->input("price","int");
-		$params['type']			= $this->input("type","int");
-		$params['saleid']		= $this->input("saleid","int");
-		$data					= $this->load('salecontact')->editSalePrice($params);
-		echo json_encode($data);exit;
-    }
-
-	/**
-	 * 个人删除商标
-	 * @author	martin
-	 * @since	2016/4/5
-	 * @access	public
-	 * @return	void
-	 */
-	public function history()
-	{
-		
-		$userId				= $this->userInfo['id'];
-		$search				= $this->getFormData('buyermysell');
-		$search['page']		= $this->input("page","int");
-		$search['pagesize']	= $this->rowNum;
-		$data				= $this->load('salehistory')->getHistoryPage($userId,$search);
-		$pager   			= $this->pager($data['total'], $this->rowNum);
-        $pageBar 			= empty($data['rows']) ? '' : getPageBar($pager);
-        $this->set('data',$data);
-        $this->set('pager',$pager);
-        $this->set('pageBar',$pageBar);
-        $this->set('status',$this->status);
-        $this->set('search',$search);
-		$this->display();
-
-	}
     /**
      * 我的求购
      * @author    alexey

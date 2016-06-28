@@ -16,14 +16,14 @@
               <header class="form-box to_buy">
                 <form class="form-inline">
 				  <div class="form-group">
-					<div class="task-option">
+					<!-- <div class="task-option">
                         <select name="" id="state">
                             <option value="0">请选择</option>
                             <? foreach($crmstate as $key => $item) { ?>
                             <option value="<?=$key?>"><?=$item?></option>
                             <? } ?>
                         </select>
-					</div>
+					</div> -->
 				</div>
                   <div class="form-group form-inline">
                     <input type="text" class="form-control input-sm" placeholder="" value="<?=$param['startdate']?>"  id="startdate" onClick="calendar.show({ id: this })">
@@ -45,9 +45,8 @@
                   <thead>
                     <tr role="row">
                       <th>日期</th>
-                      <th>求购类型</th>
+                      <th>类型</th>
                       <th>需求内容</th>
-                      <th>状态</th>
                       <th>操作</th>
                     </tr>
                   </thead>
@@ -55,13 +54,10 @@
 
                   <? foreach ($buyinfo as $item) { ?>
                   <tr>
-                      <td><? echo date('Y-m-d', $item['dateline']);?></td>
-                      <td><?=$item['pttype']?></td>
-                      <td><? if($item['tel']!='' && strstr($item['remarks'],$item['tel'])){echo $item['remarks'];}else{echo $item['remarks']."&nbsp; 联系电话:".$item['tel'];}?></td>
-                      <td>
-                          <?=$item['state']?>
-                      </td>
-                      <td><a href="/buyer/myview/?id=<?=$item['id'] ?>" type="button" class="btn btn-gray btn-xs">详情</a></td>
+                      <td><? echo date('Y-m-d', $item['recorddate']);?></td>
+                      <td>求购</td>
+                      <td><? if($item['mobile'] != '' && strstr($item['remarks'],$item['mobile'])){echo $item['remarks'];}else{echo $item['remarks']."&nbsp; 联系电话:".$item['mobile'];}?></td>
+                      <td><a href="/buyer/myview/?id=<?=$item['aid'] ?>" type="button" class="btn btn-gray btn-xs">详情</a></td>
                   </tr>
                   <? } ?>
                 </tbody>

@@ -4,7 +4,7 @@ return array(
 			'name'	=>'我的服务',
 			'icon'	=>'icon-book',
 			'child'	=> array(
-				array('title'=>'我的需求', 'url'=>'/buyer/index/',),
+				//array('title'=>'我的需求', 'url'=>'/buyer/index/',),
 				array('title'=>'我的收藏', 'url'=>'/collect/trade/',),
 				array(
 					'title'=>'我的求购', 

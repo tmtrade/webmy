@@ -211,12 +211,7 @@ class SaleModule extends AppModule
 	 */
 	public function getSaleListBuyer($num)
 	{
-		$r['limit']		= $num;
-		$r['eq']		= array('status'=>1);
-		$data			= $this->import('sale')->findAll($r);
-		foreach($data['rows'] as &$v){
-			$v['trade']	= $this->load('trademark')->details($v['number'],$v['class']);
-		}
+		$data = $this->importBi('trade')->getHotTm(null, $num);
 		return $data;
 	}
 }

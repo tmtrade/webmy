@@ -79,8 +79,8 @@
             <span class="float-left">热门商标</span>
         </header>
 		<ul class="list-inline to_buy_div">
-		<? foreach($saleList['rows'] as $item){ ?>
-			<li><div class="to_buy_img"><a href="<?=$item['trade']['yzc_url'] ?>" target="_blank"><img src="<?=$item['trade']['imgUrl'] ?>" onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'"/></a></div></li>
+		<? foreach($saleList as $item){ ?>
+			<li><div class="to_buy_img"><a href="<?=$item['viewUrl'] ?>" target="_blank"><img src="<?=$item['imgUrl'] ?>" onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'"/></a></div></li>
 		<? } ?>
 		</ul>
 		</section>

@@ -9,6 +9,6 @@ $config  = array(
 	'6' => array('url' => 'http://2.t.chofn.net/', 'token' => '*'),		//商标系统服务接口
 	'7' => array('url' => 'http://api.chofn.net/', 'token' => '*'),	//专利系统服务接口
 	'8' => array('url' => 'http://api.chofn.net/', 'token' => '*'),	//超凡网服务接口
-	'9' => array('url' => 'http://tr2.chofn.net/', 'token' => '*'),	//超凡网服务接口
+	'9' => array('url' => 'http://tr2.chofn.net/', 'token' => '*'),	//一只蝉后台接口
 	);
 ?>

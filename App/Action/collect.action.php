@@ -11,47 +11,6 @@
 class CollectAction extends AppAction
 {
 	/**
-	 * 我的收藏商标-竞手商标
-	 * @author	Edmund
-	 * @since	2016/1/28
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	public function index()
-	{
-		$userId			= $this->userInfo['id'];
-
-        $param['page']	= $this->input("page","int");
-        $param['limit']	= $this->rowNum;
-		$search			= $this->getFormData();
-        $param['user']	= $userId;
-
-        $proposerList	= $this->load("collect")->getProposerBuyCollect($userId);
-        $classList		= $this->load("collect")->getClassBuyCollect($userId);
-        //$statusList		= $this->load("collect")->getStatusBuyCollect($userId);
-        $statusList = array();
-
-		$data			= $this->load("collect")->getPageListCollect($param, $search);
-        $pager			= $this->pager($data['total'], $this->rowNum);
-        $pageBar		= empty($data['rows']) ? '' : getPageBar($pager);
-		
-		//$getSrouceCount	= $this->load("collect")->getSrouceCount($userId);
-
-		$this->set('data',$data);
-		$this->set('proposerList',$proposerList);
-		$this->set('classList',$classList);
-		$this->set('statusList',$statusList);
-		$this->set('classnew', C('SecondStatus'));
-		$this->set('classDiff',array_diff(C('CLASSNEW'), $classList));
-		$this->set('pageBar',$pageBar);
-		$this->set('search',$search);
-		$this->set('getSrouceCount',$getSrouceCount);
-		
-		
-		$this->display();
-	}
-	/**
 	 * 我的收藏商标-交易商标
 	 * @author	Edmund
 	 * @since	2016/1/28
@@ -67,6 +26,7 @@ class CollectAction extends AppAction
         $param['limit']	= $this->rowNum;
 		$search			= $this->getFormData();
         $param['user']	= $userId;
+
         $saleStatusList	= $this->load("collect")->getSaleStatusList($userId);
  
 		$data			= $this->load("collect")->getPageListCollectTrade($param, $search);  

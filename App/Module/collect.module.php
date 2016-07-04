@@ -23,58 +23,7 @@ class CollectModule extends AppModule
 		'trademark'		=> 'trademark',
 		'statusnew'		=> 'statusnew',
 		);
-	/**
-	 * 获取收藏商标
-	 * @author	martin
-	 * @since	2016/1/28
-	 *
-	 * @access	public
-	 * @param	array	$param	参数
-	 * @return	array	关注商标列表
-	 */
-	public function getPageListCollect($param , $search)
-	{
-		$r['eq']		= array('userId' => $param['user']);
-		$r['page']		= $param['page'];
-		$r['limit']		= $param['limit'];
 
-		if(!empty($search['proposer'])){
-			$r['eq']['pid'] = $search['proposer'];
-		}
-		if(!empty($search['class'])){
-			$r['eq']['class'] = $search['class'];
-		}
-		if(!empty($search['status'])){
-			$statuskey	= 'status'.$search['status'];
-			$r['eq'][ $statuskey ] = 1;
-		}
-		if(!empty($search['keyword'])){
-			$r['raw'] = "(name like '%".$search['keyword']."%' or trademark='".$search['keyword']."')";
-		}
-		$r['order']		= array('apply_date' => $search['regdate'],'tid' => 'asc');
-		$r['group']		= array('trademark' => 'asc');
-		$r['eq']['source']		= 2;
-		$data			= $this->import('collect')->findAll($r);
-
-		foreach($data['rows'] as $key => $item){
-			$trademark						= $this->load('trademark')->details($item['trademark'],$item['class']);
-			$data['rows'][$key]['trade']	= $trademark;
-			//获取商标的出售信息
-			$pricechange					= $this->load('changeprice')->getChangeInfo($item['trademark']);
-			if($pricechange!= false){
-				$data['rows'][$key]['sale']	= $pricechange;
-			}else{
-				$data['rows'][$key]['sale']	= $this->load('sale')->getSaleInfo($item['trademark']);
-			}
-			$data['rows'][$key]['second']	= $this->SecondStatusValue($item);
-			
-			$deal							= $this->load('userdeal')->getInfoOne($param['user'],$item['tid'],2);
-			$data['rows'][$key]['isdeal']	= $deal == true ? 1 : 0;
-
-			$data['rows'][$key]['butt']		= $this->button($deal, $item,$trademark);
-		}
-		return $data;
-	}
 	/**
 	 * 获取收藏商标-交易
 	 * @author	martin
@@ -108,43 +57,29 @@ class CollectModule extends AppModule
 			$s['eq'] 		= array('status' => $search['status'] );
 		}
 		
-		$data				= $this->import('sale')->findAll($s);
-		
-
+		$data				= $this->import('sale')->findAll($s);		
+		$strNumber 			= implode(',', arrayColumn($data['rows'], 'number'));
+		$imgList 			= $this->importBi('trade')->getSaleImg($strNumber);
 		foreach($data['rows'] as &$item){
-			$trademark		= $this->load('trademark')->details($item['number'],$item['class']);
-			$item['trade']	= $trademark;
+			$trademark			= $this->load('trademark')->details($item['number'],$item['class']);
+			$item['trade']		= $trademark;
 			//获取商标的出售信息
-			$pricechange	= $this->load('changeprice')->getChangeInfo($item['number']);
+			$pricechange		= $this->load('changeprice')->getChangeInfo($item['number']);
+
 			if($pricechange!= false){
 				$item['sale']	= $pricechange;
 			}else{
 				$item['sale']	= $this->load('sale')->getSaleInfo($item['number']);
 			}
+
 			$secode				= $this->load('secondstatus')->getTwoDetails($item['number']);
-			$item['second']	= $this->SecondStatusValue($secode);
+			$item['second']		= $this->SecondStatusValue($secode);
+			$item['imgUrl']		= empty($imgList[$item['number']]) ? '' : $imgList[$item['number']];
 		}
+
 		return $data;
 	}
-	/**
-	 * 获取商标总数 竞手-交易
-	 * @author	Edmund
-	 * @since	2016/1/28
-	 *
-	 * @access	public
-	 * @param	array	$param	参数
-	 * @return	array	销售商标详情
-	 */		
-	public function getSrouceCount($userId)
-	{	
-		$r['eq']		= array('userId' => $userId,'source' => 2);
-		$r['group']		= array('trademark' => 'asc');
-		$data['trade']	= $this->import('usercollect')->count($r);
-		$data['trade'] 	= empty($data['trade']) ? 0 : $data['trade'];
-		$data['sale']	= $this->getTradeCountagain($userId);
-		$data['sale']   = empty($data['sale']) ? 0 : $data['sale'];
-		return $data;
-	}
+
 	/**
 	 * 获取交易商标总数
 	 * @author	Edmund
@@ -185,7 +120,6 @@ class CollectModule extends AppModule
 		return $data;
 	}
 
-	
 	/**
 	 * 判断商标的去异议、去撤三、去无效
 	 * @author	martin
@@ -494,6 +428,7 @@ class CollectModule extends AppModule
 		}
 		return $i;
 	}
+	
 	/**
 	 * 收藏申请人的商标【根据申请人批量收藏】
 	 * @author	martin

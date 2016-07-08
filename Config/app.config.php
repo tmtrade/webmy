@@ -12,7 +12,7 @@ define('SEC', 180);//验证码有效时间
 define('USER_CENTRE', 'http://my.test.chofn.net/');//用户
 define('CRM_URL', 'http://demo.chofn.com:88/');
 define('CRM_EXPORT','http://crmwin.chofn.net/Api/jsontoexcel.php');
-
+define('SELLER_URL', 'http://seller.chofn.net/');
 //API KEY
 define('TRADE_MY_KEY', 'JyZyZcXmChOfN2016ZxWlQkFkEyYhZx');
 ?>

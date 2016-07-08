@@ -102,8 +102,12 @@
 			checkCode();
         });
     });
+    var dl_button = true;
 	//给新邮箱发送验证码
 	$("#dl_fsmm").click(function(){
+	    if(!dl_button){
+		return false;
+	    }
 		_email  = $("#email").val();
 		if($('#dl_fsmm').css("color") =='rgb(51, 51, 51)'){
 			return false;
@@ -116,6 +120,7 @@
 			async: true,
             success: function(data){
                 if (data.code == 1){
+		    dl_button = false;
                     $('#dl_fsmm').html('邮箱验证码已发送');
 					$('#dl_fsmm').removeClass('btn-danger').addClass('btn-default');
                     timer(120, $("#dl_fsmm"), '发送邮箱验证码');
@@ -170,6 +175,7 @@
 			 if(count > -1){
 				 timer(count, obj, title);
 			 }else{
+				dl_button = true;
 				obj.text(title);
 				$('#dl_fsmm').removeClass('btn-default').addClass('btn-danger');
 			 }

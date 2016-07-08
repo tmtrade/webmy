@@ -137,13 +137,17 @@ class LoginAction extends AppAction
 	* @return   void
 	*/
 	public function logout()
-	{
+	{   
 		$callback  = $this->input('callback', 'string', '');
+		$source = Session::get("source");
 		LoginAuth::logout();
 		if( !empty($callback) ){
 			$this->verifyLog();
 		}else{
-			$this->redirect('', '/index/');
+		if($source==1){
+		    $this->redirect('', SELLER_URL);
+		}
+		    $this->redirect('', '/index/');
 		}
 
 	}

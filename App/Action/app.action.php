@@ -40,9 +40,9 @@ abstract class AppAction extends Action
 			'test'	=> '*',
 
 		);
-
-
-
+		if(strpos($_SERVER['HTTP_REFERER'],SELLER_URL)!==false){ //如果是出售者平台过来的记录来源
+		    Session::set("source",1);
+		}
 		$allow  = false;
 		$mod	= $this->mod;
 		if ( isset($mods[$mod]) ) {

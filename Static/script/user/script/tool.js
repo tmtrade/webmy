@@ -167,6 +167,7 @@ function delteUserCook(){
 	delCookie(uckeystr);
 	delCookie(ucnamestr);
 	delCookie(ucmobile);
+	delCookie(ucid);
 }
 /*---cook操作---*/
 function addCookie(objName,objValue,objHours){

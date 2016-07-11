@@ -17,6 +17,7 @@ var config	 	= new Array();
 var uckeystr 	= 'uc_ukey';
 var ucnamestr	= 'uc_nickname';
 var ucmobile 	= 'uc_mobile';
+var ucid 	= 'uc_identify';
 var validTime	= 36000;
 var isDelay	 	= false;
 var ucConfig 	= {
@@ -87,7 +88,7 @@ var ucUser = {
 			success 	: function(json){  
 				$.each(json,function(i,n){
 					if(n.ukey){
-						addUserCook(n.ukey,n.nickname,n.usermobile);
+						addUserCook(n.ukey,n.nickname,n.usermobile,n.id);
 						ucLoginTemp.setLoginTemp();
 					}else{
 						delteUserCook();					

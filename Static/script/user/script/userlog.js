@@ -82,7 +82,7 @@ var ucLoginTemp = {
 			success 	: function(json){  
 				$.each(json,function(i,n){
 					if(n.ukey){
-						addUserCook(n.ukey,n.nickname,n.usermobile);
+						addUserCook(n.ukey,n.nickname,n.usermobile,n.id);
 						ucLoginTemp.setLoginTemp();
 					}else{
 						delteUserCook();					

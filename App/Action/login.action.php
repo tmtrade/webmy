@@ -199,7 +199,7 @@ class LoginAction extends AppAction
 		$cookid = getUserKey();
 		if( !empty($cookid) ){
 			$array	= $this->load('login')->getTokenUser();
-			$data	= array('ukey' => $cookid,'nickname' => $array['specname'],'usermobile' => $array['mobile']);
+			$data	= array('ukey' => $cookid,'nickname' => $array['specname'],'usermobile' => $array['mobile'],'id'=>$array['id']);
 		}
 		return $data;
 	}

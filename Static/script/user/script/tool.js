@@ -149,7 +149,7 @@ function getError(code){
 	return msgJs;	
 }
 //设置用户信息cook
-function addUserCook(key,name,utel,times){
+function addUserCook(key,name,utel,uid,times){
 	times = times ? times : validTime;
 	addCookie(uckeystr,key,times);
 	if(name){
@@ -157,6 +157,9 @@ function addUserCook(key,name,utel,times){
 	}
 	if(utel){
 		addCookie(ucmobile,utel,times);
+	}
+	if(uid){
+		addCookie(ucid,uid,times);
 	}
 }
 //删除用户信息cook

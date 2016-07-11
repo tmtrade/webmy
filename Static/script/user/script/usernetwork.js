@@ -55,7 +55,7 @@ var ucNetwork = {
 				$.each(json,function(i,n){
 					msg = getError(n.code);
 					if(n.ukey){
-						addUserCook(n.ukey,n.nickname,n.usermobile);
+						addUserCook(n.ukey,n.nickname,n.usermobile,n.id);
 					}
 					ucCode = n.code;
 				});
@@ -125,7 +125,7 @@ var ucNetwork = {
 			success 	: function(json){  
 				$.each(json,function(i,n){
 					if(n.code==1 && n.ukey){
-						addUserCook(n.ukey,n.nickname,n.usermobile);
+						addUserCook(n.ukey,n.nickname,n.usermobile,n.id);
 						window.location.reload();
 					}
 				});
@@ -151,7 +151,7 @@ var ucNetwork = {
 			success 	: function(json){  
 				$.each(json,function(i,n){
 					if(n.ukey){
-						addUserCook(n.ukey,n.nickname,n.usermobile);
+						addUserCook(n.ukey,n.nickname,n.usermobile,n.id);
 					}else{
 						delteUserCook();					
 					}

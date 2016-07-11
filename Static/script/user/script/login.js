@@ -199,7 +199,7 @@ function uc_logcode(account,pword){
 		success 	: function(json){  
 			$.each(json,function(i,n){
 				if(n.code==1 && n.ukey){
-					addUserCook(n.ukey,n.nickname,n.usermobile,validTime);
+					addUserCook(n.ukey,n.nickname,n.usermobile, n.id,validTime);
 				}
 				ucCode = n.code;
 			});
@@ -228,7 +228,7 @@ function uc_loginfo(account,pword,remind){
 		success 	: function(json){  
 			$.each(json,function(i,n){
 				if(n.ukey){
-					addUserCook(n.ukey,account,n.usermobile,validTime);
+					addUserCook(n.ukey,account,n.usermobile, n.id,validTime);
 				}
 				msg = getError(n.code);
 				$('#eTips').html(_iconE+msg);

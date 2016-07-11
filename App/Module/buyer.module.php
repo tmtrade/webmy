@@ -36,11 +36,10 @@ class BuyerModule extends AppModule
 		$search['id'] 	= $list;
 		$search['type'] = empty($search['type']) ? array() : array($search['type']);
         $cacheKey       = 'network_'.md5(serialize($search));
-        if ( empty($this->com('redisHtml')->get($cacheKey)) ){
+	$json = $this->com('redisHtml')->get($cacheKey);
+        if ( empty($json) ){
             $json = $this->importBi('crm')->getNetwork($search);
             $this->com('redisHtml')->set($cacheKey, $json, 600);
-        }else{
-            $json = $this->com('redisHtml')->get($cacheKey);
         }
 
 		return empty($json['data']) ? array() : $json;

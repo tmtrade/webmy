@@ -26,8 +26,11 @@ class IndexAction extends AppAction
 		    $userInfoId = $this->userInfo['id'];
 		    $data		= $this->load("user")->getInfoById( $userInfoId );
 		    $this->set('data', $data);
+			$this->display($html);
+		}else{
+			$this->redirect('', SELLER_URL);
 		}
-		$this->display($html);
+
 	}
 }
 ?>

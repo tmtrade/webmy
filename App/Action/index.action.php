@@ -23,14 +23,11 @@ class IndexAction extends AppAction
 	{
 		$html = $this->isLogin ? '/user/user.main.html' : 'index/index.index.html';
 		if($html=="/user/user.main.html"){
-		    $userInfoId = $this->userInfo['id'];
-		    $data		= $this->load("user")->getInfoById( $userInfoId );
-		    $this->set('data', $data);
-			$this->display($html);
-		}else{
-			$this->redirect('', SELLER_URL);
+			$userInfoId = $this->userInfo['id'];
+			$data		= $this->load("user")->getInfoById( $userInfoId );
+			$this->set('data', $data);
 		}
-
+		$this->display($html);
 	}
 }
 ?>

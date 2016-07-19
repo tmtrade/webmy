@@ -158,7 +158,7 @@ class RegisterModule extends AppModule
     	$atype 				= $cateId == 2 ? 'tel' : 'email';
     	$post['type'] 		= 1;//业务类型
     	$post['source'] 	= 0;//来源站点（0：后台查标[.COM] 2：在线咨询[.COM]  4：400电话咨询）
-		$post['subject'] 	= '知友验证通过用户';//注册名称
+		$post['subject'] 	= '蝉窝验证通过用户';//注册名称
 		$post['sid'] 		= !empty($_GET['sid']) ? $_GET['sid'] : '';
 		$post['area'] 		= !empty($_GET['area']) ? $_GET['area'] : '';
 		$post[$atype] 		= $account;

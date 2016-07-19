@@ -391,7 +391,7 @@ class UserAction extends AppAction
 		$this->set('code' ,$pass);
 		$this->set('url' ,$url);
 		$content	= $this->fetch('user/email.template.html');
-		$res		= $this->load('passport')->sendEmail($email, '更换邮箱验证码', $content,'', '知友');
+		$res		= $this->load('passport')->sendEmail($email, '更换邮箱验证码', $content,'', '蝉窝');
 
 		//$res		= $this->load('passport')->RegEmailUser($email,4);//设置验证码
 		if (isset($res['code']) && $res['code'] == 1){
@@ -538,7 +538,7 @@ class UserAction extends AppAction
 				$this->set('code' ,$pass);
 				$this->set('url' ,$url);
 				$content	= $this->fetch('user/email.template.html');
-				$res		= $this->load('passport')->sendEmail($account, '邮箱验证码', $content,'', '知友');
+				$res		= $this->load('passport')->sendEmail($account, '邮箱验证码', $content,'', '蝉窝');
 			}
 			if (isset($res['code']) && $res['code'] == 1){
 				$this->import('verify')->add($account, $pass, $m);

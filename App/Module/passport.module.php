@@ -65,7 +65,7 @@ class PassportModule extends AppModule
         $msgTemp	= C('MSG_TEMPLATE');
         $content	= sprintf($msgTemp['valid'], $pass);
 		*/
-        $res		= $this->importBi('Message')->sendMail($email, '更换邮箱验证码', $content,$name, '知友');
+        $res		= $this->importBi('Message')->sendMail($email, '更换邮箱验证码', $content,$name, '蝉窝');
 		
 		
 		if(isset($res['code']) && $res['code'] == 1){

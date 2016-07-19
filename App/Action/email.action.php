@@ -4,7 +4,7 @@ class EmailAction extends AppAction
 {
 	public function __construct()
 	{
-		$title = "商标类别注释 - 知友";
+		$title = "商标类别注释 - 蝉窝";
 		$this->set("title", $title);
 	}
 	/**
@@ -44,7 +44,7 @@ class EmailAction extends AppAction
 		if ($content != "" && self::validate_email($email)) {
 
 			//import("@.Extend.Tool.Verify");
-			$subject  = "知友 - 用户意见反馈";
+			$subject  = "蝉窝 - 用户意见反馈";
 			$from     = $email;
 			$html     = "<div>" . $content . "</div>";
 			$fromname = "游客";

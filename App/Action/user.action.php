@@ -10,6 +10,7 @@
 */
 class UserAction extends AppAction
 {
+	public $pageTitle   = "基本信息 - 一只蝉个人中心";
 	/**
 	* 引用业务模型
 	*/

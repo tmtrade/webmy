@@ -20,6 +20,8 @@ abstract class AppAction extends Action
 	public $isLogin     = false;
 
 	public $token;
+	
+	public $pageTitle   = "个人中心 - 一只蝉";
 	/**
 	* 前置操作(框架自动调用)
 	* @author	void
@@ -61,6 +63,7 @@ abstract class AppAction extends Action
 		$ucmenu = require ConfigDir.'/menu.config.php';
 		$this->set('ucmenu',$ucmenu);
 		$this->set('current_url', '/'.$this->mod .'/' . $this->action.'/');
+		$this->set('title',$this->pageTitle);
 	}
 
 	/**

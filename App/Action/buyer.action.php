@@ -10,7 +10,7 @@
 */
 class BuyerAction extends AppAction
 {
-    public $pageTitle   = "我的求购 - 一只蝉个人中心";
+    public $pageTitle   = "我的求购 - 蝉窝";
 	/**
 	* 我的求购列表
 	* @author	martin

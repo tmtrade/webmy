@@ -21,7 +21,7 @@ abstract class AppAction extends Action
 
 	public $token;
 	
-	public $pageTitle   = "个人中心 - 一只蝉";
+	public $pageTitle   = "蝉窝 - 一只蝉";
 	/**
 	* 前置操作(框架自动调用)
 	* @author	void

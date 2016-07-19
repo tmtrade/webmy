@@ -10,7 +10,7 @@
  */
 class CollectAction extends AppAction
 {
-    public $pageTitle   = "我的收藏 - 一只蝉个人中心";
+    public $pageTitle   = "我的收藏 - 蝉窝";
 	/**
 	 * 我的收藏商标-交易商标
 	 * @author	Edmund

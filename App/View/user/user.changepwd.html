@@ -26,8 +26,8 @@
                     <p>
                       <p>请输入新密码：</p>
                       <input type="password"  id="usrName_popups"  class="form-control input-sm" >
-                      <font class="red" id="new_pass"></font></p>
-                    <p><a href="javascript:;" id='changepwd' class="btn btn-success btn-sm btn-block" style="width: 153px;">确认提交</a></p>
+                      <font class="red" id="new_pass"></font><span class="showpwd">隐藏</span></p>
+                    <p><a href="javascript:;" id='changepwd' class="btn btn-success btn-sm btn-block" style="width: 153px;background-color: #CCC">确认提交</a></p>
                   </div>
                 </form>
               </header>
@@ -53,6 +53,7 @@
   <!--main content end--> 
 </section>
 <script type="text/javascript">
+	var is_submit = false;
     $(function(){
         //手机号验证
         var reg = /^0?(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/;
@@ -70,12 +71,26 @@
 	$(document).on('click', "#sendCode", function(){
 		var mobile = "<?=$userInfo['mobile']?>";
 		if(mobile){
+			$('#changepwd').css('background-color','#78CD51');
+			is_submit = true;
 			sendCode(mobile);
 		}else{
 			layer.msg('请绑定手机号');
 		}
 	});
+	//显示-隐藏
+	$(".showpwd").click(function(){
+		if($("#usrName_popups").prop("type") == 'text'){
+			$("#usrName_popups").prop("type","password");
+			$(this).text("显示");
+		}else{
+			$("#usrName_popups").prop("type","text");
+			$(this).text("隐藏");
+		}
+	})
+	//提交
 	$('#changepwd').click(function(){
+		if(is_submit==false) return false;
 		var oldmess	= checkYzm($('#old'));
 		if(oldmess == false){ return false; }
 		var pwd = checkPasswordHtml($('#usrName_popups'));

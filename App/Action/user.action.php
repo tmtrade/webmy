@@ -603,6 +603,28 @@ class UserAction extends AppAction
 		$this->myStaff();
 		$this->display();
 	}
+
+	/**
+	 * 重置密码
+	 */
+	public function resetPassword(){
+		$code = $this->input('code','string');
+		$new = $this->input('new','string');
+		//验证验证码
+		$rst = $this->load('verify')->getVerify($this->userInfo['mobile'],$code,2);
+		if($rst['code']==1){
+			//修改密码
+			$code	= $this->load('user')->resetpwd($this->userInfo['id'],$new);
+			if(!$code){
+				$msg = '修改密码失败';
+			}
+		}else{
+			$msg	= '验证码错误';
+			$code = 0;
+		}
+		$flag = array('code' => $code,'msg' => $msg);
+		$this->returnAjax($flag);
+	}
 }
 
 ?>

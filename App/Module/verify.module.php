@@ -107,7 +107,9 @@ class VerifyModule extends AppModule
 			if( $id > 0 ){
 				$this->load('register')->sendPassword($account,$password,$cateId,$smstemp);
 			}
-    	}
+    	}else{
+			$id = 10;//已发送
+		}
 		return $id;
     }
     /**

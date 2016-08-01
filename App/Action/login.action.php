@@ -236,8 +236,13 @@ class LoginAction extends AppAction
 			$msg	= '账号格式错误';
 		}else{
 			$id		= $this->load('verify')->sendCode($account,$cateId);
-			$code	= $id > 0 ? 1 : 0;
-			$msg	= $id > 0 ? '验证码发送成功' : '验证码发送失败';
+			if($id==10){
+				$code = 0;
+				$msg = '验证码已发送';
+			}else{
+				$code	= $id > 0 ? 1 : 0;
+				$msg	= $id > 0 ? '验证码发送成功' : '验证码发送失败';
+			}
 		}
 		$result = array('code' => $code,'msg' => $msg);
 		$this->setJson($result,$callback);

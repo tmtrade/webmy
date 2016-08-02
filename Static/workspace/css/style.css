@@ -3966,7 +3966,7 @@ ul.top-menu > li > a.user{     padding: 7px 15px; margin-top: -10px;}
 .dropdown-menu>li.counselor-btn button{ margin-right:10px; float:left; display:inline-block;}
 @media (max-width: 468px) {
 a.logo {
-	width:60px;
+	// width:60px;
 	height:55px;
 }
 .sidebar-toggle-box {
@@ -4028,4 +4028,7 @@ ul.sidebar-menu {
 .col_stab{width:33%;float:left;}
 @media (max-width: 800px) {
 .col_stab{width:100%;}
+}
+.btn-success{
+    border-color:#CCC !important; 
 }

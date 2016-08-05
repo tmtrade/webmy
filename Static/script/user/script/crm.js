@@ -1,5 +1,6 @@
 ﻿var crm = {
 	verifyCrmLog : function(){
+		/*
 		var	ObjJsonp 	= ucCode = '';
 		crmid  = '100001';
 		md5key = md5(crmkey+crmid);
@@ -16,9 +17,10 @@
 			 success	: function(json){
 				ObjJsonp = json;
 			 }
-		});
+		});*/
 	},
 	crmexit : function(){
+		/*
 		var	ObjJsonp 	= ucCode = ''; 
 		crmexiturl 		= crmkey + "&isexit=1&crmseid="+getCookie(CRMSESSID);
 		$.ajax({
@@ -34,7 +36,7 @@
 			 success	: function(json){
 				ObjJsonp = json;
 			 }
-		});
+		});*/
 	}
 }
 $(document).ready(function(e) {
@@ -46,10 +48,11 @@ $(document).ready(function(e) {
 		//console.log(crmNum);
 	},1);*/
 	$(document).on('click','#chaofan-mj-logcrmexit',function(){
-		crm.crmexit();
+		//crm.crmexit();
 	});
 });
 function setCrmLogIn(){
+	/*
 	letop = setInterval(function(){
 		crmUcNum 	= $('.chaofan-mj-crmuc').length;
 		logInNum 	= $('#chaofan-mj-login').length;
@@ -60,35 +63,35 @@ function setCrmLogIn(){
 		logHtml 	= ucConfig.setLogInHtml();
 		ucConfig.setLogIn(logHtml);
 		ucLoginTemp.setLoginTemp();
-	},500);
+	},500);*/
 }
 function verifyCrmLogCallback(obj){
 	//console.log(obj);
-	$.each(obj,function(i,n){
+	/*$.each(obj,function(i,n){
 		if(n['code'] == 1 && n['data']['crm_name']){
 			addCrmCookie(n['data']['crm_name'],n['data']['crm_sessid']);
 		}else{
 			deledCrmCookie();
 		}
 	});
-	setCrmLogIn();
+	setCrmLogIn();*/
 }
 function crmexitCallback(obj){
-	$.each(obj,function(i,n){
+	/*$.each(obj,function(i,n){
 		if(n['code'] == 1){
 			deledCrmCookie();
 			window.location.reload();
 		}else{
 			
 		}
-	});	
+	});	*/
 }
 
 function addCrmCookie(str1,str2){
-	addCookie(CRMNAME,str1,validTime);
-	addCookie(CRMSESSID,str2,validTime);
+	//addCookie(CRMNAME,str1,validTime);
+	//addCookie(CRMSESSID,str2,validTime);
 }
 function deledCrmCookie(){
-	delCookie(CRMNAME);
-	delCookie(CRMSESSID);
+	//delCookie(CRMNAME);
+	//delCookie(CRMSESSID);
 }

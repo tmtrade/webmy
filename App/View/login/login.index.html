@@ -105,14 +105,14 @@ $(function(){
 		
 	$('input[name="username"]').focus(function(){
 		uname = $.trim($(this).val());
-		if(uname=='邮箱/手机号'){
+		if(uname=='手机号'){
 			$(this).val('');
 		}	
 	});
 	$('input[name="username"]').blur(function(){
 		uname = $.trim($(this).val());
 		if(uname==''){
-			$(this).val('邮箱/手机号');
+			$(this).val('手机号');
 		}	
 	});
 	
@@ -390,7 +390,7 @@ $(function(){
 			</div>
 			<div class="homne_tc_user" style="margin-top:60px;">
 			<img src="<?=StaticDir?>special/images/home_tc1.png" width="43" height="38"/><!-- <input id="userNameId" type="text" value="" onfocus="if(this.value == '') this.value = ''" onblur="if(this.value =='') this.value = ''"/>	 -->
-			<input type="text" name="username" id="uemail" class="required user01" value="邮箱/手机号"/>
+			<input type="text" name="username" id="uemail" class="required user01" value="手机号"/>
 			</div>  
 			<div class="clearfix"></div>
 			<div class="homne_tc_user" style="margin-top:21px;">

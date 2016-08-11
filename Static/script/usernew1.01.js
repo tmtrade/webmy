@@ -280,12 +280,12 @@ function doLogin(){
 	ueaVal	= $.trim($('#uemail').val());
 	uepVal	= $.trim($('#upass').val());
 	if( ueaVal == '' ){
-		prompts('请输入邮箱或者手机号码',$('#usertxt'));
+		prompts('请输入手机号码',$('#usertxt'));
 		return false;
 	}
 	uType	= getUserType(ueaVal);
 	if(uType == 0){
-		prompts('请输入正确邮箱或者手机号码',$('#usertxt'));
+		prompts('请输入正确手机号码',$('#usertxt'));
 		return false;
 	}
 	if( uepVal == '' ){

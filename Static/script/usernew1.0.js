@@ -9,14 +9,14 @@ $(document).ready(function(e) {
 		ueaVal	= $.trim($('#uemail').val());
 		uepVal	= $.trim($('#upass').val());
 		if( ueaVal == '' ){
-			error1('请输入邮箱或者手机号码');
-			$('.usertxt').html('请输入邮箱或者手机号码');
+			error1('请输入手机号码');
+			$('.usertxt').html('请输入手机号码');
 			return false;
 		}
 		uType	= getUserType(ueaVal);
 		if(uType == 0){
-			error1('请输入正确邮箱或者手机号码');
-			$('.usertxt').html('请输入正确邮箱或者手机号码');
+			error1('请输入正确手机号码');
+			$('.usertxt').html('请输入正确手机号码');
 			return false;
 		}
 		if( uepVal == '' ){

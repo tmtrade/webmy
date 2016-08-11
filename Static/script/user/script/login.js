@@ -106,8 +106,8 @@ function uc_checkEmailForm()
 {
     var uemail  = $.trim($("#uemail").val());
     var upass   = $("#upass").val();
-    if (uemail == '' || uemail == '请填写邮箱或手机号'){
-        $('#eTips').html(_iconE+'请填写邮箱或手机号');
+    if (uemail == '' || uemail == '请填写手机号'){
+        $('#eTips').html(_iconE+'请填写邮手机号');
         $('#eTips').show();
         return false;
     }

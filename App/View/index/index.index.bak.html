@@ -71,8 +71,8 @@ $(function(){
 		$('#send1').click(function(){
 			/*var user = $('#username').val();
 			var pwd = $('#pwdname').val();
-			if(user == "邮箱/手机号"){
-				$('#usertxt').html('请输入邮箱/手机号').addClass('usertxt');
+			if(user == "手机号"){
+				$('#usertxt').html('请输入手机号').addClass('usertxt');
 			}else if(pwd == ""){
 				$('#usertxt').html('请输入登录密码').addClass('usertxt');;
 			}else{
@@ -125,14 +125,14 @@ $(function(){
 		
 	$('input[name="username"]').focus(function(){
 		uname = $.trim($(this).val());
-		if(uname=='邮箱/手机号'){
+		if(uname=='手机号'){
 			$(this).val('');
 		}	
 	});
 	$('input[name="username"]').blur(function(){
 		uname = $.trim($(this).val());
 		if(uname==''){
-			//$(this).val('邮箱/手机号');
+			//$(this).val('手机号');
 		}	
 	});
 	

@@ -22,28 +22,25 @@ class CollectAction extends AppAction
 	public function trade()
 	{
 		$userId			= $this->userInfo['id'];
-
+		$type = $this->input('type','int',1);
         $param['page']	= $this->input("page","int",1);
         $param['limit']	= $this->rowNum;
 		$search			= $this->getFormData();
         $param['user']	= $userId;
-
-        $saleStatusList	= $this->load("collect")->getSaleStatusList($userId);
- 		//商标列表
-		$data			= $this->load("collect")->getPageListCollectTrade($param, $search);  
-		$pager			= $this->pager($data['total'], $this->rowNum);
-        $pageBar		= empty($data['rows']) ? '' : getPageBar($pager);
+		$saleStatusList	= $this->load("collect")->getSaleStatusList($userId);
+		if($type==1){
+			//商标列表
+			$data			= $this->load("collect")->getPageListCollectTrade($param, $search);
+			$pager			= $this->pager($data['total'], $this->rowNum);
+			$pageBar		= empty($data['rows']) ? '' : getPageBar($pager);
+		}else{//打包列表
+			$data = $this->load('collect')->getPackageCollect($param);
+			$pager			= $this->pager($data['total'], $this->rowNum);
+			$pageBar		= empty($data['rows']) ? '' : getPageBar($pager);
+		}
 		//$getSrouceCount	= $this->load("collect")->getSrouceCount($userId);
 		$this->set('data',$data);
 		$this->set('pageBar',$pageBar);
-		//打包列表
-		$packages = $this->load('collect')->getPackageCollect($param);
-		$pager			= $this->pager($packages['total'], $this->rowNum);
-		$pageBar		= empty($packages['rows']) ? '' : getPageBar($pager);
-		$this->set('package',$packages);
-		$this->set('pageBar2',$pageBar);
-		var_dump($packages,$pageBar);
-
 		$this->set('saleStatusList',$saleStatusList);
 		$this->set('classnew', C('SecondStatus'));
 //		$this->set('classDiff',array_diff(C('CLASSNEW'), $classList));

@@ -18,5 +18,14 @@ $tbl['salehistory'] = array(
 	'dbId'		=> $dbId, 
 	'configFile'=> $configFile,
 );
-
+$tbl['packageItems'] = array(
+	'name'		=> $prefix.'package_items',
+	'dbId'		=> $dbId,
+	'configFile'=> $configFile,
+);
+$tbl['package'] = array(
+	'name'		=> $prefix.'package',
+	'dbId'		=> $dbId,
+	'configFile'=> $configFile,
+);
 ?>

@@ -23,25 +23,33 @@ class CollectAction extends AppAction
 	{
 		$userId			= $this->userInfo['id'];
 
-        $param['page']	= $this->input("page","int");
+        $param['page']	= $this->input("page","int",1);
         $param['limit']	= $this->rowNum;
 		$search			= $this->getFormData();
         $param['user']	= $userId;
 
         $saleStatusList	= $this->load("collect")->getSaleStatusList($userId);
- 
+ 		//商标列表
 		$data			= $this->load("collect")->getPageListCollectTrade($param, $search);  
 		$pager			= $this->pager($data['total'], $this->rowNum);
         $pageBar		= empty($data['rows']) ? '' : getPageBar($pager);
 		//$getSrouceCount	= $this->load("collect")->getSrouceCount($userId);
 		$this->set('data',$data);
-		
+		$this->set('pageBar',$pageBar);
+		//打包列表
+		$packages = $this->load('collect')->getPackageCollect($param);
+		$pager			= $this->pager($packages['total'], $this->rowNum);
+		$pageBar		= empty($packages['rows']) ? '' : getPageBar($pager);
+		$this->set('package',$packages);
+		$this->set('pageBar2',$pageBar);
+		var_dump($packages,$pageBar);
+
 		$this->set('saleStatusList',$saleStatusList);
 		$this->set('classnew', C('SecondStatus'));
-		$this->set('classDiff',array_diff(C('CLASSNEW'), $classList));
-		$this->set('pageBar',$pageBar);
+//		$this->set('classDiff',array_diff(C('CLASSNEW'), $classList));
+
 		$this->set('search',$search);
-		$this->set('getSrouceCount',$getSrouceCount);
+//		$this->set('getSrouceCount',$getSrouceCount);
 		//print_r($data);
 		$this->display();
 	}
@@ -141,19 +149,31 @@ class CollectAction extends AppAction
 	public function addtrademark()
 	{
 		$jsoncallback	= $_GET['jsoncallback'];
+		$type	= $this->input('type','int',1);
+		$package_id	= $this->input('package_id','int');
 		$data['number']	= $this->input('number','string');
 		$data['source']	= $this->input('source','int');
 		$data['ukey']	= $this->input('ukey','string');
-		if(empty($data['ukey'])){
-			$this->returnmess('emptyUkey',$jsoncallback);
-		}elseif(empty($data['number'])){
-			$this->returnmess('params',$jsoncallback);
+		//验证用户
+		if(empty($data['ukey'])) {
+			$this->returnmess('emptyUkey', $jsoncallback);
 		}
 		$userId			= $this->load('sessions')->getUserIdByCookie( $data['ukey'] );
 		if(empty($userId)){
 			$this->returnmess('emptyUser',$jsoncallback);
 		}
-		$output			= $this->load('collect')->addCollectTrademark( $data, $userId );
+		//判断收藏类型
+		if($type==1){
+			if(empty($data['number'])) {
+				$this->returnmess('params',$jsoncallback);
+			}
+			$output = $this->load('collect')->addCollectTrademark( $data, $userId );
+		}else{ // 打包商标
+			if(empty($package_id)) {
+				$this->returnmess('package',$jsoncallback);
+			}
+			$output = $this->load('collect')->addPackageCollection( $package_id, $userId );
+		}
 		echo $jsoncallback."('" . json_encode( $output ) . "')"; exit;
 	}
 	
@@ -169,19 +189,31 @@ class CollectAction extends AppAction
 	public function removetrademark()
 	{
 		$jsoncallback	= $_GET['jsoncallback'];
+		$type	= $this->input('type','int',1);
+		$package_id	= $this->input('package_id','int');
 		$data['number']	= $this->input('number','string');
 		$data['source']	= $this->input('source','int');
 		$data['ukey']	= $this->input('ukey','string');
-		if(empty($data['ukey'])){
-			$this->returnmess('emptyUkey',$jsoncallback);
-		}elseif(empty($data['number'])){
-			$this->returnmess('params',$jsoncallback);
+		//验证用户
+		if(empty($data['ukey'])) {
+			$this->returnmess('emptyUkey', $jsoncallback);
 		}
 		$userId			= $this->load('sessions')->getUserIdByCookie( $data['ukey'] );
 		if(empty($userId)){
 			$this->returnmess('emptyUser',$jsoncallback);
 		}
-		$output			= $this->load('collect')->removeCollectTrademark( $data, $userId );
+		//判断收藏类型
+		if($type==1){
+			if(empty($data['number'])) {
+				$this->returnmess('params',$jsoncallback);
+			}
+			$output = $this->load('collect')->removeCollectTrademark( $data, $userId );
+		}else{ // 打包商标
+			if(empty($package_id)) {
+				$this->returnmess('package',$jsoncallback);
+			}
+			$output = $this->load('collect')->removePackageCollection( $package_id, $userId );
+		}
 		echo $jsoncallback."('" . json_encode( $output ) . "')"; exit;
 	}
 	/**
@@ -257,6 +289,9 @@ class CollectAction extends AppAction
 				break;
 			case 'trade':
 				$mess = '商标不存在';
+				break;
+			case 'package':
+				$mess = '打包数据不存在';
 				break;
 			case 'emptyUser':
 				$mess = '用户不存在';

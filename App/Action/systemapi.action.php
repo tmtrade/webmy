@@ -94,14 +94,14 @@ class SystemApiAction extends RpcServer // extends Action//
      */
 	public function getCollectTrademark($params)
 	{
-		$keyarray	= array('uc_ukey', 'trademark', 'source', 'webname', 'key');
+		$keyarray	= array('uc_ukey', 'trademark', 'source', 'webname', 'key', 'type');
 		$websign	= array("usercenter" => '6b8736d9bcd0d9d8353f6d4ffa8a251a');
 		$this->checkParams($params, $keyarray, $websign);
 		extract($params);
 		$userId		= $this->load('sessions')->getUserIdByCookie($uc_ukey);
 		if ($userId == '') { return json_encode($this -> returnError('user'));die; }
 
-		$bool		= $this->load('collect')->getUserCollect($userId,$trademark, $source);
+		$bool		= $this->load('collect')->getUserCollect($userId,$trademark, $source,$type);
 		return $bool;
 	} 
 	

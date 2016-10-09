@@ -98,5 +98,9 @@ $tbl['userdeal'] = array(
     'dbId'        => $dbId, 
     'configFile'=> $configFile,
 );
-
+$tbl['collectpackage'] = array(
+	'name'		=> $prefix.'collect_package',
+	'dbId'		=> $dbId,
+	'configFile'=> $configFile,
+);
 ?>

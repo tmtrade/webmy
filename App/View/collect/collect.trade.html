@@ -62,12 +62,11 @@
                                         <a class="fl" href="<?=$item['trade']['yzc_url']?>" target="_blank">
                                             <img src="<?=$item['imgUrl']?>"  onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'" /></a>
                                         <div class="fl">
-                                            <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>）</p>
-                                            <p>申请人 :  <?=$item['trade']['proposerName']?> </p>
-                                            <p class="gray"><font  class="gray">商标状态：<? echo implode('/', $item['second']);?><font> 申请日：<?=$item['trade']['apply_date']?>   注册日：<?=$item['trade']['reg_date']?></p>
-                                            
+                                            <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类）</p>
                                             <? if (!empty($item['sale'])) {?>
-                                            <div class="coll_div"><p>授权方式：<?=$item['sale']['priceType']?></p><p>出售价格：<?=$item['sale']['price']?></p></div>
+                                            <div class="coll_div">
+                                                <p>出售价格：<?=$item['sale']['price']?></p>
+                                            </div>
                                             <? } ?>
                                         </div>
                                     </td>

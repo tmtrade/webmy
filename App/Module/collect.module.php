@@ -15,6 +15,9 @@ class CollectModule extends AppModule
 	 */
 	public $models = array(
         'collect'		=> 'collect',
+        'collectpackage'=> 'collectpackage',
+        'package'       => 'package',
+		'packageitems'  => 'packageitems',
 		'proposer'		=> 'proposer',
 		'second'		=> 'secondstatus',
 		'usercollect'	=> 'usercollect',
@@ -64,8 +67,8 @@ class CollectModule extends AppModule
 			$trademark			= $this->load('trademark')->details($item['number'],$item['class']);
 			$item['trade']		= $trademark;
 			//获取商标的出售信息
-			$pricechange		= $this->load('changeprice')->getChangeInfo($item['number']);
-
+//			$pricechange		= $this->load('changeprice')->getChangeInfo($item['number']);//暂时屏蔽, 收藏与一只蝉价格不一致
+			$pricechange = false;
 			if($pricechange!= false){
 				$item['sale']	= $pricechange;
 			}else{
@@ -488,27 +491,36 @@ class CollectModule extends AppModule
 	 * @param	int		$source	收入来源
 	 * @return	object  返回商标数据
 	 */
-	public function getUserCollect($userId, $trademark, $source)	
+	public function getUserCollect($userId, $trademark, $source,$type=1)
 	{
-		$source		= $source == 1 ? 1 : 2;
-		$r['eq']	= array(
-					'userId'	=> $userId,
-					'source'	=> $source,
-					);
-		if( !is_array($trademark) ){
-			$trademark	= array($trademark);
-		}
-		$r['group']	= array('trademark' => 'desc');
-		$r['id']	= array('id' => 'desc');
-		$r['in']	= array('trademark' => $trademark);
-		$r['limit']	= 10000;
-		$data		= $this->import('collect')->findAll( $r );
-		if($data['total'] == 0){ return array();}
-		$exits		= arrayColumn($data['rows'], 'trademark');
-
 		$output		= array();
-		foreach($trademark as $item){
-			$output[$item]	= in_array($item, $exits) ? 1 : 0;
+		if($type==1){
+			$source		= $source == 1 ? 1 : 2;
+			$r['eq']	= array(
+				'userId'	=> $userId,
+				'source'	=> $source,
+			);
+			if( !is_array($trademark) ){
+				$trademark	= array($trademark);
+			}
+			$r['group']	= array('trademark' => 'desc');
+			$r['id']	= array('id' => 'desc');
+			$r['in']	= array('trademark' => $trademark);
+			$r['limit']	= 10000;
+			$data		= $this->import('collect')->findAll( $r );
+			if($data['total'] == 0){ return array();}
+			$exits		= arrayColumn($data['rows'], 'trademark');
+			foreach($trademark as $item){
+				$output[$item]	= in_array($item, $exits) ? 1 : 0;
+			}
+		}else{ //打包
+			if(is_array($trademark)) $trademark = current($trademark);
+			if(!is_numeric($trademark)) return 0;
+			$r = array(
+				'eq'=>array('userId'=>$userId,'package_id'=>$trademark),
+			);
+			$count = $this->import('collectpackage')->count($r);
+			$output = $count?1:0;
 		}
 		return $output;
 	}
@@ -633,6 +645,93 @@ class CollectModule extends AppModule
 		$r['limit']	= 20000;
 		$count		= $this->import('usercollect')->findAll($r);
 		return $count;		
+	}
+
+	/**
+	 * 得到打包收藏数据
+	 * @param $param
+	 * @return array
+	 */
+	public function getPackageCollect($param)
+	{
+		//得到收藏的分页数据
+		$r['eq']			= array('userId' => $param['user']);
+		$r['order']			= array('created' =>'desc');
+		$r['page']			= $param['page'];
+		$r['limit']			= $param['limit'];
+		$r['col']			= array('package_id');
+		$data				= $this->import('collectpackage')->findAll($r);
+		if(empty($data['total']) ) { return array(); }
+		//得到详细信息
+		foreach($data['rows'] as &$item){
+			$item['count'] = 0;
+			$item['imgUrl'] = '';
+			$r = array();
+			$r['eq'] = array('id'=>$item['package_id']);
+			$r['col'] = array('id','title','price');
+			$rst = $this->import('package')->find($r);
+			//得到当前打包数据的详细信息
+			if($rst){
+				$r = array();
+				$r['eq'] = array('pkgId'=>$item['package_id']);
+				$r['col'] = array('number');
+				$rst1 = $this->import('packageitems')->find($r);
+				if($rst1){
+					$item['count'] = count($rst1);
+					//得到第一个的商标图片
+					$number = $rst1[0]['number'];
+					$img = $this->importBi('trade')->getSaleImg($number);
+					$item['imgUrl'] = empty($img[$number]) ? '' : ($img[$number]);
+				}
+			}
+		}
+		unset($item);
+		return $data;
+	}
+
+	/**
+	 * 添加打包收藏
+	 * @param $id
+	 * @param $userId
+	 * @return int
+	 */
+	public function addPackageCollection($id,$userId){
+		//检测是否存在
+		$r = array(
+			'eq'=>array('userId'=>$userId,'package_id'=>$id),
+		);
+		$count = $this->import('collectpackage')->count($r);
+		if($count) return array('type' => 3, 'mess' => '已收藏');
+		//添加收藏
+		$data = array(
+			'userId'=>$userId,
+			'package_id'=>$id,
+			'created'=>time(),
+		);
+		$bool = $this->import('collectpackage')->create($data);
+		if($bool > 0){
+			return  array('type' => 1, 'mess' => '收藏成功');
+		}else{
+			return  array('type' => 2, 'mess' => '收藏失败');
+		}
+	}
+
+	/**
+	 * 添加打包收藏
+	 * @param $id
+	 * @param $userId
+	 * @return int
+	 */
+	public function removePackageCollection($id,$userId){
+		$r = array(
+			'eq'=>array('userId'=>$userId,'package_id'=>$id),
+		);
+		$bool = $this->import('collectpackage')->remove($r);
+		if($bool){
+			return  array('type' => 1, 'mess' => '取消成功');
+		}else{
+			return  array('type' => 2, 'mess' => '取消失败');
+		}
 	}
 }
 ?>

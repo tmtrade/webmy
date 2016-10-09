@@ -158,27 +158,33 @@ function setSendPowtime(val){
 * c ：商标类别
 * source ：来源类别 1:交易；2：竞手
 */
-function collectTrademark(number, source, callback){
+function collectTrademark(number, source, callback,type){
 
 	var isLogin = popUp(popupObj);
 	if(isLogin == false){ 
 		$('#chaofan_js_code').val("cfjsCT('"+number+"', '"+source+"')");
 		return false;
 	}
+	if(typeof type=='undefined') type=1;
 	var _data ;
+	if(type==1){
+		_data = {'number':number, 'source' : source, 'ukey':ukey};
+	}else{ //打包
+		_data = {'package_id':number, 'type' : 2, 'ukey':ukey};
+	}
 	$.ajax({
 		type : "GET",
 		url  : HOST + '/collect/addtrademark/?'+configUrl,
 		dataType: 'jsonp',
 		jsonp: 'jsoncallback',
-		data:{'number':number, 'source' : source, 'ukey':ukey},
+		data:_data,
 		success: function (data) { 
 			callback(eval("("+data+")"));
 		},
 		error: function(){
 			callback( {'type':2,'mess':'关注失败！'} );
 		}
-	})
+	});
 	return true;
 }
 /****
@@ -186,16 +192,22 @@ function collectTrademark(number, source, callback){
 * c ：商标类别
 * source ：来源类别 1:交易；2：竞手
 */
-function deleteCollectTrademark(number, source, callback){
+function deleteCollectTrademark(number, source, callback,type){
 	var isLogin = popUp(popupObj);
 	if(isLogin == false){ return false; }
+	if(typeof type=='undefined') type=1;
 	var _data ;
+	if(type==1){
+		_data = {'number':number, 'source' : source, 'ukey':ukey};
+	}else{ //打包
+		_data = {'package_id':number, 'type' : 2, 'ukey':ukey};
+	}
 	$.ajax({
 		type : "GET",
 		url  : HOST + '/collect/removetrademark/?'+configUrl,
 		dataType: 'jsonp',
 		jsonp: 'jsoncallback',
-		data:{'number':number, 'source' : source, 'ukey':ukey},
+		data:_data,
 		success: function (data) { 
 			callback(data);
 		},

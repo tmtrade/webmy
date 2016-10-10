@@ -15,7 +15,7 @@ body { min-width: 320px; color: #000; }
 .whitebg { background: #fff; padding: 10px; }
 .green { color: #78CD51; }
 .text-right { text-align: right; }
-.form-box { padding: 15px 10px; border-bottom: 1px solid #ddd; }
+.form-box { padding: 15px 10px; border-bottom: 1px solid #ddd;background-color: #f2f2f2; }
 .form-group { margin: 5px; }
 .btn-del { background-color: #fff; border-color: #F00; color: #F00; }
 .btn-excel { background-color: #fff; border-color: #65c5e4; color: #65c5e4; }

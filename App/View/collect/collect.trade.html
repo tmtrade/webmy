@@ -15,71 +15,115 @@
     <? }else{ ?>
     <!----收藏-交易商标---->
     <section class="wrapper">
+        <ul class="hd-cg">
+            <li id="com1" class="cur" onclick="jc('com',1,2)">普通商品<em>12</em></li>
+            <li id="com2" onclick="jc('com',2,2)">打包商品<em>0</em></li>
+        </ul>
         <div class="row">
             <div class="col-xs-12">
                 <section class="panel">
-                    <header class="form-box">
-                        <form class="form-inline">
-                            <input  type="hidden" id="search-status" value="<?=$search['status']?>"/>
-                            <input  type="hidden" id="source" value="1"/>
+                    <div id="con_com_1">
+                        <header class="form-box">
+                            <form class="form-inline">
+                                <input  type="hidden" id="search-status" value="<?=$search['status']?>"/>
+                                <input  type="hidden" id="source" value="1"/>
 
-							<div class="form-group">
-								<div class="task-option">
-								  <select class="styled" onchange="searchUrl('status',this.value)">
-									<option value="0" <? if ($search['status'] ==0){ echo 'selected="selected"';} ?>>销售状态</option>
-                                        <?
-										foreach($saleStatusList as $k=>$new){
-                                        echo '<option value="'.$k.'"';
-                                        if($search['status'] ==$k){ echo ' selected="selected"';}
-                                        echo '>'.$new.'</option>';
-                                        }
-                                        ?>								  
-								  </select>
-								</div>
-							</div>
+                                <div class="form-group">
+                                    <div class="task-option">
+                                      <select class="styled" onchange="searchUrl('status',this.value)">
+                                        <option value="0" <? if ($search['status'] ==0){ echo 'selected="selected"';} ?>>销售状态</option>
+                                            <?
+                                            foreach($saleStatusList as $k=>$new){
+                                            echo '<option value="'.$k.'"';
+                                            if($search['status'] ==$k){ echo ' selected="selected"';}
+                                            echo '>'.$new.'</option>';
+                                            }
+                                            ?>
+                                      </select>
+                                    </div>
+                                </div>
 
-                            <div class="form-group"> 商标名称/商标号：
-                                <input type="text" name="keywords" id="keywords" value="<?=$search['keyword']?>" class="form-control input-sm" />
+                                <div class="form-group"> 商标名称/商标号：
+                                    <input type="text" name="keywords" id="keywords" value="<?=$search['keyword']?>" class="form-control input-sm" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success btn-sm" onclick="searchUrl('','')">搜索</button>
+                                </div>
+                            </form>
+                        </header>
+                        <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                            <div class="form-inline padding">
+                                <div class="form-group">当前筛选结果<span class="red"><?=$data['total']?></span>个商标
+                                    <!-- <a class="btn btn-del btn-sm" href="<?=C('WEBSITE_URL') ?>" target="_blank">添加收藏</a> -->
+                                    <!-- <button type="submit" class="btn btn-excel btn-sm" data-toggle="modal" data-target="#"  onclick="excelexport()">导出Excel</button> -->
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-success btn-sm" onclick="searchUrl('','')">搜索</button>
-                            </div>
-                        </form>
-                    </header>
-                    <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
-                        <div class="form-inline padding">
-                            <div class="form-group">当前筛选结果<span class="red"><?=$data['total']?></span>个商标
-                                <!-- <a class="btn btn-del btn-sm" href="<?=C('WEBSITE_URL') ?>" target="_blank">添加收藏</a> -->
-                                <!-- <button type="submit" class="btn btn-excel btn-sm" data-toggle="modal" data-target="#"  onclick="excelexport()">导出Excel</button> -->
-                            </div>
-                        </div>
-                        <div class="tablebox">
-                            <table class="table table-striped border-top dataTable tab_imgsize">
-                                <tbody>
-                                <? foreach ($data['rows'] as $item){ ?>
-                                <tr id="tr<?=$item['trade']['id']?>">
-                                    <td>
-                                        <a class="fl" href="<?=$item['trade']['yzc_url']?>" target="_blank">
-                                            <img src="<?=$item['imgUrl']?>"  onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'" /></a>
-                                        <div class="fl">
-                                            <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类）</p>
-                                            <? if (!empty($item['sale'])) {?>
-                                            <div class="coll_div">
-                                                <p>出售价格：<?=$item['sale']['price']?></p>
+                            <div class="tablebox">
+                                <table class="table table-striped border-top dataTable tab_imgsize">
+                                    <tbody>
+                                    <? foreach ($data['rows'] as $item){ ?>
+                                    <tr id="tr<?=$item['trade']['id']?>">
+                                        <td>
+                                            <a class="fl" href="<?=$item['trade']['yzc_url']?>" target="_blank">
+                                                <img src="<?=$item['imgUrl']?>"  onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'" /></a>
+                                            <div class="fl">
+                                                <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类）</p>
+                                                <? if (!empty($item['sale'])) {?>
+                                                <div class="coll_div">
+                                                    <p>出售价格：<?=$item['sale']['price']?></p>
+                                                </div>
+                                                <? } ?>
                                             </div>
-                                            <? } ?>
-                                        </div>
-                                    </td>
-                                    <td class="valign-middle text-right">
-                                        <button type="button" class="btn btn-colorah btn-sm rmBtn" data-toggle="modal" data-target="#batch-remove" content="第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>" tradeid="<?=$item['trade']['id']?>">删除</button>
-                                        <a type="button" class="btn btn-gray btn-sm" href="<?=$item['trade']['yzc_url']?>" target="_blank">详情</a></td>
-                                </tr>
-                                <? } ?>
-                                </tbody>
-                            </table>
+                                        </td>
+                                        <td class="valign-middle text-right">
+                                            <button type="button" class="btn btn-colorah btn-sm rmBtn" data-toggle="modal" data-target="#batch-remove" content="第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>" tradeid="<?=$item['trade']['id']?>">删除</button>
+                                            <a type="button" class="btn btn-gray btn-sm" href="<?=$item['trade']['yzc_url']?>" target="_blank">详情</a></td>
+                                    </tr>
+                                    <? } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <?=$pageBar ?>
+                            </div>
                         </div>
-                        <div class="row">
-                            <?=$pageBar ?>
+                    </div>
+                    <div id="con_com_2">
+                        <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                            <div class="form-inline padding">
+                                <div class="form-group">当前筛选结果<span class="red"><?=$data['total']?></span>个商标
+                                    <!-- <a class="btn btn-del btn-sm" href="<?=C('WEBSITE_URL') ?>" target="_blank">添加收藏</a> -->
+                                    <!-- <button type="submit" class="btn btn-excel btn-sm" data-toggle="modal" data-target="#"  onclick="excelexport()">导出Excel</button> -->
+                                </div>
+                            </div>
+                            <div class="tablebox">
+                                <table class="table table-striped border-top dataTable tab_imgsize">
+                                    <tbody>
+                                    <? foreach ($data['rows'] as $item){ ?>
+                                    <tr id="tr<?=$item['trade']['id']?>">
+                                        <td>
+                                            <a class="fl" href="<?=$item['trade']['yzc_url']?>" target="_blank">
+                                                <img src="<?=$item['imgUrl']?>"  onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'" /></a>
+                                            <div class="fl">
+                                                <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类）</p>
+                                                <? if (!empty($item['sale'])) {?>
+                                                <div class="coll_div">
+                                                    <p>出售价格：<?=$item['sale']['price']?></p>
+                                                </div>
+                                                <? } ?>
+                                            </div>
+                                        </td>
+                                        <td class="valign-middle text-right">
+                                            <button type="button" class="btn btn-colorah btn-sm rmBtn" data-toggle="modal" data-target="#batch-remove" content="第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>" tradeid="<?=$item['trade']['id']?>">删除</button>
+                                            <a type="button" class="btn btn-gray btn-sm" href="<?=$item['trade']['yzc_url']?>" target="_blank">详情</a></td>
+                                    </tr>
+                                    <? } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <?=$pageBar ?>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -115,6 +159,21 @@
 <iframe src="" id="iframesrc"  style="display:none;"></iframe>
 
 <script>
+    //选项卡
+    function jc(name,curr,n)
+    {
+        for(i=1;i<=n;i++)
+        {
+            var menu=document.getElementById(name+i);
+            var cont=document.getElementById("con_"+name+"_"+i);
+            menu.className=i==curr ? "cur" : "";
+            if(i==curr){
+                cont.style.display="block";
+            }else{
+                cont.style.display="none";
+            }
+        }
+    }
     $(function(){
         $(".rmBtn").on("click",function(){
             $("#hiddenTradeId").val($(this).attr("tradeid"));

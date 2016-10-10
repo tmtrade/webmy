@@ -9,8 +9,10 @@ a:hover {
 
 /*panel*/
 .panel {
-    border: none;
+    border: 1px solid #ddd;
     box-shadow: none;
+    border-radius: 0px 0px 4px 4px;
+    -webkit-border-radius: 0px 0px 4px 4px;
 }
 
 .panel-heading {

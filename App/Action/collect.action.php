@@ -33,10 +33,18 @@ class CollectAction extends AppAction
 			$data			= $this->load("collect")->getPageListCollectTrade($param, $search);
 			$pager			= $this->pager($data['total'], $this->rowNum);
 			$pageBar		= empty($data['rows']) ? '' : getPageBar($pager);
+			//得到打包商品的列表
+			$count = $this->load('collect')->getCount(1,$userId);
+			$this->set('count1',$data['total']);
+			$this->set('count2',$count);
 		}else{//打包列表
 			$data = $this->load('collect')->getPackageCollect($param);
 			$pager			= $this->pager($data['total'], $this->rowNum);
 			$pageBar		= empty($data['rows']) ? '' : getPageBar($pager);
+			//得到普通商品的列表
+			$count = $this->load('collect')->getCount(2,$userId);
+			$this->set('count1',$count);
+			$this->set('count2',$data['total']);
 		}
 		//$getSrouceCount	= $this->load("collect")->getSrouceCount($userId);
 		$this->set('data',$data);
@@ -46,6 +54,7 @@ class CollectAction extends AppAction
 //		$this->set('classDiff',array_diff(C('CLASSNEW'), $classList));
 
 		$this->set('search',$search);
+		$this->set('type',$type);
 //		$this->set('getSrouceCount',$getSrouceCount);
 		//print_r($data);
 		$this->display();
@@ -80,10 +89,17 @@ class CollectAction extends AppAction
 	 */
 	public function deleteCollect()
 	{
-        $param['trademark']		= $this->input("id","string");
-        $param['source']		= $this->input("source","int");
-        $param['userId']		= $this->userInfo['id'];
-		$bool					= $this->load('collect')->deleteCollectById($param);
+		$type = $this->input('type','int',1);
+		if($type==1){
+			$param['trademark']		= $this->input("id","string");
+			$param['source']		= $this->input("source","int");
+			$param['userId']		= $this->userInfo['id'];
+			$bool					= $this->load('collect')->deleteCollectById($param);
+		}else{
+			$rst = $this->load('collect')->removePackageCollection($this->input("id","int"),$this->userInfo['id']);
+			$bool = ($rst && $rst['type']==1)?1:0;
+		}
+
 		echo $bool;exit;
 	}
 

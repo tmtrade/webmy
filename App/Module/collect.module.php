@@ -666,12 +666,15 @@ class CollectModule extends AppModule
 		foreach($data['rows'] as &$item){
 			$item['count'] = 0;
 			$item['imgUrl'] = '';
+			$item['url'] = C('WEBSITE_URL').'package/?id='.$item['package_id'];
 			$r = array();
 			$r['eq'] = array('id'=>$item['package_id']);
 			$r['col'] = array('id','title','price');
 			$rst = $this->import('package')->find($r);
 			//得到当前打包数据的详细信息
 			if($rst){
+				$item['title'] = $rst['title'];
+				$item['price'] = $rst['price'];
 				$r = array();
 				$r['eq'] = array('pkgId'=>$item['package_id']);
 				$r['col'] = array('number');
@@ -679,7 +682,8 @@ class CollectModule extends AppModule
 				if($rst1){
 					$item['count'] = count($rst1);
 					//得到第一个的商标图片
-					$number = $rst1[0]['number'];
+					$number = current($rst1);
+					$number = $number['number'];
 					$img = $this->importBi('trade')->getSaleImg($number);
 					$item['imgUrl'] = empty($img[$number]) ? '' : ($img[$number]);
 				}
@@ -731,6 +735,30 @@ class CollectModule extends AppModule
 			return  array('type' => 1, 'mess' => '取消成功');
 		}else{
 			return  array('type' => 2, 'mess' => '取消失败');
+		}
+	}
+
+	/**
+	 * 得到数量
+	 * @param $type
+	 * @param $userId
+	 * @return int
+	 */
+	public function getCount($type,$userId){
+		$r['eq'] = array('userId'=>$userId);
+		if($type==1){
+			return $this->import('collectpackage')->count($r);
+		}else{
+			//查询收藏表
+			$r['eq']['source'] = 1;//交易来源
+			$r['group'] = array('trademark' => 'asc');//去重
+			$r['limit'] = 10000;
+			$data = $this->import('collect')->findAll($r);
+			if(empty($data['total'])) return 0;
+			//看交易sale表中是否存在该数据
+			$tidList			= arrayColumn($data['rows'],'tid');
+			$s['in']			= array('tid' => $tidList);
+			return $this->import('sale')->count($s);
 		}
 	}
 }

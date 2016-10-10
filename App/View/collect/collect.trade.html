@@ -16,12 +16,13 @@
     <!----收藏-交易商标---->
     <section class="wrapper">
         <ul class="hd-cg">
-            <li id="com1" class="cur" onclick="jc('com',1,2)">普通商品<em>12</em></li>
-            <li id="com2" onclick="jc('com',2,2)">打包商品<em>0</em></li>
+            <li id="com1" class="<?=($type==1?'cur':'')?>" onclick="location.href='/collect/trade/?type=1'">普通商品<em><?=$count1?></em></li>
+            <li id="com2" class="<?=($type==2?'cur':'')?>" onclick="location.href='/collect/trade/?type=2'">打包商品<em><?=$count2?></em></li>
         </ul>
         <div class="row">
             <div class="col-xs-12">
                 <section class="panel">
+                    <? if($type==1): ?>
                     <div id="con_com_1">
                         <header class="form-box">
                             <form class="form-inline">
@@ -53,9 +54,8 @@
                         </header>
                         <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
                             <div class="form-inline padding">
-                                <div class="form-group">当前筛选结果<span class="red"><?=$data['total']?></span>个商标
-                                    <!-- <a class="btn btn-del btn-sm" href="<?=C('WEBSITE_URL') ?>" target="_blank">添加收藏</a> -->
-                                    <!-- <button type="submit" class="btn btn-excel btn-sm" data-toggle="modal" data-target="#"  onclick="excelexport()">导出Excel</button> -->
+                                <div class="form-group">
+                                    当前筛选结果<span class="red"><?=$data['total']?></span>个商标
                                 </div>
                             </div>
                             <div class="tablebox">
@@ -88,34 +88,34 @@
                             </div>
                         </div>
                     </div>
+                    <? else: ?>
                     <div id="con_com_2">
-                        <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                        <div class="dataTables_wrapper form-inline" role="grid">
                             <div class="form-inline padding">
-                                <div class="form-group">当前筛选结果<span class="red"><?=$data['total']?></span>个商标
-                                    <!-- <a class="btn btn-del btn-sm" href="<?=C('WEBSITE_URL') ?>" target="_blank">添加收藏</a> -->
-                                    <!-- <button type="submit" class="btn btn-excel btn-sm" data-toggle="modal" data-target="#"  onclick="excelexport()">导出Excel</button> -->
+                                <div class="form-group">
+                                    当前筛选结果<span class="red"><?=$data['total']?></span>个商标
                                 </div>
                             </div>
                             <div class="tablebox">
                                 <table class="table table-striped border-top dataTable tab_imgsize">
                                     <tbody>
                                     <? foreach ($data['rows'] as $item){ ?>
-                                    <tr id="tr<?=$item['trade']['id']?>">
+                                    <tr id="tr<?=$item['package_id']?>">
                                         <td>
-                                            <a class="fl" href="<?=$item['trade']['yzc_url']?>" target="_blank">
+                                            <a class="fl" href="<?=$item['url']?>" target="_blank">
                                                 <img src="<?=$item['imgUrl']?>"  onerror="this.src='<?=StaticDir?>workspace/img/icon1.gif'" /></a>
                                             <div class="fl">
-                                                <p><font size="4"><? echo mbSub($item['trade']['trademark'],0,10);?></font>（第<?=$item['trade']['class']?>类）</p>
-                                                <? if (!empty($item['sale'])) {?>
+                                                <p><font size="4"><? echo mbSub($item['title'],0,10);?></font>（共有<?=$item['count']?>条商品）</p>
+                                                <? if ($item['price']) {?>
                                                 <div class="coll_div">
-                                                    <p>出售价格：<?=$item['sale']['price']?></p>
+                                                    <p>出售价格：<?=$item['price']?>元</p>
                                                 </div>
                                                 <? } ?>
                                             </div>
                                         </td>
                                         <td class="valign-middle text-right">
-                                            <button type="button" class="btn btn-colorah btn-sm rmBtn" data-toggle="modal" data-target="#batch-remove" content="第<?=$item['trade']['class']?>类   商标号 :  <?=$item['trade']['id']?>" tradeid="<?=$item['trade']['id']?>">删除</button>
-                                            <a type="button" class="btn btn-gray btn-sm" href="<?=$item['trade']['yzc_url']?>" target="_blank">详情</a></td>
+                                            <button type="button" class="btn btn-colorah btn-sm rmBtn" data-toggle="modal" data-target="#batch-remove" content="" tradeid="<?=$item['package_id']?>">删除</button>
+                                            <a type="button" class="btn btn-gray btn-sm" href="<?=$item['url']?>" target="_blank">详情</a></td>
                                     </tr>
                                     <? } ?>
                                     </tbody>
@@ -126,13 +126,12 @@
                             </div>
                         </div>
                     </div>
+                    <? endif; ?>
                 </section>
             </div>
         </div>
     </section>
-
     <? } ?>
-
 </section>
 
 <!-- Modal -->
@@ -154,26 +153,8 @@
         </div>
     </div>
 </div>
-
-
 <iframe src="" id="iframesrc"  style="display:none;"></iframe>
-
 <script>
-    //选项卡
-    function jc(name,curr,n)
-    {
-        for(i=1;i<=n;i++)
-        {
-            var menu=document.getElementById(name+i);
-            var cont=document.getElementById("con_"+name+"_"+i);
-            menu.className=i==curr ? "cur" : "";
-            if(i==curr){
-                cont.style.display="block";
-            }else{
-                cont.style.display="none";
-            }
-        }
-    }
     $(function(){
         $(".rmBtn").on("click",function(){
             $("#hiddenTradeId").val($(this).attr("tradeid"));
@@ -181,14 +162,15 @@
             $('#batch-remove').modal();
 
 
-        })
+        });
         $("#subSure").click(function(){
+            var type = '<?=$type?>';
             var hiddenTradeId= $("#hiddenTradeId").val();
             var source  = $("#source").val();
             $.ajax({
                 type: "GET",
                 url: "/collect/deleteCollect/",
-                data: {'id':hiddenTradeId,'source':source},
+                data: {'id':hiddenTradeId,'source':source,'type':type},
                 dataType: "html",
                 success: function(data){
                     $('#batch-remove').modal('hide');

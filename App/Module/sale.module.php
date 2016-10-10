@@ -86,7 +86,7 @@ class SaleModule extends AppModule
 
 			if($sale['isOffprice'] == 1 && $sale['salePriceDate'] > time()){//特价
 				$mess = $sale['salePrice'] .'元（截至'.date('Y-m-d',$sale['salePriceDate']).'）';
-			}elseif($sale['isOffprice'] == 1 && $sale['salePriceDate'] == 0){//特价
+			}if($sale['isOffprice'] == 1 && $sale['salePriceDate'] == 0){//特价
 				$mess = $sale['salePrice'] .'元（不限时特价）';
 			}else {//定价
 				$mess = $price.'元';

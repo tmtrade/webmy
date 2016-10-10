@@ -80,18 +80,16 @@ class SaleModule extends AppModule
 		$s['col']					= array('status','isOffprice', 'salePrice', 'salePriceDate', 'priceType', 'isSale', 'isLicense', 'price');
 		$sale						= $this->import('sale')->find($s);
 		if($sale  == false)  return array();
-
-		$mess						= '-';
 		if($sale['priceType'] == 1){
 //			$salePrice = $sale['salePrice'] >= 10000 ? (getFloatValue(($sale['salePrice'] *1.1) / 10000,2) . '万') : ($sale['salePrice'] == 0 ? '议价' : $sale['salePrice']*1.1);
-			$price = $sale['price'] >= 10000 ? (getFloatValue(($sale['price']*1.1) / 10000,2) . '万') : ($sale['price'] == 0 ? '议价' : $sale['price']*1.1);
+			$price = $sale['price']*1.1;
 
 			if($sale['isOffprice'] == 1 && $sale['salePriceDate'] > time()){//特价
-				$mess = $sale['salePrice'] .'（截至'.date('Y-m-d',$sale['salePriceDate']).'）';
-			}if($sale['isOffprice'] == 1 && $sale['salePriceDate'] == 0){//特价
-				$mess = $sale['salePrice'] .'（不限时特价）';
+				$mess = $sale['salePrice'] .'元（截至'.date('Y-m-d',$sale['salePriceDate']).'）';
+			}elseif($sale['isOffprice'] == 1 && $sale['salePriceDate'] == 0){//特价
+				$mess = $sale['salePrice'] .'元（不限时特价）';
 			}else {//定价
-				$mess = $price; 
+				$mess = $price.'元';
 			}
 		}else{
 			$mess = '议价'; 

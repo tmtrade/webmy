@@ -82,6 +82,7 @@ class ChangePriceModule extends AppModule
 		$mess ='-';
 		if($newInfo['priceType'] == 1){
 			$newOffprice =$newInfo['salePrice'] >= 10000 ? (getFloatValue($newInfo['salePrice'] / 10000,2) . '万') : $newInfo['salePrice'];
+            $oldOffprice =$oldInfo['salePrice'] >= 10000 ? (getFloatValue($oldInfo['salePrice'] / 10000,2) . '万') : $oldInfo['salePrice'];
 			
 			$oldSalePrice =$oldInfo['price'] >= 10000 ? (getFloatValue(($oldInfo['price'] * 1.1)/ 10000,2) . '万') : ($oldInfo['price'] == 0 ? '议价' : ($oldInfo['price'] * 1.1));
 			$newSalePrice =$newInfo['price'] >= 10000 ? (getFloatValue(($newInfo['price']  * 1.1)/ 10000,2) . '万') : ($newInfo['price'] == 0 ? '议价' : ($newInfo['price']  * 1.1));
@@ -93,15 +94,18 @@ class ChangePriceModule extends AppModule
 				}else{
 					$mess .= '（截至'.date('Y-m-d',$newInfo['salePriceDate']).'）';
 				}
-				$mess .= '&nbsp;<font color="#ff9d1f">'.date('Y-m-d',time()).'前出售价格为：'.$oldSalePrice .'</font>';  
+				$mess .= '&nbsp;<font color="#ff9d1f">'.date('Y-m-d',$data['created']).'前出售价格为：'.$oldSalePrice .'</font>';
 			}elseif($newInfo['price'] != $oldInfo['price']) {//定价
-				$mess = $newSalePrice.' &nbsp;<font color="#ff9d1f">'.date('Y-m-d',time()).'前出售价格为：'.$oldSalePrice.'</font>'; 
+				$mess = $newSalePrice.' &nbsp;<font color="#ff9d1f">'.date('Y-m-d',$data['created']).'前出售价格为：'.$oldSalePrice.'</font>';
 			}elseif($oldInfo['priceType'] == 2){
-				$mess = $newSalePrice .' &nbsp;<font color="#ff9d1f">'.date('Y-m-d',time()).'前出售价格为：议价</font>'; 
-			}
+				$mess = $newSalePrice .' &nbsp;<font color="#ff9d1f">'.date('Y-m-d',$data['created']).'前出售价格为：议价</font>';
+			}elseif( $oldInfo['isOffprice'] != $newInfo['isOffprice'] ){
+			    $mess = $newSalePrice .' &nbsp;<font color="#ff9d1f">'.date('Y-m-d',$data['created']).'前出售价格为：'.$oldOffprice.'</font>';
+            }
 		}elseif($newInfo['priceType'] == 2){
-			$mess = '议价 &nbsp;<font color="#ff9d1f">'.date('Y-m-d',time()).'前出售价格为：'.round($oldInfo['price']/10000,2) .'万</font>'; 
+			$mess = '议价 &nbsp;<font color="#ff9d1f">'.date('Y-m-d',$data['created']).'前出售价格为：'.round($oldInfo['price']/10000,2) .'万</font>';
 		}
+		
 		return array('price'=>$mess, 'priceType'=>$data['priceType']);
 
 	}

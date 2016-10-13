@@ -678,6 +678,7 @@ class CollectModule extends AppModule
 				$r = array();
 				$r['eq'] = array('pkgId'=>$item['package_id']);
 				$r['col'] = array('number');
+				$r['limit'] = 10000;
 				$rst1 = $this->import('packageitems')->find($r);
 				if($rst1){
 					$item['count'] = count($rst1);

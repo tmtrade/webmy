@@ -666,7 +666,7 @@ class CollectModule extends AppModule
 		foreach($data['rows'] as &$item){
 			$item['count'] = 0;
 			$item['imgUrl'] = '';
-			$item['url'] = C('WEBSITE_URL').'package/?id='.$item['package_id'];
+			$item['url'] = 'package/?id='.$item['package_id'];
 			$r = array();
 			$r['eq'] = array('id'=>$item['package_id']);
 			$r['col'] = array('id','title','price');

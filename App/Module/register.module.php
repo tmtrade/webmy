@@ -25,11 +25,11 @@ class RegisterModule extends AppModule
     */
     public function exist($account,$cateId = 2)
     {
-        $code       = 1;
-        $cfexist    = $this->importBi('passport')->exist($account,$cateId);
-        if( $cfexist['code'] == 0 ){//不存在
+//        $code       = 1;
+//        $cfexist    = $this->importBi('passport')->exist($account,$cateId);
+//        if( $cfexist['code'] == 0 ){//不存在
             $code = $this->import('user')->exist($account,$cateId);
-        }
+//        }
         return $code;
     }
     /**
@@ -112,11 +112,11 @@ class RegisterModule extends AppModule
         $pword      = getPasswordMd5($password,$user['salt']);
         $issend     = $this->sendPassword($account,$password,$cateId);
         if( $issend == 1 ){
-        	$cfArray= $this->importBi('passport')->get($account,$cateId);
-    		if( !empty($cfArray) && $cfArray['code'] == 1 ){//修改超凡密码
-    			$cfId = !empty($cfArray['data']['id']) ? $cfArray['data']['id'] : 0;
-				$this->importBi('passport')->resetPwd($cfId,$password);
-    		}
+//        	$cfArray= $this->importBi('passport')->get($account,$cateId);
+//    		if( !empty($cfArray) && $cfArray['code'] == 1 ){//修改超凡密码
+//    			$cfId = !empty($cfArray['data']['id']) ? $cfArray['data']['id'] : 0;
+//				$this->importBi('passport')->resetPwd($cfId,$password);
+//    		}
             $code   = $this->import('user')->updatePassword($account,$pword,$cateId);
         }
         $code       = $code == 1 ? 1 : 0;
@@ -134,14 +134,14 @@ class RegisterModule extends AppModule
     public function remoteUserLogin($account,$password,$cateId = 2)
     {
     	$id		= 0;
-		$cfInfo	= $this->importBi('passport')->get($account,$cateId);
-		if(!empty($cfInfo['data']['id'])){//超凡存在
-        	$isexist    = $this->import('user')->existChofnId($cfInfo['data']['id']);//检查账号是否在库里面存在
-	        $isexist == 0 && $id = $this->import('user')->addChofn($cfInfo['data']);//用超凡账号创建账号
-		}else{
+//		$cfInfo	= $this->importBi('passport')->get($account,$cateId);
+//		if(!empty($cfInfo['data']['id'])){//超凡存在
+//        	$isexist    = $this->import('user')->existChofnId($cfInfo['data']['id']);//检查账号是否在库里面存在
+//	        $isexist == 0 && $id = $this->import('user')->addChofn($cfInfo['data']);//用超凡账号创建账号
+//		}else{
 			$usInfo     = $this->import('user')->getUserInfo($account,$cateId);//检查用户库有无用户
 			empty($usInfo['id']) && $id = $this->regDeal($account,$password,$cateId);//注册
-		}
+//		}
 		return $id;
     }
     /**

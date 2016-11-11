@@ -9,8 +9,7 @@ var crmkey		= '11afghaxbnPZ4gOxSO7lcLLsPu';
 var CRMNAME		= 'crm_name';
 var CRMSESSID	= 'crm_sessid';
 //------------------------------------------------------------- 
-//var HOST 	 	= 'http://my.yizhchan.com';//处理域名
-var HOST 	 	= 'http://my.test.chofn.net';//处理域名
+var HOST 	 	= 'http://my.uzichan.cn';//处理域名
 var configUrl	= '';//配置信息
 var classid	 	= 'chaofan-login';
 var config	 	= new Array();

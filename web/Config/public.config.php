@@ -98,10 +98,10 @@ $define = array(
         ),
 
 	'TRADEMARK_NAME'	=> '商标查询',
-	'WEBSITE_URL'		=> 'http://t.chofn.net/', //一只蝉地址
-	'MANAGER_URL'		=> 'http://i.chofn.net/', //商标管家
-	'SEARCH_URL'		=> 'http://shansoo.net/', //近似查询
-    'YIZHCHAN_URL'		=> 'http://t.chofn.net/', //交易平台
+	'WEBSITE_URL'		=> 'http://www.uzichan.cn/', //一只蝉地址
+	'MANAGER_URL'		=> 'http://my.uzichan.cn/', //商标管家
+	'SEARCH_URL'		=> 'http://www.biaoju01.com/', //近似查询
+    'YIZHCHAN_URL'		=> 'http://www.uzichan.cn/', //交易平台
 
 	'PUBLIC_USER'		=> 'chaofancookid',//公用用户登录信息标识
 	'PUBLIC_TIME'		=> '36000',//登录过期时间(秒)

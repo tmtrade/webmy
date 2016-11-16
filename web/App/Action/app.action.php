@@ -232,7 +232,7 @@ abstract class AppAction extends Action
 			$tid	= !empty($pathArr[1]) ? $pathArr[1] : 0;
 		}
 		if( $tid > 0 ){
-			$this->load('browse')->addTidBrowse($tid,$url,$userId);
+			//$this->load('browse')->addTidBrowse($tid,$url,$userId);
 		}
 	}
 }

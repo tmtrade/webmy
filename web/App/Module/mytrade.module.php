@@ -317,18 +317,17 @@ class MytradeModule extends AppModule
 			$tradeinfo[]	= '商标名：'.$item['trademark'].';商标号：'.$item['id'].";第".$item['class']."类";
 		}
 		$input		= array(
-					'type'		=> 1,
-					'referer'	=> '',
-					'source'	=> 0,
-					'name'		=> $search['name'],
-					'pttype'	=> '',
-					'tel'		=> $search['phone'],
-					'remarks'	=> implode("；", $tradeinfo),
+			'type'		=> 1,
+			'referer'	=> '',
+			'source'	=> 0,
+			'name'		=> $search['name'],
+			'pttype'	=> '',
+			'tel'		=> $search['phone'],
+			'remarks'	=> implode("；", $tradeinfo),
 		);
 		$output				= $this->load('network')->networkJoin($input);
 		if($output['code'] == 1 && !empty($output['data']['id'])){
 			$bool = $this->load('relation')->addRelation($userId,$output['data']['id'] );
-
 
 			foreach($trademark['rows'] as $item){
 				$deal = array(

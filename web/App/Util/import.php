@@ -8,4 +8,8 @@ require('app.function.php');
 //导入自定义变量
 require('LoadConfig.php');
 
+//导入自定义变量
+require('aliSMS.php');
+
+
 ?>

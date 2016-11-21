@@ -15,7 +15,8 @@ class NetworkModule extends AppModule
      */
     public $models = array(
         'user'		=> 'user',
-        'verify'	=> 'verify'
+        'verify'	=> 'verify',
+        'network'   => 'network',
     );
 	
     /**
@@ -54,8 +55,18 @@ class NetworkModule extends AppModule
 		$post['ptype'] 		= !empty($array['ptype']) ? $array['ptype'] : '';//专利的类别
 		$post['area'] 		= !empty($_GET['area']) ? $_GET['area'] : '';//地区
 		$post['sid'] 		= !empty($_GET['sid']) ? $_GET['sid'] : '';
-		$data				= $this->importBi('crm')->networkJoin($post);
-		return $data;
+		//$data				= $this->importBi('crm')->networkJoin($post);
+        $res = $this->import('network')->create($post);
+        if ( $res ){
+            $data = array(
+                'code'  => 1,
+                'data'  => array(
+                    'id'    => $res,
+                ),
+            );
+            return $data;
+        }
+		return array('code'=>0);
 	}
 	
     

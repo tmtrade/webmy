@@ -58,12 +58,18 @@ class MessageBi extends Bi
 	 */
 	public function sendMsg($mobile, $content, $tplId=0)
 	{
-		$param = array(
-			'mobile'   	=> $mobile,
-			'content' 	=> $content,
-			'tplId'	  	=> $tplId,
-		);
-		return $this->request("message/sendMsg/", $param);
+		// $param = array(
+		// 	'mobile'   	=> $mobile,
+		// 	'content' 	=> $content,
+		// 	'tplId'	  	=> $tplId,
+		// );
+		// return $this->request("message/sendMsg/", $param);
+		return $this->aliMsg($mobile, $content, $tplId);
+	}
+
+	public function aliMsg($mobile, $code, $tplId=0)
+	{
+		return aliSMS::sendCode($mobile, $code);
 	}
 
 }

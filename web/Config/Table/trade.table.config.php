@@ -28,4 +28,11 @@ $tbl['package'] = array(
 	'dbId'		=> $dbId,
 	'configFile'=> $configFile,
 );
+
+$tbl['network'] = array(
+	'name'		=> $prefix.'network',
+	'dbId'		=> $dbId,
+	'configFile'=> $configFile,
+);
+
 ?>

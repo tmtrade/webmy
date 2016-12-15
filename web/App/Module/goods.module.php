@@ -26,19 +26,26 @@ class GoodsModule extends AppModule
         $r = array();
         $r['page']  = $page;
         $r['limit'] = $limit;
-        $r['col']   = array('tid','class','number','name','(select price from t_sale_contact where saleId=t_sale.id and uid='.$params["uid"].') as price','(select date from t_sale_contact where saleId=t_sale.id and uid='.$params["uid"].') as date');
+        $r['col']   = array('number','price','saleId');
         $r['raw'] = ' 1 ';
         
         if ( !empty($params['name']) ){
-            $r['like']['name'] = $params['name'];
-        } 
-        
-        $r['raw'] .= " AND `id` IN (select distinct(`saleId`) from t_sale_contact where uid={$params['uid']} and isVerify={$params['status']}) ";
+            $r['raw'] .= " AND `number` IN (select number from t_sale where name LIKE '%{$params['name']}%') ";
+        }
+        $r['eq'] = array(
+            'uid'       => $params['uid'],
+            'isVerify'  => $params['status'],
+        );
+
         $r['order'] = array('date'=>'desc');
-        $res = $this->import('sale')->findAll($r);
-	foreach($res['rows'] as &$v){
-	    $v['pic'] = $this->load('sale')->getSaltTminfoByNumber($v['number']);
-	}
+        $res = $this->import('contact')->findAll($r);
+        foreach($res['rows'] as &$v){
+            $v['pic']   = $this->load('sale')->getSaltTminfoByNumber($v['number']);
+            $_info      = $this->load('sale')->getSale($v['number']);
+            $v['tid']   = $_info['tid'];
+            $v['name']  = $_info['name'];
+            $v['class'] = $_info['class'];
+        }
         return $res;
     }
     

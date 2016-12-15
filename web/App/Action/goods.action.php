@@ -51,8 +51,6 @@ class GoodsAction extends AppAction {
         $this->set("count", $count);
         $this->set("size", $size);
         $this->set("page", $page);
-//	echo "<pre>";
-//	print_r($data);
         $this->set("s", $params);
         $this->display();
     }

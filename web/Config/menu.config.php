@@ -28,7 +28,7 @@ return array(
                     '/buyer/mysellcontent/',
                 ),
             ),
-            array('title'=>'商标报价单', 'url'=>'/quotation/index/',),
+            array('title'=>'商标报价单', 'url'=>'/quotation/index/', ),
             array(
                 'title' => '我要出售',
                 'url'   => '/sell/index/',
@@ -38,6 +38,7 @@ return array(
                     '/sell/document/',
                 ),
             ),
+            array( 'title' => '我的出售', 'url'   => '/goods/index/', ),
         ),
     ),
 	2 => array(

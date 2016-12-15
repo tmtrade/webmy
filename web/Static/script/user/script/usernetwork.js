@@ -45,7 +45,7 @@ var ucNetwork = {
 			 data		: { 'account' : account,'password' : password,'cateId' : cateId},
 			 complete	: function(xhr,status){
 				userLogCallback(ObjJsonp,data);
-				if( ucCode == 1 ){
+				if( ucCode == 1 && data == 'yes' ){
 					delayRefresh();
 				}
 			 },

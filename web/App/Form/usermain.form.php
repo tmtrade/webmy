@@ -24,10 +24,10 @@ class UserMainForm extends Form
 			'field' => 'sex',
 			'method' => 'doSex', 
 			),
-		'follow' => array(
-			'field' => 'follow',
-			'method' => 'doFollow', 
-			),
+//		'follow' => array(
+//			'field' => 'follow',
+//			'method' => 'doFollow',
+//			),
 		);
 	/**
 	 * 处理页面提交数据

@@ -25,7 +25,7 @@ class TrademarkModule extends AppModule
      */
     public function details($number, $class)
     {
-        $r['eq']                = array('id' => $number, 'class' => $class);
+        $r['eq']                = array('id' => $number);//, 'class' => $class);
         $r['limit']             = 1;
         $data                   = $this->import('trademark')->find($r);
         if(empty($data)) return array();

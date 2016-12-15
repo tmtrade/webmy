@@ -1,0 +1,268 @@
+<? require(ViewDir.'/public/header.html'); ?> 
+<? require(ViewDir.'/public/notbound.html'); ?> 
+    <script type="text/javascript">
+        $(function () {
+            $("#tmnewprice").keyup(function () {
+                //如果输入非数字，则替换为''，如果输入数字，则在每4位之后添加一个空格分隔
+                this.value = this.value.replace(/[^\d]/g, '').replace(/(\d{4})(?=\d)/g, "$1");
+            })
+        });
+    </script>
+<!--main content start-->
+<section id="main-content">
+  <header class="tab-head">
+    <ul class="nav nav-tabs">
+      <li class="active"> <a href="/buyer/mysell/">出售中</a> </li>
+      <li> <a href="/buyer/history/">已删除</a> </li>
+    </ul>
+  </header>
+  <section class="wrapper tab-container">
+    <div class="row">
+      <div class="col-xs-12">
+        <section class="panel">
+          <header class="form-box">
+            <form class="form-inline">
+              <div class="form-group">
+				<!--  select -->
+				<div class="task-option">
+				  <select class="styled" onchange="searchUrl('status',this.value)">
+					  <option value="0">状态</option>
+						<?php  foreach($status as $k => $v){ ?>
+					  <option value="<?=$k?>" <? if($k == $search['status']){echo 'selected="selected"';}?>><?=$v?></option>
+					  <?php } ?>
+				  </select>
+				</div>
+				<!-- select -->
+              </div>
+              <div class="form-group">
+				<div class="task-option">
+				  售价：<input type="text" class="form-control input-sm" style="width:100px;" maxlength="10" name="startprice" id="startprice" value="<?=$search['startprice']?>"/>-<input type="text" class="form-control input-sm" style="width:100px;" maxlength="10" name="endprice" id="endprice" value="<?=$search['endprice']?>"/>
+				</div>
+				<!-- select -->
+              </div>
+              
+              <div class="form-group"> 商标名称/商标号：
+                <input type="text" class="form-control input-sm" name="keywords" id="keywords" value="<?=$search['keywords']?>">
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-success btn-sm"  id="wodesubmit">搜索</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="window.open('<?=C('WEBSITE_URL')?>sell');">商标出售</button>
+              </div>
+            </form>
+          </header>
+          <div id="sample_1_wrapper" class="dataTables_wrapper form-inline" role="grid">
+            <div class="form-inline padding">
+              <div class="form-group">当前筛选结果<span class="red"><?=$data['total']?></span>个商标
+                <!-- <button type="submit" class="btn btn-del btn-sm" data-toggle="modal" data-target="#batch-remove">批量删除</button> -->
+              </div>
+            </div>
+            <table class="table table-striped border-top dataTable">
+              <thead>
+                <tr role="row">
+                  <th width="13"><input type="checkbox" class="group-checkable" id="checkAll"></th>
+                  <th width="10%">日期</th>
+                  <th>商标号</th>
+                  <th>商标名称</th>
+                  <th>类别</th>
+                  <th>售价</th>
+                  <th>状态</th>
+                  <th width="20%">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+			  <? foreach($data['rows'] as $k => $item){ ?>
+                <tr>
+                  <td><input type="checkbox" class="checkboxes" name="subBox[]" value="<?=$item['saleId']?>"></td>
+                  <td><? echo date('Y-m-d', $item['date']);?></td>
+                  <td><?=$item['number']?></td>
+                  <td title="<?=$item['trade']['trademark']?>"><? echo mbSub($item['trade']['trademark'],0,10);?></td>
+                  <td><?=$item['class']?>类</td>
+                  <td><?=$item['price']?></td>
+                  <td><?=$status[$item['isVerify']]?></td>
+                  <td>
+					<button type="button" class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#batch-remove" onclick="deleleButton('<?=$item['trade']['trademark']?>','<?=$item['class']?>', '<?=$item['trade']['id']?>')">删除</button>
+					<a href="/buyer/mysellcontent/?number=<?=$item['number']?>&class=<?=$item['class']?>"  class="btn btn-gray btn-sm">详情</a>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#revised-price" onclick="edit('<?=$item['id']?>', '<?=$item['price']?>')">修改价格</button>
+					</td>
+                </tr>
+				<? } ?>
+              </tbody>
+            </table>
+            <div class="row"><?=$pageBar?></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+  <!--main content end--> 
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="batch-remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<?=StaticDir?>workspace/img/close.gif"/></button></div>
+      <div class="modal-body">
+        <div class="modal-center">
+          <h3><img src="<?=StaticDir?>workspace/img/modal-icon1.gif" /> 你确认删除该项吗？ </h3>
+          <p class="orange" id="tmname">五粮液（33类）</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="delMysell()">确认</button>
+        <button type="button" class="btn btn-gray" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="revised-price" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="<?=StaticDir?>workspace/img/close.gif"/></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-left">
+          <h4 class="orange">原售价：<span id="tmoldprice"></span></h4>
+          <form class="form-inline">
+            <div class="form-group form-inline"> 修改售价为：
+              <input type="text" class="form-control input-sm" id="tmnewprice" maxlength="7" />
+            </div>
+            <div class="form-group">
+              <select class="form-control input-sm" id="pricetype">
+                <option value="1" >元</option>
+                <option value="10000" >万元</option>
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="submitform">确认</button>
+        <button type="button" class="btn btn-gray" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+    /**
+     * 输入框
+     * @type {null}
+     */
+    var jInputTime = null;
+    $('#monitorTipSell').on('keyup', '.jInput input', function(){
+        clearTimeout(jInputTime);
+        var _this = $(this);
+        jInputTime = setTimeout(function(){
+            var _span = _this.prev();
+            if( _this.val() != '' ){
+                _span.css('visibility', 'hidden');
+            }else{
+                _span.css('visibility', 'visible');
+            }
+        }, 100);
+    });
+    $(".ul-input-text input").keyup(function(){
+        clearTimeout(jInputTime);
+        var _this = $(this);
+        jInputTime = setTimeout(function(){
+            var _span = _this.prev();
+            if( _this.val() != '' ){
+                _span.css('visibility', 'hidden');
+            }else{
+                _span.css('visibility', 'visible');
+            }
+        }, 100);
+    });
+	//全选
+	$(function() {
+		$("#checkAll").click(function() {
+			$('input[name="subBox[]"]').prop("checked",this.checked); 
+		});
+		var $subBox = $("input[name='subBox[]']");
+		$subBox.click(function(){
+			$("#checkAll").prop("checked",$subBox.length == $("input[name='subBox[]']:checked").length ? true : false);
+		}); 
+	});
+	function searchUrl (type, number){
+		_status  	= (type == 'status') ? number : $("#search-status").val();
+		_regdate  	= (type == 'regdate') ? number : $("#search-regdate").val();
+		keyword  	= $("#keywords").val();
+		startprice  = $("#startprice").val();
+		endprice  	= $("#endprice").val();
+		location.href = "/buyer/mysell/?status="+_status+"&regdate="+_regdate+"&keywords="+keyword+"&startprice="+startprice+"&endprice="+endprice;
+		return true;
+	}
+	function excelexport(){
+		_status  	= $("#search-status").val();
+		_regdate  	= $("#search-regdate").val();
+		keyword  	= $("#keywords").val();
+		startprice  = $("#startprice").val();
+		endprice  	= $("#endprice").val();
+		url 		= "/buyer/excel/?status="+_status+"&regdate="+_regdate+"&keywords="+keyword+"&startprice="+startprice+"&endprice="+endprice;
+		
+		//location.href = url;
+		$('#iframesrc').attr('src',url);
+		return false;
+	}
+	var tmid = '';
+	function deleleButton (name,classid,id){
+		$("#tmname").html(name+" ("+classid+"类)");
+		tmid = id;
+	}
+    function delMysell(){
+        $.ajax({
+            type: "GET",
+            url: "/buyer/delMysell/",
+            data: {'number':tmid},
+            dataType: "json",
+            success: function(data){
+                if(data == '999'){
+                    alert("删除成功");
+                    //$(".modal-form .tips2").text("删除成功").show();
+                    location.reload();
+                    return true;
+                }else{
+                    alert("删除失败");
+                    //$(".modal-form .tips2").text("删除失败").show();
+                    return false;
+                }
+            }
+        })
+    }
+	$('#wodesubmit').click(function(){
+		location.href = '/buyer/mysell/?status='+$('#search-status').val()+'&regdate='+$('#search-regdate').val()+'&keywords='+$('#keywords').val()+'&startprice='+$('#startprice').val()+'&endprice='+$('#endprice').val();
+	})
+
+	var saleid = '';
+	function edit(cid,price){
+		saleid = cid;
+		$("#tmoldprice").html(price);
+	}
+	$('#submitform').click(function(){
+		if( $("#pricetype").val() =='10000' && $("#tmnewprice").val().length >5){
+			alert('售价太大,请输入正确价格');
+			return false;
+		}
+		$.ajax({
+             type: "POST",
+             url: "/buyer/editPrice/",
+             data: {price:$("#tmnewprice").val(), type:$("#pricetype").val(), saleid:saleid},
+             dataType: "json",
+             success: function(data){
+				 if(data['code'] == '999' || data['code'] == 999){
+					alert('修改成功！');
+				 }else{
+					alert('修改失败！');
+				 }
+				 $('#revised-price').modal('hide');
+			 }
+         });
+		
+	})
+</script>
+<? require(ViewDir.'/public/footer.html'); ?>

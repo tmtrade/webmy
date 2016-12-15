@@ -20,5 +20,6 @@ class SecondStatusApi extends Entity
 	 * 数据表主键
 	 */
 	public $pk       = 'status_id';
+
 }
 ?>

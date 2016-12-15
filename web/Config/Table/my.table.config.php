@@ -4,31 +4,6 @@ $prefix		= 'my_';
 $dbId		= 'my';
 $configFile	= array( ConfigDir.'/Db/my.master.config.php' );
 
-$tbl['sessions'] = array(
-	'name'		=> $prefix.'user_sessions',
-	'dbId'		=> $dbId, 
-	'configFile'=> $configFile,
-);
-$tbl['user'] = array(
-	'name'		=> $prefix.'user',
-	'dbId'		=> $dbId, 
-	'configFile'=> $configFile,
-);
-$tbl['changelogs'] = array(
-    'name'        => $prefix.'user_changelogs',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
-$tbl['loginlogs'] = array(
-    'name'        => $prefix.'user_loginlogs',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
-$tbl['message'] = array(
-    'name'        => $prefix.'user_message',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
 $tbl['template'] = array(
     'name'        => $prefix.'user_template',
     'dbId'        => $dbId, 
@@ -40,11 +15,7 @@ $tbl['relation'] = array(
     'dbId'        => $dbId, 
     'configFile'=> $configFile,
 );
-$tbl['verify'] = array(
-    'name'        => $prefix.'user_verify',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
+
 $tbl['collect'] = array(
     'name'        => $prefix.'user_collect',
     'dbId'        => $dbId, 

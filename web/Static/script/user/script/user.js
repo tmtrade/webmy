@@ -4,10 +4,10 @@
  * 
  **********************************************************/
 //var HOSTCRM 	= 'http://crm:81/';
-var HOSTCRM 	= 'http://demo.chofn.com:88/';
-var crmkey		= '11afghaxbnPZ4gOxSO7lcLLsPu';
-var CRMNAME		= 'crm_name';
-var CRMSESSID	= 'crm_sessid';
+//var HOSTCRM 	= 'http://demo.chofn.com:88/';
+//var crmkey		= '11afghaxbnPZ4gOxSO7lcLLsPu';
+//var CRMNAME		= 'crm_name';
+//var CRMSESSID	= 'crm_sessid';
 //------------------------------------------------------------- 
 var HOST 	 	= 'http://my.uzichan.cn';//处理域名
 var configUrl	= '';//配置信息
@@ -16,7 +16,7 @@ var config	 	= new Array();
 var uckeystr 	= 'uc_ukey';
 var ucnamestr	= 'uc_nickname';
 var ucmobile 	= 'uc_mobile';
-var ucid 	= 'uc_identify';
+var ucid 		= 'uc_identify';
 var validTime	= 36000;
 var isDelay	 	= false;
 var ucConfig 	= {
@@ -45,28 +45,22 @@ var ucConfig 	= {
 		for( var k in newArray ){
 			url+='&'+k+'='+newArray[k];
 		}
-		crm_ucname 	= getCookie(CRMNAME);
-		coUrl		= crm_ucname ? '' : ucConfig.getConfigUrl();
+		coUrl		= ucConfig.getConfigUrl();
 		return url+coUrl;
 	},//设置登录信息
 	setLogInHtml : function(){
+		//TODO callback user function
 		var logHtml = '<a href="javascript:void(0);" id="chaofan-mj-login">登录</a>';
-		crm_ucname 	= getCookie(CRMNAME);//检查crm是否登录
-		if(crm_ucname){
-			ucUser.logexit();//退出用户中心
-			var logHtml = '<a href="javascript:void(0);" id="chaofan-mj-nickname" class="chaofan-mj-crmuc">'+crm_ucname+'</a>&nbsp;&nbsp;';
-		}else{
-			nickname  	= getCookie(ucnamestr);
-			if( ukey ){
-				var logHtml = '<a href="javascript:void(0);" id="chaofan-mj-nickname">'+nickname+'</a>&nbsp;&nbsp;<a href="javascript:;" id="chaofan-mj-logexit">退出</a>';
-			}
+		nickname  	= getCookie(ucnamestr);
+		if( ukey ){
+			var logHtml = '<a href="javascript:void(0);" id="chaofan-mj-nickname">'+nickname+'</a>&nbsp;&nbsp;<a href="javascript:;" id="chaofan-mj-logexit">退出</a>';
 		}
 		return logHtml;
 	},
 	setLogIn :function(string){
 		$('.'+classid).html(string);
 	}
-	
+
 };
 var ucUser = {
 	//验证是否登录
@@ -89,8 +83,9 @@ var ucUser = {
 					if(n.ukey){
 						addUserCook(n.ukey,n.nickname,n.usermobile,n.id);
 						ucLoginTemp.setLoginTemp();
+                        callbackSetLoginTemp();
 					}else{
-						delteUserCook();					
+						delteUserCook();
 					}
 				});
 				ObjJsonp = json;

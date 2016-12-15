@@ -1,0 +1,132 @@
+<? require(ViewDir.'/public/header_seller.html'); ?>
+<link rel="stylesheet" href="<?=StaticDir?>/1.0/css/transfer.css?v=<?=$static_version?>">
+<script type="text/javascript" src="<?=StaticDir?>/1.0/js/simple-share.min.js?v=<?=$static_version?>"></script>
+<style type="text/css">
+	a{color:#000;}
+  </style>
+<div class="yzc-sell-main">
+    <!--公用左边导航-->
+    <? require(ViewDir.'/left.html'); ?>
+    <!--内容-->
+    <div class="sell-lf-main">
+        <div class="comm-list-tit sell-by-brand w-cont">
+            <h3 class="fl">我的商品单 ><label>创建商品单</label></h3>
+        </div>
+        <!--没有商品数据的时候-->
+        <!--<div class="trans-cj f-clearfix f-hidden">-->
+            <div class="trans-no-data">
+                <div class="trans-ts-xx">
+                    <img src="<?=StaticDir?>/1.0/images/sub-state-end.png">
+                    <h6>创建成功<i class="fa fa-check"></i></h6>
+                </div>
+                <label>现在就发给客户吧</label>
+            </div>
+        <!--</div>-->
+        <div class="merch-sce-cz">
+            <div class="merch-sce-ly">
+                <input class="oinp" type="text" id="oURL" placeholder="www.yizhchan.com/goos12340.html" value="<?=SELLER_URL.'p-'.$id.'-'.UID?>.html"/>
+                <a href="javascript:;" class="cir sear-btn batch-pric" id="cpywz">拷贝网址</a>
+                <a href="/<?='p-'.$id.'-'.UID?>.html" target="_blank" class="cir qx-btn batch-del">查看页面</a>
+            </div>
+            <p class="merch-sce-share">
+                <a href="/quotation/getImg/?id=<?=$id?>" target="_blank"><i><img src="<?=StaticDir?>/1.0/images/dc-ico.png"></i>导出图片</a>
+                <em></em>
+                 <a href="javascript:;" class="to_sina">微博</a>
+                <a href="javascript:share.weixin(function(qr){$('.wxt').attr('src',qr);tc();});" class="to_weixn">朋友圈</a>
+            </p>
+        </div>
+    </div>
+</div>
+<!--分享微信弹窗-->
+<div class="wx-tc">
+   <span>
+        <img class="wxt" src="" />
+   </span>
+    <p>分享到微信朋友圈</p>
+</div>
+<!--添加复制功能的插件-->
+<script type="text/javascript" src="<?=StaticDir?>/1.0/js/copy/ZeroClipboard.js?v=<?=$static_version?>"></script>
+<script type="text/javascript">
+    //分享
+    var share = new SimpleShare({
+        url: location.href,
+        pic: '<?=SELLER_URL.StaticDir?>1.0/images/share.jpg'
+    });
+    //分享事件-朋友圈
+    function tc(){
+        layer.open({
+            area:["542px","415px"],
+            type: 1,
+            title: false,
+            closeBtn:1,
+            shadeClose:false,
+            content:$(".wx-tc")
+        });
+    }
+     $(function(){
+        var url =$("#oURL").val();
+         
+        var title = document.title;
+        var content = '';
+        var pic = '<?=SELLER_URL.StaticDir?>1.0/images/share.jpg';
+         //分享事件-微博
+        $('.to_sina').click(function(){
+            share_event({url:url,title:title,content:content,pic:pic});
+        });
+        //分享事件-朋友圈
+        $('.to_weixn').click(function(){
+            share_event({url:url,title:title,content:content,pic:pic},1);
+        });
+        clipboard('cpywz',url);
+    });
+    
+    
+    //复制事件
+    function clipboard(button,text) {
+        if (window.clipboardData) {    //for ie
+            var copyBtn = document.getElementById(button);
+            copyBtn.onclick = function () {
+                window.clipboardData.setData('text', text);
+                layer.msg('复制成功!',{
+                    time:1500
+                });
+            }
+        } else {
+            var client = new ZeroClipboard($("#" + button));
+            client.on('ready', function (event) {
+                client.on('copy', function (event) {
+                    event.clipboardData.setData("text/plain", text);
+                    layer.msg('复制成功!',{
+                        time:1500
+                    });
+                });
+            });
+            client.on('error', function (event) {
+                layer.msg('复制失败!',{
+                    time:1500
+                });
+                ZeroClipboard.destroy();
+            });
+        }
+        return false;
+    }
+    
+    //分享事件
+    function share_event(obj,type){
+        if(typeof type=='undefined') type=0;
+        var share = new SimpleShare({
+            url: obj.url,
+            title: obj.title,
+            content: obj.content,
+            pic: obj.pic
+        });
+        if(type==0){
+            share.weibo();
+        }else{
+            share.weixin(function(qr){
+            })
+        }
+    }
+
+</script>
+<? require(ViewDir.'/public/footer_seller.html'); ?>

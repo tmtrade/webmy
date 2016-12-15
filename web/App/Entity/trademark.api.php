@@ -19,6 +19,7 @@ class TrademarkApi extends Entity
 	/**
 	 * 数据表主键
 	 */
-	public $pk       = 'id';
+	public $pk       = 'auto';
+
 }
 ?>

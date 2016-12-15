@@ -13,9 +13,154 @@ class SaleModule extends AppModule
 	* 引用业务模型
 	*/
 	public $models = array(
-		'sale'		=> 'sale',
-		'verify'	=> 'verify'
+		'sale'		    => 'sale',
+		'verify'	    => 'verify',
+        'contact'	    => 'saleContact',
+        'saleTminfo'	=> 'SaleTminfo',
 	);
+
+    /**
+     * 根据商标得到tminfo
+     * @author dower
+     * @param $number
+     * @param string $field
+     * @return array|bool
+     */
+    public function getSaleTmByNumber($number){
+        $r['eq'] = array('number'=>$number);
+        $r['col']   = array('embellish');
+        $info = $this->import('saleTminfo')->find($r);
+        if($info==false){
+            return false;
+        }
+        //返回包装数据
+        if($info['embellish']){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 根据商标号得到商标的包装信息(无美化图,获得商标图)
+     * @param $number
+     * @return array|bool
+     * @throws SpringException
+     */
+    public function getSaltTminfoByNumber($number){
+        $r['eq'] = array('number'=>$number);
+        $info = $this->import('saleTminfo')->find($r);
+        //无销售数据
+        if($info==false){
+            $info = array();
+            $info['alt1'] = '';
+            $info['embellish'] = $this->load('trademark')->getImg($number);
+            return $info;
+        }
+        //返回包装数据
+        if($info['embellish']){
+            $info['embellish'] = TRADE_URL.$info['embellish'];
+        }else{
+            $info['embellish'] = $this->load('trademark')->getImg($number);
+        }
+
+        return $info;
+    }
+
+    /**
+     * 判断商标是否销售中
+     * @author dower
+     * @param $number
+     * @return bool
+     */
+    public function isSale($number){
+        $r['eq'] = array('number'=>$number);
+        $r['col'] = array('status');
+        $result = $this->import('sale')->find($r);
+        if($result && $result['status']==1){
+            return true;
+        }
+        return false;
+    }
+
+    //获取商品信息
+    public function getSale($number)
+    {
+        $arr['eq'] = array(
+            'number' => $number,
+        );
+        $info = $this->import('sale')->find($arr);
+        if ( empty($info) ) return array();
+        return $info;
+    }
+
+    //获取商品number和UId获取商标下的联系人信息
+    public function getSaleContactByUid($number, $uid)
+    {
+        $r['eq'] = array(
+            'number' => $number,
+            'uid' => $uid,
+        );
+        $r['limit'] = 1;
+        return $this->import('contact')->find($r);
+    }
+
+    /**
+     * 获取出售信息
+     * @author  haydn
+     * @since   2016-02-25
+     * @param   int			$uid  	 当前登录id
+     * @param   array		$search  查询条件
+     * @param   int			$page  	 当前页
+     * @param   int			$limit   每页数据
+     * @return  array		$array
+     */
+    public function getSellRows($uid,$search,$page,$limit = 5)
+    {
+        if ( $uid <= 0 ) return array();
+        $r = array();
+        $r['eq']    = array('uid'=>$uid);
+
+        if( count($search) > 0 ){
+            $where	= array();
+            !empty($search['keywords']) && $where[] = " number IN (SELECT number FROM t_sale WHERE (name like '%".$search['keywords']."%' or number like '%".$search['keywords']."%') ) ";
+
+            !empty($search['startprice']) ? $where[] = "`price` >='{$search['startprice']}'" : "";
+            !empty($search['endprice']) ? $where[] = "`price` <='{$search['endprice']}'" : "";
+            !empty($search['status']) ?$r['eq']['isVerify'] = "`isVerify` ='{$search['status']}'" : "";
+            $strand = count($where) > 0 ? ' ('.implode(' AND ',$where).')' : '';
+        }
+        $r['raw']   = $strand;
+        $r['page']	= $page;
+        $r['limit']	= $limit;
+        $r['order'] = array('date'=>'desc');
+//debug($r);
+        $data		= $this->import('contact')->findAll($r);
+
+        if( $data['total'] > 0 ){
+            foreach( $data['rows'] as $k => $v ){
+                $number	= $v['number'];
+                //$class	= $v['class'];
+                $data['rows'][$k]['dealdate'] = 0;
+                //获取联系人相关信息
+                //$data['rows'][$k]['contact']	= $this->load('salecontact')->getSaleContactInfo($v['saleId'],$uid);
+                //获取申请人、图片等信息
+                $trademark 						= $this->load('trademark')->details($v['number']);
+                $data['rows'][$k]['trade']		= $trademark;
+                //用于排序
+                $data['rows'][$k]['apply_date']	= $trademark['apply_date'];
+                //获取二级状态
+                $statusTwo						= $this->load('secondstatus')->getTwoDetails($v['number']);
+                $data['rows'][$k]['second']		= $this->load('mytrade')->SecondStatusValue($statusTwo);
+
+                $_info = $this->getSale($number);
+                $data['rows'][$k]['class'] = $_info['class'];
+                $data['rows'][$k]['name']  = $_info['name'];
+            }
+        }
+        //$data['rows'] 	= array_sort($data['rows'],'apply_date',$search['regdate']);
+        return $data;
+    }
 
 	/**
 	* 获取出售信息
@@ -30,14 +175,19 @@ class SaleModule extends AppModule
 	public function getSellList($uid,$search,$page,$limit = 5)
 	{
 		$list['aid']	= $this->load('relation')->getRelationList($uid);
+
 		$sbArr 			= $this->load('salecontact')->getSellBrandIds($uid,$search);
+
 		!empty($search['keywords']) && $r['raw'] = "(name like '%".$search['keywords']."%' or number like '%".$search['keywords']."%')";
 		!empty($search['number']) && $r['eq']['number']	= $search['number'];
 		!empty($search['class']) && $r['eq']['class']	= $search['class'];
 		$r['in']	= array('number' => $sbArr);
 		$r['page']	= $page;
 		$r['limit']	= $limit;
+        $r['order'] = array('id'=>'desc');
+
 		$data		= $this->import('sale')->findAll($r);
+
 		if( $data['total'] > 0 ){
 			foreach( $data['rows'] as $k => $v ){
 				$number	= $v['number'];

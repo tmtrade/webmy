@@ -22,6 +22,9 @@ abstract class AppAction extends Action
 	public $token;
 	
 	public $pageTitle   = "蝉窝 - 一只蝉";
+
+
+    public $ptype        = 0;
 	/**
 	* 前置操作(框架自动调用)
 	* @author	void
@@ -64,6 +67,10 @@ abstract class AppAction extends Action
 		$this->set('ucmenu',$ucmenu);
 		$this->set('current_url', '/'.$this->mod .'/' . $this->action.'/');
 		$this->set('title',$this->pageTitle);
+        //静态文件版本号>>控制js,css缓存
+        $this->set('static_version', 12666);
+
+        $this->set('ptype',$this->ptype);//设置页面标识
 	}
 
 	/**
@@ -117,6 +124,7 @@ abstract class AppAction extends Action
 					'cfwId'     => $userInfo['cfwId'],
 					'cateId'	=> $session['type']
 				);
+                if(!defined('UID')) define('UID',$session['userId']);//定义用户id常量UID
 				$this->userInfo = $mbinfo;
 				$this->isLogin  = true;
 				$this->setUserView();
@@ -201,7 +209,7 @@ abstract class AppAction extends Action
 			$signature	= $_GET['signature'];
 			$surl		= $_GET['surl'];
 			$referer 	= $_SERVER["HTTP_REFERER"];
-			$jsapiToken = 'chaofnwang';
+			$jsapiToken = 'chanshuwang';
 			$key		= sha1("jsapi_ticket={$jsapiToken}&noncestr={$nonceStr}&timestamp={$timestamp}&url={$referer}");
 			if( $key == $signature ){
 				$is = true;

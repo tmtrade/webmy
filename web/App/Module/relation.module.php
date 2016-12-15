@@ -36,8 +36,8 @@ class RelationModule extends AppModule
 	*/
 	public function getStaffInfo( $aid )
 	{
-		$staffInfo = $this->importBi('crm')->getStaffInfo($aid);
-		return $staffInfo;
+		//$staffInfo = $this->importBi('crm')->getStaffInfo($aid);
+		return $staffInfo = array();
 	}
 	
 	/**

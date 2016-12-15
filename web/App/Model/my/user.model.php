@@ -42,13 +42,13 @@ class UserModel extends AppModel
     */
     public function existChofnId($cfwid)
     {
-        $r['eq']    = array(
-            'cfwId'  => $cfwid,
-        );
-        $r['col']   = array('count(`id`) as num');
-        $data       = $this->find($r);
-        $num        = !empty($data['num']) ? $data['num'] : 0;
-        return $num;
+//        $r['eq']    = array(
+//            'cfwId'  => $cfwid,
+//        );
+//        $r['col']   = array('count(`id`) as num');
+//        $data       = $this->find($r);
+//        $num        = !empty($data['num']) ? $data['num'] : 0;
+        return $num = 0;
     }
     /**
     * 账号注册
@@ -66,9 +66,12 @@ class UserModel extends AppModel
         $field              = $this->getUserType($cateId);
         $data[$field]       = $account;
         $data['password']   = getPasswordMd5($password,$rand);
-        $data['salt']       = $rand;
-        $data['regDate']    = TIME;
-        $data['regIp']      = getIp();
+        //$data['salt']       = $rand;
+        $data['createtime']    = TIME;
+        if ( $field == 'mobile' ){
+            $data['isMobile'] = 1;
+        }
+        //$data['regIp']      = getIp();
         return $this->create($data);
     }
     /**
@@ -80,23 +83,23 @@ class UserModel extends AppModel
     * @return   int         $id         数据id
     */
     public function addChofn($chofnInfo)
-    {        
-        $data['cfwId']      = $chofnInfo['id'];
+    {
+        //$data['cfwId']      = $chofnInfo['id'];
         $data['username']   = $chofnInfo['username'];
         $data['nickname']   = $chofnInfo['nickname'];
         $data['email']      = $chofnInfo['email'];
         $data['mobile']     = $chofnInfo['mobile'];
         $data['password']   = $chofnInfo['password'];
-        $data['salt']       = $chofnInfo['salt'];
-        $data['regIp']      = $chofnInfo['regIp'];
+        //$data['salt']       = $chofnInfo['salt'];
+        //$data['regIp']      = $chofnInfo['regIp'];
         $data['isEmail']    = $chofnInfo['isEmail'];
         $data['isMobile']   = $chofnInfo['isMobile'];
-        $data['lastIp']     = $chofnInfo['lastIp'];
-        $data['loginNum']   = $chofnInfo['loginNum'];
-        $data['updated']    = $chofnInfo['updated'];
-        $data['photo']      = $chofnInfo['photo'];
-        $data['level']      = $chofnInfo['level'];
-        $data['regDate']    = $chofnInfo['created'];
+        //$data['lastIp']     = $chofnInfo['lastIp'];
+        //$data['loginNum']   = $chofnInfo['loginNum'];
+        //$data['updated']    = $chofnInfo['updated'];
+        $data['head_path']      = $chofnInfo['photo'];
+        //$data['level']      = $chofnInfo['level'];
+        $data['createtime']    = $chofnInfo['created'];
         return $this->create($data);
     }
     /**
@@ -109,19 +112,7 @@ class UserModel extends AppModel
     */
     public function updateChofn($chofnInfo,$id = 0)
     {
-        $data['nickname']   = $chofnInfo['nickname'];//昵称
-        $data['username']   = $chofnInfo['username'];//用户名
-        $data['email']      = $chofnInfo['email'];//邮箱
-        $data['mobile']     = $chofnInfo['mobile'];//手机
-        $data['cfwId']   	= $chofnInfo['id'];
-        $data['password']   = $chofnInfo['password'];//密码
-        $data['salt']       = $chofnInfo['salt'];//密码签名
-        if( $id == 0 ){
-			$r['eq'] = array('cfwId' => $chofnInfo['id']);
-        }else{
-			$r['eq'] = array('id' => $id);
-        }
-        return $this->modify($data, $r);
+        return true;
     }
     /**
     * 获取用户类型字段
@@ -152,7 +143,7 @@ class UserModel extends AppModel
         $r['eq']    = array(
             $field  => $account,
         );
-        $r['col']   = array('`id`,`mobile`,`email`,`cfwId`,`password`,`salt`,`isEmail`,`isMobile`');
+        $r['col']   = array('`id`,`mobile`,`email`,`password`,`isEmail`,`isMobile`');
         $data       = $this->find($r);
         return $data;
     }
@@ -166,13 +157,14 @@ class UserModel extends AppModel
     */
     public function updateUser($account,$cateId = 2)
     {
-        $field              = $this->getUserType($cateId);
-        $userInfo           = $this->getUserInfo($account,$cateId);
-        $data['loginNum']   = $userInfo['loginNum'] + 1;
-        $data['lastDate']   = TIME;
-        $data['lastIp']     = getIp();
-        $r['eq']            = array($field => $account);
-        return $this->modify($data, $r);
+//        $field              = $this->getUserType($cateId);
+//        $userInfo           = $this->getUserInfo($account,$cateId);
+//        $data['loginNum']   = $userInfo['loginNum'] + 1;
+//        $data['lastDate']   = TIME;
+//        $data['lastIp']     = getIp();
+//        $r['eq']            = array($field => $account);
+//        return $this->modify($data, $r);
+        return true;
     }
     /**
      * 检查是否登陆
@@ -216,9 +208,10 @@ class UserModel extends AppModel
     */
     public function resetCfPwd($id,$password,$salt)
     {
-        $data	= array('password' => $password,'salt' => $salt);
-	    $r['eq']= array('cfwId' => $id);
-        return $this->modify($data, $r);
+        //$data	= array('password' => $password,'salt' => $salt);
+	    //$r['eq']= array('cfwId' => $id);
+        //return $this->modify($data, $r);
+        return true;
     }
     /**
     * 登录后修改登录信息
@@ -229,12 +222,13 @@ class UserModel extends AppModel
     */
     public function updateLogin($uid)
     {
-    	$info				= $this->get($uid);
-        $data['loginNum']   = $info['loginNum'] + 1;
-        $data['lastDate']	= TIME;
-        $data['lastIp']		= getIp();
-        $r['eq']            = array('id' => $uid);
-        return $this->modify($data, $r);
+//    	$info				= $this->get($uid);
+//        $data['loginNum']   = $info['loginNum'] + 1;
+//        $data['lastDate']	= TIME;
+//        $data['lastIp']		= getIp();
+//        $r['eq']            = array('id' => $uid);
+//        return $this->modify($data, $r);
+        return true;
     }
     /**
     * 更新手机

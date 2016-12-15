@@ -105,6 +105,25 @@ function getPageBar($pager, $script = false)
 }
 
 /**
+* 获取分页条
+*
+* @param	array   $pager   组合要素
+* @param	bool    $script  是否带有下拉
+* @return	string
+*/
+function getPageBarNew($pager, $script = true)
+{
+	if ( empty($pager) || !is_array($pager) ) {
+		return '';
+	}
+	$html = "";
+	$html .='<a class="page_btn" href="' . $pager['pre']   . '">上页</a>' . '&nbsp;' .$pager['point']. '&nbsp;' .'<a class="page_btn" href="' . $pager['next']  . '">下页</a>' . '&nbsp;' ;
+	$html .= '<span>共' . $pager['pageNum'] . '页</span>' . '&nbsp;';
+	$html .= $script ? $pager['jump'] : '';
+	return $html;
+}
+
+/**
 * 数组格式转换[2维转化成1维]
 *
 * @param  array  $list  2维数组
@@ -559,7 +578,8 @@ function passwordMd5($password)
 */
 function getPasswordMd5($password,$salt = '')
 {
-	$string = md5(md5($password).$salt);
+	//$string = md5(md5($password).$salt);
+    $string = md5($password);
 	return $string;
 }
 /**
@@ -601,7 +621,7 @@ function checkJsApiCode()
 		$signature	= $_GET['signature'];
 		$surl		= $_GET['surl'];
 		$referer 	= $_SERVER["HTTP_REFERER"];
-		$jsapiToken = 'chaofnwang';
+		$jsapiToken = 'chanshuwang';
 		$key		= sha1("jsapi_ticket={$jsapiToken}&noncestr={$nonceStr}&timestamp={$timestamp}&url={$referer}");
 		if( $key == $signature ){
 			$is = true;
@@ -814,5 +834,83 @@ function get_client_ip($type = 0,$adv=true) {
 	$long = sprintf("%u",ip2long($ip));
 	$ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
 	return $ip[$type];
+}
+
+function replaceSpace($str) {
+  $str = str_replace ( ' ',  '&nbsp;' ,  $str );
+  return $str;
+}
+
+/**
+ * 网页转换成pdf
+ * @author   haydn
+ * @since    2016-01-27
+ * @param    string  $file		网页地址
+ * @param    string  $filepdf	pdf文件保存地址
+ * @return   int		$success	返回（0：成功 1：失败）
+ */
+function makePDF($file,$filepdf)
+{
+	$pdfexe = C('HTMLTOPDF');
+	exec("{$pdfexe} {$file} {$filepdf}",$out,$success);
+	return $success;
+}
+
+/**
+ * 网页转换成png
+ * @author   dower
+ * @since    2016-01-27
+ * @param    string  $file		网页地址
+ * @param    string  $filepng	png文件
+ * @return   int		$success	返回（0：成功 1：失败）
+ */
+function makePng($file,$filepng)
+{
+	$pdfexe = C('HTMLTOIMG');
+	exec("{$pdfexe} {$file} {$filepng}",$out,$success);
+	return $success;
+}
+/**
+ * 验证访问设置是否为移动端
+ * @return bool
+ */
+function is_mobile_request()
+{
+	$_SERVER['ALL_HTTP'] = isset($_SERVER['ALL_HTTP']) ? $_SERVER['ALL_HTTP'] : '';
+	$mobile_browser = '0';
+	if(preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|iphone|ipad|ipod|android|xoom)/i', strtolower($_SERVER['HTTP_USER_AGENT'])))
+		$mobile_browser++;
+	if((isset($_SERVER['HTTP_ACCEPT'])) and (strpos(strtolower($_SERVER['HTTP_ACCEPT']),'application/vnd.wap.xhtml+xml') !== false))
+		$mobile_browser++;
+	if(isset($_SERVER['HTTP_X_WAP_PROFILE']))
+		$mobile_browser++;
+	if(isset($_SERVER['HTTP_PROFILE']))
+		$mobile_browser++;
+	$mobile_ua = strtolower(substr($_SERVER['HTTP_USER_AGENT'],0,4));
+	$mobile_agents = array(
+		'w3c ','acs-','alav','alca','amoi','audi','avan','benq','bird','blac',
+		'blaz','brew','cell','cldc','cmd-','dang','doco','eric','hipt','inno',
+		'ipaq','java','jigs','kddi','keji','leno','lg-c','lg-d','lg-g','lge-',
+		'maui','maxo','midp','mits','mmef','mobi','mot-','moto','mwbp','nec-',
+		'newt','noki','oper','palm','pana','pant','phil','play','port','prox',
+		'qwap','sage','sams','sany','sch-','sec-','send','seri','sgh-','shar',
+		'sie-','siem','smal','smar','sony','sph-','symb','t-mo','teli','tim-',
+		'tosh','tsm-','upg1','upsi','vk-v','voda','wap-','wapa','wapi','wapp',
+		'wapr','webc','winw','winw','xda','xda-'
+	);
+	if(in_array($mobile_ua, $mobile_agents))
+		$mobile_browser++;
+	if(strpos(strtolower($_SERVER['ALL_HTTP']), 'operamini') !== false)
+		$mobile_browser++;
+	// Pre-final check to reset everything if the user is on Windows
+	if(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'windows') !== false)
+		$mobile_browser=0;
+	// But WP7 is also Windows, with a slightly different characteristic
+	if(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'windows phone') !== false)
+		$mobile_browser++;
+	if($mobile_browser>0)
+		return true;
+	else
+		return false;
 }
 ?>

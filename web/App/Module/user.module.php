@@ -102,22 +102,7 @@ class UserModule extends AppModule
 		}
 		$bool			= true;
 		$userInfo		= $this->getInfoById($user);
-		if(!empty($userInfo['cfwId'])){//调用超凡网接口，修改用户信息。
-			$return = array('code' => 1);
-			if( isset($data['mobile']) && !empty($data['mobile']) ){
-				$return	= $this->load('passport')->changeMobile($userInfo['cfwId'], $data['mobile']);
-			}
-			if( isset($data['email']) && !empty($data['email']) ){
-				$return	= $this->load('passport')->changeEmail($userInfo['cfwId'], $data['email']);
-			}
-			if( isset($data['nickname']) ){
-				$return	= $this->load('passport')->changeNickname($userInfo['cfwId'], $data['nickname']);
-			}
 
-			if(isset($return['code']) && $return['code'] != 1){//修改失败，返回错误信息
-				return array('code' => $return['code'],'mess'=> $return['msg']);
-			}
-		}
 		//修改本地信息，记录修改日志
 		$r['eq']				= array('id'=>$user);
 		$bool					= $this->import("user")->modify($data, $r);
@@ -147,20 +132,12 @@ class UserModule extends AppModule
 		}
 		$bool			= true;
 		$userInfo		= $this->getInfoById($user);
-		if(!empty($userInfo['cfwId'])){//调用超凡网接口，修改用户密码。
-			$return = array('code' => 1);
-			if( isset($data['password']) && !empty($data['password']) ){
-				$return	= $this->load('passport')->changePwd($userInfo['cfwId'], $data['oldpassword'], $data['password']);
-			}
-			if(isset($return['code']) && $return['code'] != 1){//修改失败，返回错误信息
-				return array('code' => $return['code'],'mess'=> $return['msg']);
-			}
-		}else{//调用超凡网接口，修改用户密码
-			$pword		= getPasswordMd5($data['oldpassword'],$userInfo['salt']);
-			if($userInfo['password'] != $pword){
-				return array('code' => 2,'mess'=> '旧密码错误');
-			}
-		}
+		//调用超凡网接口，修改用户密码
+        $pword		= getPasswordMd5($data['oldpassword'],$userInfo['salt']);
+        if($userInfo['password'] != $pword){
+            return array('code' => 2,'mess'=> '旧密码错误');
+        }
+
 		unset($data['oldpassword']);
 		$data['password']	= getPasswordMd5($data['password'], $userInfo['salt']);
 
@@ -203,10 +180,11 @@ class UserModule extends AppModule
 	 */
 	public function getChofanId($id)
 	{
-		$r['eq'] 	= array('id' => $id);
-		$r['col']   = array('`cfwId`');
-		$data 		= $this->import("user")->find($r);
-		$cfwId		= !empty($data) ? $data['cfwId'] : 0;
+		//$r['eq'] 	= array('id' => $id);
+		//$r['col']   = array('`cfwId`');
+		//$data 		= $this->import("user")->find($r);
+		//$cfwId		= !empty($data) ? $data['cfwId'] : 0;
+        $cfwId = 0;
 		return $cfwId;
 	}
 	/**
@@ -221,8 +199,8 @@ class UserModule extends AppModule
 	 */
 	public function getChofnAccount($account,$cateId = 2)
 	{
-		$cfInfo	= $this->importBi('passport')->get($account,$cateId);
-		return $cfInfo;
+		//$cfInfo	= $this->importBi('passport')->get($account,$cateId);
+		return $cfInfo = array();
 	}
 	/**
 	 * 用超凡id获取用户中心账号
@@ -236,11 +214,11 @@ class UserModule extends AppModule
 	 */
 	public function getUcChofnInfo($cfid,$field='*')
     {
-    	$fieldArr	= explode(',',$field);
-		$r['eq'] 	= array('cfwId' => $cfid);
-		$r['col']   = $fieldArr;
-		$data 		= $this->import("user")->find($r);
-		return $data;
+    	//$fieldArr	= explode(',',$field);
+		//$r['eq'] 	= array('cfwId' => $cfid);
+		//$r['col']   = $fieldArr;
+		//$data 		= $this->import("user")->find($r);
+		return $data = array();
     }
     /**
 	 * 重置密码
@@ -254,10 +232,8 @@ class UserModule extends AppModule
 	 */
     public function resetpwd($uid,$password)
     {
-    	$usInfo	= $this->import("user")->get($uid);
-    	if( !empty($usInfo['cfwId']) ){
-			$this->importBi('passport')->resetPwd($usInfo['cfwId'],$password);
-    	}
+    	$usInfo	            = $this->import("user")->get($uid);
+
     	$password			= getPasswordMd5($password,$usInfo['salt']);
     	$data['password']	= $password;
     	$r['eq'] 			= array('id'=>$uid);
@@ -291,9 +267,9 @@ class UserModule extends AppModule
 	 */
     public function resetChofnPwd($cfid,$password)
     {
-    	$code	= $this->importBi('passport')->resetPwd($cfid,$password);
-    	$code	= $code == 1 ? 1 : 0;
-		return $code;
+    	//$code	= $this->importBi('passport')->resetPwd($cfid,$password);
+    	//$code	= $code == 1 ? 1 : 0;
+		return $code = 1;
     }
 }
 ?>

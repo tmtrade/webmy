@@ -46,7 +46,7 @@ class SessionsModule extends AppModule
 	*/
 	public function getloginDate($userId,$thetime = 0)
 	{
-		$r['raw']	= "`loginDate` < {$thetime} and `userId` = {$userId}";
+		$r['eq'] 	= array('userId'=>$userId);
 		$r['order']	= array( 'id' => 'desc' );
 		$r['limit']	= 1;
 		$data		= $this->import( 'sessions' )->find( $r );

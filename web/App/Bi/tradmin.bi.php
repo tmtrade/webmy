@@ -38,11 +38,6 @@ class TradminBi extends Bi
 	{
 		$actionName = 'systemapi';
 		$funName     = 'cancelContact';
-		/*
-		$data = array(
-			'uid'           => '580',
-			'number'        => '144',
-		);*/
 		$params = array(
 			'user' => 'api1010',
 			'sign' => $this->sign($data),
@@ -77,7 +72,7 @@ class TradminBi extends Bi
     public function sign($data)
     {
         ksort($data, SORT_STRING);
-        $apiKey = 'JyZyZcXmChOfN2016ZxWlQkF';
+        $apiKey = TRADE_MY_KEY;
         $sign   = md5( md5(serialize($data)).$apiKey );
         return $sign;
     }

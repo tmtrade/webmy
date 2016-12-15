@@ -51,6 +51,7 @@ class LoginAction extends AppAction
 		}
 		$msg		= $this->load('login')->getError($code);
 		$result     = array('code' => $code,'msg' => $msg);
+
 		$this->setJson($result,$callback);
 	}
 	/**

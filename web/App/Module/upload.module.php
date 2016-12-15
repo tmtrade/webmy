@@ -51,7 +51,7 @@ class UploadModule extends AppModule
             $up->_imgUrl_ = StaticDir.$this->path.'/'.$up->upFile;
         }else{
             $up->_imgUrl_ = '';
-        }        
+        }
         return $up;
     }
 	
@@ -106,7 +106,7 @@ class UploadModule extends AppModule
             $up->fileurl = StaticDir.$this->path.'/excel/'.$up->upFile;
         }else{
             $up->fileurl = '';
-        }        
+        }
         return $up;
     }
 }

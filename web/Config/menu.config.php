@@ -29,6 +29,15 @@ return array(
                 ),
             ),
             array('title'=>'商标报价单', 'url'=>'/quotation/index/',),
+            array(
+                'title' => '我要出售',
+                'url'   => '/sell/index/',
+                'child'	=> array(
+                    '/sell/number/',
+                    '/sell/person/',
+                    '/sell/document/',
+                ),
+            ),
         ),
     ),
 	2 => array(

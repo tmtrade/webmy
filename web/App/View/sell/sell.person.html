@@ -1,0 +1,756 @@
+<? require(ViewDir.'/public/header_seller.html'); ?>
+<section id="main-content">
+    <section class="wrapper" >
+    <!--右侧主体部分-->
+    <div class="sell-lf-main">
+        <div class="comm-list-tit sell-by-brand w-cont">
+            <h3 class="fl"><label>根据申请人出售</label></h3>
+            <p class="fr">
+                您还可以选择:<a href="/sell/number" addmsg="根据商标号出售" module='根据申请人出售'>根据申请号出售  </a>|<a href="/sell/document" addmsg="根据文档出售" module='根据申请人出售'>根据文档出售</a>
+            </p>
+        </div>
+        <div class="comm-search-bg">
+            <div class="desi by-brand-search w-cont">
+                <label>根据申请人出售</label>
+                <input type="text" class="cir" id="person" placeholder="请输入申请人名义"/>
+                <a  class="cir sear-btn" id="serch-pel">立刻搜索</a>
+                <!--当该商标失效-->
+                <!--<a class="eff-brand hint-bg cir"><i></i>改商标已失效</a>-->
+                <p class="sqr-ts cir blk" style="display: none"  id="p_tip"><span class="fl">当前申请人：<span class="p_tip"></span></span><a class="del-sqr fl"><i class="fa fa-remove"></i>删除</a></p>
+            </div>
+            <div class="batch-cz fr">
+                <a href="javascript:;" class="cir sear-btn batch-pric" addmsg="批量设置价格" module='根据申请人出售'>批量设置价格</a>
+                <a href="javascript:;" class="cir qx-btn batch-del" addmsg="批量删除" module='根据申请人出售'>批量删除</a>
+            </div>
+        </div>
+        <div class="pull-list choose-trade">
+            <a class="cir all-tp-btn" index="1" addmsg="仅查看未提交商标" module='根据申请人出售'><font id="size_income">仅查看未提交商标</font><i class="fa fa-chevron-down"></i></a>
+            <ul class="all-tp-list" style="display: none;">
+                <li id="trade1" onclick="jc('trade',1,2)">仅查看未提交商标</li>
+                <li id="trade2" onclick="jc('trade',2,2)">仅查看已提交商标</li>
+
+            </ul>
+        </div>
+        <div class="data-list-mess by-prop" style="display: block" id="con_trade_1">
+            <div id="has-data">
+
+                <table class="list-mess-main list-mess-tit">
+                    <thead>
+                    <tr class="tbl-tit">
+                        <th><label><input type="checkbox" id="chooseall">全选</label></th>
+                        <th>序号</th>
+                        <th class="list-mess-pic">商标图形</th>
+                        <th>商标号  </th>
+                        <th>商标名称</th>
+                        <th>类别</th>
+                        <th class="exp-ear">期望获得收益</th>
+                        <th class="oper">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+                <div class="comm-list-news blk  brand-list">
+                    <form id="submit_number">
+                        <table class="list-mess-main">
+
+                            <!--<thead>-->
+                            <!--<tr class="tbl-tit">-->
+                                <!--<th><label><input type="checkbox" id="chooseall">全选</label></th> <th>序号</th><th class="list-mess-pic-tit">商标图形</th> <th>商标号  </th> <th>商标名称</th><th>类别</th><th>期望获得收益    </th><th>操作</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+
+                            <tbody class="list-mess" id="list_body"></tbody>
+                        </table>
+                    </form>
+                </div>
+                <p class="brand-data fr">当前共有 <span id="goods_num">0</span> 条商品数据 </p>
+            </div>
+            <!--未添加商标-->
+            <div id="no-data" class="no-data">
+                <h4>您还未添加商标</h4>
+                <label>请先添加商标到出售列表</label>
+            </div>
+        </div>
+        <div class="data-list-mess by-prop" id="con_trade_2">
+            <div id="has-data2">
+                <table class="list-mess-main list-mess-tit">
+                    <thead>
+                    <tr class="tbl-tit">
+                       <th>序号</th>
+                        <th class="list-mess-pic">商标图形</th>
+                        <th>商标号  </th>
+                        <th>商标名称</th>
+                    </tr>
+                    </thead>
+                </table>
+                <div class="comm-list-news blk  brand-list">
+                    <table class="list-mess-main">
+
+                        <!--<thead>-->
+                        <!--<tr class="tbl-tit">-->
+                           <!--<th>序号</th><th class="list-mess-pic-tit">商标图形</th> <th>商标号  </th> <th>商标名称</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+
+                        <tbody class="list-mess" id="list_body2"></tbody>
+                    </table>
+                </div>
+            </div>
+            <!--未添加商标-->
+            <div class="no-data" id="no-data2">
+                <h4>暂无已售商标</h4>
+            </div>
+        </div>
+        <div class="cg-cont">
+            <a class="cir qx-btn" href="javascript:;" id="get_left" style="display: none" addmsg="换一批" module='根据申请人出售'>换一批</a>
+        </div>
+
+        <div class="amend-cont-all amend-cont-tj">
+            <? if($userInfo['mobile']): ?>
+            <!--联系人信息完整可以修改-->
+            <div class="amend-cont cir ">
+                <label>联系电话：</label>
+                <div class="cg-cont-tel">
+                    <span class="contact_mobile"><?=$userInfo['mobile']?></span>
+                </div>
+                <label>联系人：</label>
+                <div class="cg-cont-name">
+                    <span class="contact_name"><?=$userInfo['name']?></span>
+                </div>
+                <div class="cg-tel">
+                    <a href="javascript:;" class="xg_mobile" addmsg="修改联系方式" module='根据申请人出售'>修改联系方式</a>
+                </div>
+            </div>
+            <? else: ?>
+            <!--联系人信息不完整可以添加-->
+            <div class="amend-cont cir">
+                <div class="incomp f-hidden">
+                    <label>联系电话：</label>
+                    <div class="cg-cont-tel">
+                        <input type="text" class="cir blk c_tel" />
+                    </div>
+                    <label>联系人：</label>
+                    <div class="cg-cont-name">
+                        <input type="text" class="cir blk c_name" value=""/>
+                    </div>
+                    <div class="cg-tel">
+                        <a class="cir sear-btn cg-sear">确定修改</a><a class="cir qx-btn cg-qx">取消</a>
+                    </div>
+                </div>
+                <p class="cir blk inc-ts">请至少添加一条商标数据</p>
+            </div>
+            <? endif; ?>
+            <a class="sub-btn cir" id="add_goods">
+                提交当前页面商品
+            </a>
+        </div>
+        <!--保存修改内容的隐藏域-->
+        <div id="nicaicai" style="display: none">
+            <!--显示内容-->
+            <div class="cc1 ">
+                <label>联系电话：</label>
+                <div class="cg-cont-tel">
+                    <span class="contact_mobile"><?=$userInfo['mobile']?></span>
+                </div>
+                <label>联系人：</label>
+                <div class="cg-cont-name">
+                    <span class="contact_name"><?=$userInfo['name']?></span>
+                </div>
+                <div class="cg-tel">
+                    <a href="javascript:;" class="xg_mobile"  addmsg="修改联系方式" module='根据申请人出售'>修改联系方式</a>
+                </div>
+            </div>
+            <!--修改框-->
+            <div class="cc2">
+                <div class="incomp f-hidden">
+                    <label>联系电话：</label>
+                    <div class="cg-cont-tel">
+                        <input type="text" class="cir blk c_tel" />
+                    </div>
+                    <label>联系人：</label>
+                    <div class="cg-cont-name">
+                        <input type="text" class="cir blk c_name" value=""/>
+                    </div>
+                    <div class="cg-tel">
+                        <a class="cir sear-btn cg-sear">确定修改</a><a class="cir qx-btn cg-qx">取消</a>
+                    </div>
+                    <p class="cir blk inc-ts" style="display: none">请至少添加一条商标数据</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--批量设置价格弹窗-->
+<div class="price-cpm common-cpm-sty" id="pri-cont-main">
+    <div class="common-cpm-top">
+        <h3>批量设置价格</h3>
+    </div>
+    <div class="common-cpm-cent">
+        <label>您现在可以将</label>
+        <select class="cir blk" id="mass_set">
+            <option value="0">勾选中的商标</option>
+            <option value="1">全部商标</option>
+        </select>
+        <label>统一设置为</label>
+        <input class="cir blk" id="mass_price" type="text" placeholder="请输入商品期望获益的价格"/>
+        <label>元</label>
+    </div>
+</div>
+<!--申请人输入为空时 点击搜索时弹出选择申请人弹窗-->
+<div class="price-cpm common-cpm-sty" id="pel-cont-main">
+    <div class="common-cpm-top">
+        <h3>请选择申请人</h3>
+    </div>
+    <div class="cpm-pel-cent">
+        <label class="tit">根据您搜索的关键字,有以下<span class="p_num"></span> 条申请人符合您的搜索要求，请选择</label>
+        <table class="pel-cent-th">
+            <thead>
+            <tr>
+                <td class="com-name" style="width:39.9%;width/***/:38.9%\9;">公司名称</td>
+                <td class="com-name" style="width/***/:38.9%\9;">公司地址</td>
+                <td class="com-ope" style="width:16.9%;width/***/:16.4%\9;text-indent: -10px;">操作</td>
+            </tr>
+            </thead>
+        </table>
+        <div class="pel-cent">
+            <table class="cir">
+                <tbody class="list-mess" id="p_list">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cpm-pel-price cir">
+            <!--<label><input class="chi" type="checkbox" id="is_union"/>-->
+            <label>我想把本次出售的商标获益统一设置为</label></label>
+            <input class="blk cir" type="text" id="union_price" placeholder="请输入期望获益的价格"/>
+        </div>
+    </div>
+</div>
+    </section>
+</section>
+<script type="text/javascript" src="<?=StaticDir?>1.0/js/sell.js?v=<?=$static_version?>"></script>
+<script type="text/javascript">
+    var is_all = true;//当前商标是否为申请人下的所有商标
+    var now = 0;//0表示全部商标,大于0表示还有下一页数据
+    var total_num = 0;//未出售商标
+    var other_num = 0;//除去当前页面剩余的未出售商标
+    var proposer_id = 0;
+    var union_price = 0;
+    var now_k = 0;
+    $(function(){
+        //enter键事件
+        $(document).keypress(function(e) {
+            if(e.which == 13) {
+                $('#serch-pel').click();
+                return false;
+            }
+        });
+        //搜索申请人事件
+        $('#serch-pel').click(function(){
+            layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            var person = $.trim($('#person').val());
+            if(person=='' || person=='请输入申请人名义'){
+                layer.msg('您还未填写申请人名义', {
+                    time: 1500
+                });
+                layer.closeAll('loading');
+                return false;
+            }
+            var btnval = $('#serch-pel').text();
+            if(btnval=='重新搜索'){
+                $('#p_tip').hide();
+                $('#serch-pel').text('搜索');
+                $('#list_body').empty();
+                $('#list_body2').empty();
+                $('#goods_num').text(0);
+                now_k = 0;
+                $('#trade1').click();
+                check_table();
+            }
+	    setEvent("根据申请人出售","输入了申请人:"+person);
+            //获得申请人模糊列表
+            $.post('/sell/getPerson',{'person':person},function(data){
+                layer.closeAll('loading');
+                if(data.code==0){
+                    $('.p_num').text(data.list.length);
+                    var html = '';
+                    //组装内容
+                    for(var i in data.list){
+                        html += '<tr index="1">\
+                            <td class="com-name"><p>'+(data.list)[i]['name']+'</p></td>\
+                            <td class="com-name"><p>'+(data.list)[i]['address']+'</p></td>\
+                            <td class="com-ope">\
+                            <input type="hidden" class="proposer_id" value="'+(data.list)[i]['id']+'">\
+                             <a  class="xzk"></a>\
+                            </td>\
+                            </tr>';
+                    }
+                    $('#p_list').text('').append(html);
+                    //弹出申请人选择框
+                    layer.open({
+                        area:["640px","202"],
+                        btn: ['确定','关闭'],
+                        yes: function(){
+                            layer.load(1, {
+                                shade: [0.1,'#fff'] //0.1透明度的白色背景
+                            });
+                            //得到申请人
+                            var choose = $("#p_list tr[index=2]");
+                            if(choose.length!=1){
+                                layer.msg('请选择具体的申请人', {
+                                    time: 1500
+                                });
+                                layer.closeAll('loading');
+                                return false;
+                            }
+                            var proposer_name = $.trim(choose.closest('tr').find('td:first p').text());
+                            proposer_id = $.trim(choose.closest('tr').find('.proposer_id').val());
+                            if(!proposer_id){
+                                layer.msg('参数异常,请刷新', {
+                                    time: 1500
+                                });
+                                layer.closeAll('loading');
+                                return false;
+                            }
+                            //是否设置通用价格
+                            union_price = $('#union_price').val();
+                            if(union_price && union_price!='请输入期望获益的价格' && checkPrice(union_price)==false){
+                                layer.msg('请输入0以上的整数', {
+                                    time: 1500
+                                });
+                                layer.closeAll('loading');
+                                return false;
+                            }
+                            union_price = (union_price && union_price!='请输入期望获益的价格')?parseInt(union_price):'';
+                            //提交数据获得商标数据
+                            $.post('/sell/getPersonTm',{'proposer_id':proposer_id},function(data){
+                                layer.closeAll('loading');
+                                if(data.code==0){
+                                    //下页的起点, 为0则无
+                                    now = data.now;
+                                    if(now){
+                                        is_all = false;
+                                    }
+                                    //商标总数
+                                    total_num = data.total;
+                                    other_num = total_num-data.list.length;
+                                    is_show();
+                                    //修改商标数量
+                                    $('#goods_num').text(data.list.length);
+                                    //清空列表框并关闭
+                                    $('#p_list').empty();
+                                    layer.closeAll();
+                                    //保存已售商标
+                                    var has_tm = '';
+                                    for(var i in data.exist){
+                                        ++now_k;
+                                        has_tm += '<tr>\
+                                            <td>'+now_k+'</td>\
+                                            <td class="list-mess-pic">\
+                                            <a class="pic" href="javascript:;"><img src="'+(data.exist)[i]['imgUrl']+'" onerror="this.src=\'/Static/1.0/images/img1.png\'"></a>\
+                                            </td>\
+                                            <td class="number">'+(data.exist)[i]['number']+'</td>\
+                                            <td>'+(data.exist)[i]['name']+'</td>\
+                                            <td>'+(data.exist)[i]['class']+'</td>\
+                                            </tr>';
+                                    }
+                                    $('#list_body2').append(has_tm);//追加到当前中
+                                    //为空时
+                                    if(!(data.list.length)){
+                                        layer.msg('该申请人无有效商标或商标已在您的出售中', {
+                                            time: 3000
+                                        });
+                                    }else{
+                                        //追加商标数据
+                                        var html = '';
+                                        //组装内容
+                                        for(var i in data.list){
+                                            html += '<tr>\
+                                                <td><input type="checkbox"/></td>\
+                                                <td>'+(i-0+1)+'</td>\
+                                                <td class="list-mess-pic">\
+                                                <a class="pic" href="javascript:;"><img src="'+(data.list)[i]['imgUrl']+'" onerror="this.src=\'/Static/1.0/images/img1.png\'"></a>\
+                                                </td>\
+                                                <td class="number">'+(data.list)[i]['number']+'</td>\
+                                                <td>'+(data.list)[i]['name']+'</td>\
+                                                <td title="'+(data.list)[i]['class']+'">'+(data.list)[i]['thumb']+'</td>\
+                                                <td class="exp-ear">\
+                                                <input type="hidden" name="number[]" value="'+(data.list)[i]['number']+'">\
+                                                我期望获益<input type="text" name="price[]" placeholder="请填写底价" class="cir blk tr_price" value="'+union_price+'"/>元\
+                                                </td>\
+                                                <td class="dele">\
+                                                <a class="del-lis" href="javascript:;">删除</a>\
+                                                </td>\
+                                                </tr>';
+                                        }
+                                        $('#list_body').append(html);
+                                    }
+                                    //添加当前申请人的提示框并清空申请人表单
+                                    $('.p_tip').text(proposer_name);
+                                    $('#person').val('');
+                                    $('#p_tip').show();
+                                    $('#serch-pel').text('重新搜索');
+                                    //检测内容
+                                    check_table();
+                                }else{
+                                    layer.msg(data.msg, {
+                                        time: 1500
+                                    });
+                                }
+                            },'json');
+                        },
+                        type: 1,
+                        title: false,
+                        closeBtn:1,
+                        shadeClose: true, //开启遮罩关闭
+                        content:$("#pel-cont-main")
+                    });
+                }else{
+                    layer.msg(data.msg, {
+                        time: 1500
+                    });
+                }
+            },'json');
+        });
+        //提交商品事件
+        $('#add_goods').click(function(){
+            layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            var num = $('#goods_num').text();
+            if(num>50){
+                layer.msg('单次提交商标数不能大于50', {
+                    time: 1500
+                });
+                layer.closeAll('loading');
+                return false;
+            }
+            //检查商标价格
+            var prices = $('#list_body input[name*=price]');
+            if(prices.length==0){
+                layer.msg('请至少添加一条商标信息', {
+                    time: 1500
+                });
+                layer.closeAll('loading');
+                return false;
+            }
+            var tmp = '';
+            var flag = true;
+            prices.each(function(i){
+                tmp = $.trim($(this).val());
+                if(checkPrice(tmp)==false){
+                    flag = false;
+                    return false;
+                }
+            });
+            if(!flag){
+                layer.msg('请输入0以上的整数', {
+                    time: 1500
+                });
+                layer.closeAll('loading');
+                return false;
+            }
+            //序列化表单数据
+            var data = $('#submit_number').serialize();
+            //联系人信息
+            var mobile = $('.amend-cont-all .contact_mobile').text();
+            if(!isMobile(mobile)){
+                layer.msg('联系方式不正确', {
+                    time: 1500
+                });
+                layer.closeAll('loading');
+                return false;
+            }
+            var name = $('.amend-cont-all .contact_name').text();
+            if(!name){
+                layer.msg('请输入联系人', {
+                    time: 1500
+                });
+                layer.closeAll('loading');
+                return false;
+            }
+            if(!isName(name)){
+                layer.msg('联系人为30个字符内的中文或英文', {
+                    time: 1500
+                });
+                layer.closeAll('loading');
+                return false;
+            }
+            //组装联系人信息
+            data += ('&mobile='+mobile+'&name='+name);
+            //提交数据
+            $.post('/sell/addPerson',data,function(dd){
+                layer.closeAll('loading');
+                if(dd.code==0){
+                    if(is_all){
+                        layer.msg('提交成功', {
+                            time: 1500
+                        },function(){
+                            location.reload();
+                        });
+                    }else{
+                        //计算剩余商标
+                        total_num -= num;
+                        //将当前数据添加到已售中
+                        putSubmitData();
+                        layer.msg('提交成功,现加载剩余商标', {
+                            time: 2500
+                        });
+                        $('#chooseall').prop('checked',false);
+                        getLeft();
+                    }
+                }else if(dd.code==1){
+                    layer.msg(dd.msg, {
+                        time: 1500
+                    });
+                }else{
+                    var msg = '出现错误, 请稍后再试';//线上
+//                    var msg = dd.msg;
+                    layer.msg(msg, {
+                        time: 1500
+                    });
+                }
+            },'json');
+        });
+        //批量设置价格
+        $(".batch-pric").on("click",function(){
+            layer.open({
+                area:["640px","202"],
+                btn: ['确定','关闭'],
+                type: 1,
+                yes:function(){
+                    //价格
+                    var price = parseInt($.trim($('#mass_price').val()));
+                    if(checkPrice(price)==false){
+                        layer.msg('请输入0以上的整数', {
+                            time: 1500
+                        });
+                        return false;
+                    }
+                    //设置模式
+                    var choose = $('#mass_set').val();
+                    var trs = '';
+                    if(choose==1){//全部商标
+                        trs = $('#list_body>tr');
+                    }else{//选中商标
+                        trs = $('#list_body input:checked').parents('tr');
+                    }
+                    if(trs.length==0){
+                        layer.msg('请勾选需设置价格的商标', {
+                            time: 1500
+                        });
+                        return false;
+                    }
+                    //设置价格
+                    trs.each(function(){
+                        $(this).find('input[name*=price]').val(price);
+                    });
+                    layer.closeAll();
+                },
+                title: false,
+                closeBtn:1,
+                shadeClose:false,
+                content:$("#pri-cont-main")
+            });
+        });
+
+
+
+        //批量删除；
+        $(".batch-del").on("click",function(){
+            var oips=$("#list_body").find("input:checked");
+            if(oips.length==0){
+                layer.msg('请至少选择一条商标', {
+                    time: 1500
+                });
+                return false;
+            }
+            layer.confirm('您确定删除选中的商标吗?',function(){
+                oips.each(function(i){
+                    $(this).parent().parent().remove();
+                    $('#goods_num').text(function(i,v){
+                        return v-1;
+                    });
+                });
+                layer.closeAll();
+                check_table();
+            })
+        });
+        //删除申请人标签
+        $(".del-sqr").on("click",function(){
+            layer.confirm('删除申请人会同时清空出售商标列表，您确定继续操作么?',function(){
+                $('#p_tip').hide();
+                //清空当前
+                $('#serch-pel').text('搜索');
+                $('#list_body').empty();
+                $('#list_body2').empty();
+                $('#goods_num').text(0);
+                now_k = 0;
+                check_table();
+                $('#trade1').click();
+                layer.closeAll();
+            })
+        });
+
+        //全选/全不选 事件
+        $('#chooseall').click(function(){
+            var flag = $(this).prop('checked');
+            $('#list_body>tr input[type=checkbox]').prop('checked',flag);
+        });
+        $('#list_body').on('click','input[type=checkbox]',function(){
+            if($('#list_body tr').length != $('#list_body input:checked').length){
+                $('#chooseall').prop('checked',false);
+            }else{
+                $('#chooseall').prop('checked',true);
+            }
+        });
+        //换一批功能
+        $('#get_left').click(function(){
+            if(is_all){
+                layer.msg('没有更多信息了',{time:1500});
+            }else{
+                getLeft();
+            }
+        });
+    });
+
+    //申请人列表选中效果相关js
+    $("#p_list").on("click",'tr',function(){
+        var oinx= $(this).attr("index");
+        if(oinx==1){
+            $("#p_list").find("tr").css({"backgroundColor":"#ffffff"});
+            $("#p_list").find("tr").find("a.xzk").css({"backgroundImage":"url('<?=StaticDir?>1.0/images/sell-ope.png')","backgroundRepeat":"no-repeat"});
+            $("#p_list").find("tr").attr("index","1");
+            $(this).css({"backgroundColor":"#fff5e1"});
+            $(this).find("a.xzk").css({"backgroundImage":"url('<?=StaticDir?>1.0/images/sell-ope-over.png')","backgroundRepeat":"no-repeat"});
+            $(this).attr("index","2");
+        }else{
+            $(this).css({"backgroundColor":"#ffffff"});
+            $(this).find("a.xzk").css({"backgroundImage":"url('<?=StaticDir?>1.0/images/sell-ope.png')","backgroundRepeat":"no-repeat"});
+            $(this).attr("index","1");
+        }
+        return false;
+    });
+    //得到剩余的商标
+    function getLeft(){
+        //清空数据
+        $('#list_body').empty();
+        $('#goods_num').text(0);
+        //得到申请人
+        if(!proposer_id){
+            layer.msg('参数异常,请刷新', {
+                time: 1500
+            });
+            return false;
+        }
+        //是否设置通用价格
+        union_price = union_price?parseInt(union_price):'';
+        //提交数据获得商标数据
+        $.post('/sell/getPersonTm',{'proposer_id':proposer_id,'now':now},function(data){
+            if(data.code==0){
+                //下页的起点, 为0则无
+                now = data.now;
+                other_num = total_num-data.list.length;
+                is_show();
+                //追加商标数据
+                var html = '';
+                //组装内容
+                for(var i in data.list){
+                    html += '<tr>\
+                        <td><input type="checkbox"/></td>\
+                        <td>'+(i-0+1)+'</td>\
+                        <td class="list-mess-pic">\
+                        <a class="pic" href="javascript:;"><img src="'+(data.list)[i]['imgUrl']+'" onerror="this.src=\'/Static/1.0/images/img1.png\'"></a>\
+                        </td>\
+                        <td class="number">'+(data.list)[i]['number']+'</td>\
+                        <td>'+(data.list)[i]['name']+'</td>\
+                        <td title="'+(data.list)[i]['class']+'">'+(data.list)[i]['thumb']+'</td>\
+                        <td class="exp-ear">\
+                        <input type="hidden" name="number[]" value="'+(data.list)[i]['number']+'">\
+                        我期望获益<input type="text" name="price[]" placeholder="请填写底价" class="cir blk tr_price" value="'+union_price+'"/>元\
+                        </td>\
+                        <td class="dele">\
+                        <a class="del-lis" href="javascript:;">删除</a>\
+                        </td>\
+                        </tr>';
+                }
+                $('#list_body').append(html);
+                //修改商标数量
+                $('#goods_num').text(data.list.length);
+                //检测内容
+                check_table();
+            }else{
+                layer.msg(data.msg, {
+                    time: 1500
+                });
+            }
+        },'json');
+    }
+    //检查表格中是否有内容
+    function check_table(){
+        cg_tbcolor();
+        support_placeholder();
+        var objs = $('#list_body tr').length;
+        if(!objs){
+            $('#chooseall').prop('checked',false)//全选按钮失去勾选
+            $('#has-data').hide();
+            $('#no-data').show();
+        }else{
+            $('#no-data').hide();
+            $('#has-data').show();
+        }
+        var objs2 = $('#list_body2 tr').length;
+        if(!objs2){
+            $('#has-data2').hide();
+            $('#no-data2').show();
+        }else{
+            $('#no-data2').hide();
+            $('#has-data2').show();
+        }
+        var obj=$(".comm-list-news");
+        if(obj.height()>=600){
+           $(".list-mess-tit tr th.oper").css({"width":"111.9px"})
+        }else{
+           $(".list-mess-tit tr th.oper").css({"width":"100px"})
+       }
+
+    }
+
+    //将提交的数据添加到已售列表中
+    function putSubmitData(){
+        var objs = $('#list_body tr');
+        var has_tm = '';
+        var t_img = '';
+        var t_name = '';
+        var t_class = '';
+        var t_number = '';
+        objs.each(function(){
+            ++now_k;
+            t_img = $(this).find('img').attr('src');
+            t_number = $(this).find('.number').text();
+            t_name = $(this).find('td:eq(4)').text();
+            t_class = $(this).find('td:eq(5)').text();
+            has_tm += '<tr>\
+                <td>'+now_k+'</td>\
+                <td class="list-mess-pic">\
+                <a class="pic" href="javascript:;"><img src="'+t_img+'" onerror="this.src=\'/Static/1.0/images/img1.png\'"></a>\
+                </td>\
+                <td class="number">'+t_number+'</td>\
+                <td>'+t_name+'</td>\
+                <td>'+t_class+'</td>\
+                </tr>';
+        });
+        $('#list_body2').append(has_tm);//追加到当前中
+    }
+    //是否显示 换一批
+    function is_show(){
+        if(other_num>0){
+            $('#get_left').show();
+        }else{
+            $('#get_left').hide();
+        }
+    }
+
+</script>
+<? require(ViewDir.'/public/footer_seller.html'); ?>

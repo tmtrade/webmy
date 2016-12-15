@@ -1,0 +1,156 @@
+<? require(ViewDir.'/public/header_seller.html'); ?>
+<section id="main-content">
+    <section class="wrapper" >
+
+    <div class="sell-lf-main">
+        <div class="comm-list-tit sell-by-brand w-cont">
+            <h3 class="fl"><label>根据文档出售</label></h3>
+            <p class="fr">
+                您还可以选择:<a href="/sell/number" addmsg="根据商标号出售" module='根据文档出售'>根据申请号出售 </a>|<a href="/sell/person" addmsg="根据商标号出售" module='根据文档出售'>根据申请人出售</a>
+            </p>
+        </div>
+        <div class="comm-search-bg f-hidden">
+            <p class="docum-step">
+                <span class="on one" >第一步&nbsp;|&nbsp;选择文档上传</span>
+                <i class="fa fa-chevron-right"></i>
+                <span class="two">第二步&nbsp;|&nbsp;自动提交商品</span>
+                <i class="fa fa-chevron-right"></i>
+                <span class="three">第三步&nbsp;|&nbsp;提交完成</span>
+            </p>
+        </div>
+        <div class="sub-result">
+            <!--选择文档上传 opacity: 0; -->
+            <div class="sub-state" id="one">
+                <div class="sub-state-pic">
+                    <img src="<?=StaticDir?>1.0/images/sub-state-bf.png">
+                </div>
+
+            <form id='bzformupload' action='/sell/ajaxUploadExcel/' method='post' enctype='multipart/form-data' style="cursor:pointer;">
+                <a class="sub-btn cir" addmsg="选择上传文档" module='根据文档出售'>
+                    选择上传文档
+                <input type="file"   name="fileName" id="upfile"  style="font-size:47px;overflow:hidden;cursor:pointer;border:0px;border-bottom-style:none;border-top-style:none;border-left-style:none;border-right-style:none;width:200px;height:45px; position:relative;top: -45px;line-height:45px; opacity: 0;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);"  />
+                </a>
+            </form>
+		
+                <p>
+                    <label>一次最高不超过100条数据<br/>还没有模板？</label>
+                    <a href="javascript:void(0)" onclick="downModel()" addmsg="点这里EXCEL模板下载" module='根据文档出售'>点这里 EXCEL模板下载</a>
+                </p>
+            </div>
+            <!--商品提交中-->
+            <div class="sub-state" id="two" style="display:none;">
+                <div class="sub-state-pic">
+                    <img src="<?=StaticDir?>1.0/images/sub-state-ing.png">
+                </div>
+                <h3>
+                    商品提交中，请耐心等候
+                </h3>
+                <p>
+                    提交的商品越多，等待的时间就越长噢~不要捉急，马上就好
+                </p>
+            </div>
+            <!--提交完毕-->
+            <div class="sub-state" id="three" style="display:none;">
+                <div class="sub-state-pic" >
+                    <img src="<?=StaticDir?>1.0/images/sub-state-end.png">
+                </div>
+                <h3>
+                    提交完毕
+                </h3>
+                <p>
+                    本次您导入了<span class="cFF0000" id="alldata"></span>条商品，
+		    成功<span class="cFF0000" id="sucdata"></span>条商品，
+		    失败<span class="cFF0000" id="errdata"></span>条商品<br/>
+		    <a href="javascript:void(0)" id="downError" style="display: none" addmsg="下载失败文档" module='根据文档出售'>下载失败文档</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+</section>
+
+<script type="text/javascript" src="<?=StaticDir?>1.0/js/jquery.form.js"></script>
+<script type="text/javascript">
+	var errMsg = "上传的附件文件不能超过2M！！！";
+	var errFile = "可选择一条excel文件（仅支持后缀名为 .xls  .xlsx  .xlsm 文件）。文件最大不可超过 ( 10m ) ";
+	//检查文件类型
+	function checkfileType(fileInput){
+		var flag = true;
+		var extStart=fileInput.lastIndexOf(".");
+		var ext=fileInput.substring(extStart,fileInput.length).toUpperCase(); //wenjian 
+		var fileType=new Array(".XLS",".XLSX",".XLSM");
+		if($.inArray(ext, fileType) == -1){
+			layer.msg(errFile, {
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			});
+			flag = 0;
+			return false;
+		}
+		return flag;
+	}
+	var filepath;
+	//excel文件上传
+	$("#upfile").change(function(){
+		/**文件格式**/
+		var fileInput = $("#upfile").val();
+		var result = checkfileType(fileInput);
+		if(!result){
+			$("#upfile").val('');
+			return false;
+		}
+		$(".docum-step .two").addClass("on");
+		$(".docum-step .one").removeClass("on");
+		$("#one").hide();
+		$("#two").show();
+		$("#bzformupload").ajaxSubmit({
+			dataType:  'json',
+			success: function(data) {
+				if (data.code == 1){
+					$('#alldata').text(data.alldata);
+					$('#sucdata').text(data.sucdata);
+					$('#errdata').text(data.errdata);
+					filepath = data.filepath;
+					if(filepath!=undefined){
+					    $("#downError").show();
+					}
+					$('#downError').attr('href',filepath);
+					$(".docum-step .three").addClass("on");
+					$(".docum-step .two").removeClass("on");
+					$("#two").hide();
+					$("#three").show();
+				}else{
+				    $("#upfile").val("");
+				    layer.msg(data.msg, {
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				    });
+				    $(".docum-step .one").addClass("on");
+				    $(".docum-step .two").removeClass("on");
+				    $("#two").hide();
+				    $("#one").show();
+				}
+			},
+			error:function(xhr){
+			     $("#upfile").val("");
+			    layer.msg('文件格式不正确或文件过大，请重新上传！', {
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				    });
+			    $(".docum-step .one").addClass("on");
+			    $(".docum-step .two").removeClass("on");
+			    $("#two").hide();
+			    $("#one").show();
+			}
+		});
+	});
+	
+	//下载模板
+	function downModel(){
+		window.location.href="/Static/1.0/saletemplate.xls";
+	}
+	
+	//错误文档下载
+	$('#downError').click(function(){
+		window.location.href=filepath;
+	})
+</script>
+<? require(ViewDir.'/public/footer_seller.html'); ?>

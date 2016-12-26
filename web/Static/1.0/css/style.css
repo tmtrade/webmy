@@ -1769,7 +1769,7 @@ cpm-pel-cent table tr td.com-name p{
     display: inline-block;
     margin-top: 60px;
     padding: 15px;
-    width: 100%;
+    width: 97%;
 }
 .row{
     overflow: hidden;
@@ -2085,6 +2085,9 @@ p .btn {
         width: 100px !important;
     }
 
+}
+*, *:before, *:after{
+    box-sizing : content-box ;
 }
 
 

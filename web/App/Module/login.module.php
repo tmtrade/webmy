@@ -248,5 +248,20 @@ class LoginModule extends AppModule
 		}
 		return $msgJs;	
 	}
+
+    /**
+     * 用户是否为首次登陆,首次登陆修改为非首次
+     * @return bool
+     */
+    public function isFirst(){
+        $res = false;
+        //修改状态为非第一次
+        $data = array('isfirst'=>1);
+        $rst = $this->import('user')->modify($data,array('eq'=>array('id'=>UID)));
+        if($rst){
+            $res = true;
+        }
+        return $res;
+    }
 }
 ?>

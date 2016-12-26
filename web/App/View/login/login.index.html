@@ -4,10 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>首页专题</title>
 
-<link href="<?=StaticDir?>special/css/css.css" rel="stylesheet" type="text/css" />
-<link href="<?=StaticDir?>special/css/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?=StaticDir?>special/js/jquery-1.7.2.min.js" ></script>
-<script type="text/javascript" src="<?=StaticDir?>special/js/koala.min.1.5.js"></script>
+<link href="<?=StaticDir?>special/css/css.css?v=<?=$static_version?>" rel="stylesheet" type="text/css" />
+<link href="<?=StaticDir?>special/css/style.css?v=<?=$static_version?>" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?=StaticDir?>special/js/jquery-1.7.2.min.js?v=<?=$static_version?>" ></script>
+<script type="text/javascript" src="<?=StaticDir?>special/js/koala.min.1.5.js?v=<?=$static_version?>"></script>
 
 <script src="<?=StaticDir?>script/usernew.js"></script>
 <!--[if lt IE 9]>
@@ -16,13 +16,13 @@
 <script type="text/javascript">
 //弹出隐藏层
 function ShowDiv(show_div,bg_div){
-document.getElementById(show_div).style.display='block';
-document.getElementById(bg_div).style.display='block' ;
-var bgdiv = document.getElementById(bg_div);
-bgdiv.style.width = document.body.scrollWidth;
-//bgdiv.style.height = $(document).height();
-$("#"+bg_div).height($(document).height());
-};
+	$("#"+show_div).show();
+	$("#"+bg_div).show();
+	var bgdiv = $("#"+bg_div);
+	bgdiv.width = document.body.scrollWidth;
+	//bgdiv.style.height = $(document).height();
+	$("#"+bg_div).height($(document).height());
+}
 $(function(){
 	$('.home_dl').click(function(){
 		$('.home_float').removeClass().addClass("home_float2");

@@ -9,7 +9,7 @@ q:before,q:after {content:''}
 abbr,acronym { border:0}
 table {border-collapse: collapse;border-spacing: 0;}
 .fl{float: left}
-.fr{float: right}
+.fr{float: right; margin-bottom: auto; font-weight: normal;}
 body{min-width: 1340px;min-height:800px;}
 table{width: 100%;}
 input{color: #666666;border-color:#d5d5d5;outline:none;}
@@ -1019,8 +1019,6 @@ body,html{
 .layui-layer{
     min-width: 380px !important;
 }
-
-
 
 
 

@@ -172,7 +172,7 @@ function ajaxLogin(account,pword,utype,uauto){
 			 success	: function(data){
 				if(data){
 					if(data.code == 1){
-						window.location = '/user/main/';
+						window.location = '/index/';
 					}else if(data.code == 2){
 						error1('账号不存在');
 						$('.pwdtxt').html('账号不存在');						
@@ -230,7 +230,7 @@ function logCode(account,pword,utype,uauto){
 		},
 		success 	: function(data){  
 			if(data.code==1){
-				window.location = '/user/main/';
+				window.location = '/index/';
 			}
 		}  
 	});

@@ -55,13 +55,19 @@ class SellModule extends AppModule{
      * @param $number
      * @return array|mixed
      */
-    public function getTmInfo($number){
+    public function getTmInfo($number, $fix=1){
         //得到基础商标信息
         $r['eq']    = array('id' => $number);
         $r['col']   = $this->col;
         $r['limit'] = 100;
         $data       = $this->import('tm')->find($r);
-        if(empty($data)) return array();
+        if( empty($data) ) {
+            $res = $this->importBi('trade')->syncTm($number);//debug($res);
+            if ( $res[$number] && $fix==1 ){
+                return $this->getTmInfo($number, 0);
+            }
+            return array();
+        }
         //得到商标状态
         $info   = current($data);
         $info['class'] = implode(',',arrayColumn($data,'class'));//合并分类
@@ -221,6 +227,7 @@ class SellModule extends AppModule{
                             );
                         }
                     }
+                    $this->importBi('trade')->syncTm($v0['code']);
                 }
                 $rst['rows'] = array_values($aa);
                 //缓存数据

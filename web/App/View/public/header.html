@@ -46,7 +46,7 @@
   <!--header start-->
   <header class="header white-bg">
     <!--logo start--> 
-    <a href="/user/main" class="logo" ></a> 
+    <a href="/index/" class="logo" ></a>
     <div class="sidebar-toggle-box"><!-- data-original-title="Toggle Navigation" data-placement="right"  -->
       <div class="icon-reorder tooltips"></div>
     </div>
@@ -54,8 +54,21 @@
     <div class="nav notify-row" id="top_menu"> 
       <!--  notification start -->
       <ul class="nav top-menu">
-      
-        <li class="dropdown"> <a data-toggle="dropdown" class="dropdown-toggle user" href="#"> <img alt="" width="29" height="29" src="<?=StaticDir?>workspace/img/chat-avatar2.jpg"> <span class="username"><?=$nickname?></span> <b class="caret"></b> </a>
+          <li id="header_inbox_bar" class="dropdown">
+              <a class="dropdown-toggle" href="/messege/index/">
+                  <i class="icon-envelope-alt"></i>
+                  <?php
+                $badClass = $mcount = "";
+                if($messagecount>0){
+                  $badClass = "badge";
+                  $mcount   = $messagecount;
+                  }
+                  ?>
+                  <span class="<?=$badClass?> bg-important" id="message-count"><?=$mcount?></span>
+
+              </a>
+          </li>
+          <li class="dropdown"> <a data-toggle="dropdown" class="dropdown-toggle user" href="#"> <img alt="" width="29" height="29" src="<?=StaticDir?>workspace/img/chat-avatar2.jpg"> <span class="username"><?=$nickname?></span> <b class="caret"></b> </a>
           <ul class="dropdown-menu" style="border:none;">
             <li><a href="/login/logout/">退出登录</a></li>
           </ul>

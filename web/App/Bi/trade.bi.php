@@ -74,6 +74,33 @@ class TradeBi extends Bi
         return array();
     }
 
+    /**
+     * 同步
+     *
+     * @access  public
+     * @param   string     $number     商标号（144,88888）;多个用英文逗号分隔
+     *
+     * @return  array
+     */
+    public function syncTm($number)
+    {
+        $param = array(
+            'number' => $number,
+        );
+        $params = array(
+            'user'      =>  'api1010',
+            'method'    =>  'syncTm',
+            'data'      =>  $param,
+        );
+        $params['sign'] = $this->sign($params);
+        $data = $this->request("openapi/request/", $params);
+
+        if ( $data['code'] == '101' ){
+            return $data['data'];
+        }
+        return array();
+    }
+
 	/**
      * sign签名
      *

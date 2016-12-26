@@ -23,9 +23,9 @@ class LoginAction extends AppAction
 		/*  先不处理，等所有页面套完了。
 		*   登录页还没有完全套完，存在bug*/
 		if( $this->isLogin == true ){
-			$this->redirect('', '/user/main/');
+			$this->redirect('', '/index/');
 		}
-		$this->display('index/index.index.html');
+		$this->display('login/index.index.html');
 
 	}
 	/**

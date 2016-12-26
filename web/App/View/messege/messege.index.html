@@ -1,0 +1,141 @@
+<? require(ViewDir.'/public/header_seller.html'); ?>
+
+<section id="main-content">
+    <section class="wrapper" >
+    <!--右侧主体部分-->
+    <div class="sell-lf-main">
+        <div class="comm-list-tit w-cont">
+            <h3>消息中心</h3>
+        </div>
+        <div class="comm-list-mess">
+            <div class="comm-list-news blk">
+                <table class="list-mess-main">
+                    <thead>
+                       <tr class="tbl-tit">
+                           <th class="tick">站内信标题</th><th>接收时间</th><th>操作</th>
+                       </tr>
+                    </thead>
+                    <tbody class="list-mess">
+                        <? foreach($list as $k=>$item): ?>
+                        <tr>
+                            <?php
+                                //判断站内信的类型
+                                if($item['type']==2){
+                                    if($item['content']){
+                                        $link_type = $item['content'];
+                                    }else{
+                                        $link_type = 'javascript:;';
+                                    }
+                                }else{
+                                    $link_type = '/messege/view/?id='.$item['mid'];
+                                }
+                            ?>
+                            <td class="tick">
+                                <p>
+                                    <a class="msg_a" mid="<?=$item['mid']?>" target="_blank" href="<?=$link_type?>" addmsg="点击标题" module='第<?=$page?>页第<?=($k+1)?>条'><i class="sell-ico <?=($item['status'])?'news-end':'news-str'?>"></i><?=$item['title']?></a>
+                                </p>
+                                <div style="display: none">
+                                    <a class="msg_s" target="_blank" href="<?=$link_type?>">1</a>
+                                </div>
+                            </td>
+                            <td class="time"><?=date('Y-m-d H:i:s',$item['date'])?></td>
+                            <td class="dele">
+                                <a href="javascript:;" onclick="delMsg(<?=$item['mid']?>)" addmsg="删除" module='第<?=$page?>页第<?=($k+1)?>条'>删除</a>
+                            </td>
+                        </tr>
+                        <? endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mj-pages">
+                <?=$pageBar?>
+            </div>
+        </div>
+    </div>
+</div>
+    </section>
+</section>
+
+<script type="text/javascript">
+    //给链接类型消息添加已读功能
+    $(function(){
+        $(".msg_a[target=_blank]").click(function(){
+            var id = $(this).attr('mid');
+            if(id<=0 || id=='') return false;
+            var _this = this;
+            var href = $(this).attr('href');
+            var bbbb = true;
+            if(href=='#'){
+                bbbb = false;
+            }
+            //是否第一次点击
+            var flag = $(this).find('i').hasClass('news-str');
+            if(!flag){
+                if(bbbb) {
+                    $(_this).closest('td').find('.msg_s').click();
+                }else{
+                    return false;
+                }
+            }else{
+                $.post('/messege/read',{'id':id},function(data){
+                    if(data.code==0){
+                        if(bbbb){
+                            $(_this).closest('td').find('.msg_s').click();
+                        }
+                        //变当前消息为已读
+                        $(_this).find('i').removeClass('news-str').addClass('news-end');
+                        //消息数减1
+                        $('.msg_t_num').text(function(i,n){
+                            if(n==0){
+                                return 0;
+                            }else{
+                                return n-1;
+                            }
+                        })
+                    }else{
+                        layer.msg('操作失败，请稍后再试', {
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                    if(!bbbb){
+                        return false;
+                    }
+                },'json');
+            }
+        })
+    });
+    //删除消息
+    function delMsg(id){
+        if ( id <= 0 || id == '' ) return false;
+        layer.confirm('确认要删除此消息吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type : 'post',
+                url  : '/messege/remove/',
+                data : {'id':id},
+                dataType : 'json',
+                success : function (data){
+                    if (data.code==0){
+                        layer.msg('操作成功', {
+                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        var msg = data.msg == undefined ? '操作失败，请稍后再试' : data.msg;
+                        layer.msg(msg, {
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                },
+                error : function (data){
+                    layer.msg('操作失败，请稍后再试', {
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    });
+                }
+            });
+        });
+    }
+</script>
+<? require(ViewDir.'/public/footer_seller.html'); ?>

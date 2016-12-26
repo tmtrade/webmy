@@ -26,7 +26,7 @@ class GoodsModule extends AppModule
         $r = array();
         $r['page']  = $page;
         $r['limit'] = $limit;
-        $r['col']   = array('number','price','saleId');
+        $r['col']   = array('number','price','saleId','date');
         $r['raw'] = ' 1 ';
         
         if ( !empty($params['name']) ){

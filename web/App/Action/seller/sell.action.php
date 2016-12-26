@@ -53,6 +53,7 @@ class SellAction extends AppAction {
         $isSale = $this->load("sell")->existContact($number, UID);
         if ($isSale)
             $this->returnAjax(array('code' => 2, 'msg' => '您已经对该商标提出过报价'));
+        
         //判断商标是否存在
         $info = $this->load('sell')->getTmInfo($number);
         if (empty($info))

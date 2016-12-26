@@ -28,12 +28,6 @@ $tbl['loginlogs'] = array(
     'configFile'=> $configFile,
 );
 
-$tbl['message'] = array(
-    'name'        => $prefix.'user_message',
-    'dbId'        => $dbId, 
-    'configFile'=> $configFile,
-);
-
 $tbl['verify'] = array(
     'name'        => $prefix.'user_verify',
     'dbId'        => $dbId, 

@@ -1,0 +1,172 @@
+<? require(ViewDir.'/public/header_seller.html'); ?>
+<script type="text/javascript" src="<?=StaticDir?>1.0/js/url.js?v=<?=$static_version?>"></script>
+
+<section id="main-content">
+    <section class="wrapper" >
+    <!--右侧主体部分-->
+    <div class="sell-lf-main">
+        <!--<div class="comm-list-tit w-cont">-->
+            <!--<h3>我的收益</h3>-->
+        <!--</div>-->
+        <div class="comm-search-bg">
+            <div class="type w-cont">
+                <label>商品类型</label>
+                <div class="all-tp pull-list">
+                    <a class="all-tp-btn">
+                        <font id="type_income">商标</font>
+                        <!--<font id="type_income"><?=$type_income?></font>-->
+                        <!--<i class="fa fa-chevron-down"></i>-->
+                    </a>
+                    <!--<ul class="all-tp-list">
+                        <li>全部</li>
+                        <li>商标</li>
+                        <li>专利</li>
+                    </ul>-->
+                </div>
+            </div>
+            <div class="desi chi-time">
+                <label>选择时间</label>
+                <span class="cir blk" id="start_income" onclick="laydate({max: laydate.now()})"><?=$start?></span>
+                <i>-</i>
+                <span class="cir blk" id="end_income" onclick="laydate({max: laydate.now()})"><?=$end?></span>
+                <a class="cir sear-btn" id="search_income">立刻搜索</a>
+            </div>
+        </div>
+        <? if($list): ?>
+        <div class="comm-list-mess">
+            <div class="list-earn-top">
+                <p class="mess-earn-hj fl"><?=$date_str?>，共销售 <label class="pt-cor"><?=$count?></label> 件商品，收入合计 <b class="pt-cor"><?=$income?></b> 元。</p>
+                <div class="mess-top-dq fr">
+                    <div class="pull-list paging">
+                        <input type="hidden" id="size" value="<?=$size?>">
+                        <a class="cir all-tp-btn" index="1">每页 <font id="size_income"><?=$size?></font><i class="fa fa-chevron-down"></i> </a>
+                        <ul class="all-tp-list" style="display: none;">
+                            <li>20</li>
+                            <li>40</li>
+                            <li>60</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="earn-list-mess">
+                <table class="list-mess-main">
+                    <thead>
+                    <tr class="tbl-tit">
+                        <th class="list-mess-pic">商品图片</th><th>商品类型</th><th>商品名称</th><th>提交时间</th><th>获得收益</th>
+                    </tr>
+                    </thead>
+                    <tbody class="list-mess">
+                    <? foreach($list as $item): ?>
+                    <tr>
+                        <td class="list-mess-pic">
+                            <a class="pic" style="cursor: default" href="javascript:;"><img src="<?=$item['img']?>" onerror="this.src='/Static/1.0/images/img1.png'"></a>
+                        </td>
+                        <td><?=$item['type']?'专利':'商标'?>商品</td>
+                        <td><span class="list-name" title="<?=$item['name']?>"><?=mbSub($item['name'],0,10)?></span></td>
+                        <td><?=date('Y-m-d',$item['date'])?></td>
+                        <td class="pri-num">
+                              <span><?=$item['price']?></span>
+                        </td>
+                    </tr>
+                    <? endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mj-pages">
+                <?=$pageBar?>
+            </div>
+        </div>
+
+        <? else: ?>
+        <!--收益列表没得数据的时候-->
+        <div class="comm-list-mess">
+            <div class="no-data">
+                <h4>这段时间内您还没有成交记录</h4>
+            </div>
+        </div>
+        <? endif; ?>
+    </div>
+</div>
+    </section>
+</section>
+<script type="text/javascript">
+    $(function(){
+        //提交事件
+        $('#search_income').click(function(){
+            buildUrl();
+        });
+        //每页大小改变
+        $('.mess-top-dq li').click(function(){
+	    var size = $.trim($(this).text());
+	    setEvent("选择分页条数","每页显示"+size);
+            buildUrl({size:size});
+        });
+        //页码点击事件
+        $('.mj-pages a').click(function(){
+            var href = $(this).attr('href');
+            if(href=='javascript:;'){
+                return false;
+            }else{
+                var page = href.split('=');
+                var index_page = page.length-1;
+                page = page[index_page];
+                buildUrl({page:page});
+                return false;
+            }
+        });
+    });
+
+    //url处理跳转
+    function buildUrl(obj){
+        if(typeof obj == 'undefined') obj = {};
+        var page = obj.page;
+        var size = obj.size;
+        var myurl = new objURL(location.href);//url处理对象
+        //时间
+        var start = $.trim($('#start_income').text());
+        if(start){
+            myurl.set('start',start);
+        }else{
+            myurl.remove('start');
+        }
+        var end = $.trim($('#end_income').text());
+        if(end){
+            myurl.set('end',end);
+        }else{
+            myurl.remove('end');
+        }
+	if(start || end){
+	    setEvent("搜索了时间段",start+"-"+end);
+	}
+        //类型
+        var type = $.trim($('#type_income').text());
+        if(type=='专利'){
+            type = 1;
+            myurl.set('type',type);
+        }else if(type=='商标'){
+            type = 0;
+            myurl.remove('type');
+            myurl.set('type',type);
+        }else{
+            type = 2;
+            myurl.set('type',type);
+        }
+        //页码大小
+        if(size===undefined){
+            size = $.trim($('#size_income').text());
+        }
+        if(size==20){
+            myurl.remove('size');
+        }else{
+            myurl.set('size',size);
+        }
+        //分页
+        if(page===undefined || page<=1){
+            myurl.remove('page');
+        }else{
+            myurl.set('page',page);
+        }
+        location.href=myurl.url();
+    }
+</script>
+<? require(ViewDir.'/public/footer_seller.html'); ?>

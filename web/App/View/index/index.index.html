@@ -1,124 +1,410 @@
-<? require(ViewDir.'/header_old.html'); ?>
-<link rel="stylesheet" href="<?=StaticDir?>style/mj-registered.css"/>
-<link rel="stylesheet" href="<?=StaticDir?>style/secCenter.css"/>
-<?php
-if(!$isLogin){
-?>
-<!--注册-->
-<!--content start-->
-<div class="g-content g-login">
-    <div class="w1180 g-nal">
-        <div class="g-login_rg">
-            <ul class="f-clearfix">
-                <li class="g-mt">帐号登录</li>
-                <li>快捷登录</li>
-            </ul>
-
-            <div class="g-login-input">
-                <!-- 账号登录 start -->
-                <div class="g-toinput">
-                    <div class="g-toinput_ip1">
-                        <div class="g-toinput_ip1_p">
-                            <span>用户名</span>
-                            <i id="eTips" style="display: none">
-                                <img src="<?=StaticDir?>style/slice/mj-icon14.png" alt=""/>
-                                <span style="color:#eb5152">手机号格式不正确</span>
+<? require(ViewDir.'/public/header_seller.html'); ?>
+<link rel="stylesheet" href="<?=StaticDir?>1.0/avatar/css/jquery.Jcrop.css?v=<?=$static_version?>" type="text/css" />
+<script src="<?=StaticDir?>1.0/avatar/js/jquery.Jcrop.js?v=<?=$static_version?>" type="text/javascript"></script>
+<script src="<?=StaticDir?>script/jquery.form.js?v=<?=$static_version?>"></script>
+    <style type="text/css">
+        body,html{
+            background-color:rgb(245, 245, 245) !important;
+        }
+    </style>
+<section id="main-content">
+    <section class="wrapper" >
+    <!--右边主要内容-->
+    <div class="sell-lf-main">
+        <div class="top-bg">
+            <div class="sell-per-top">
+<!--                <div class="sell-news hint-bg cir">
+                    <p>欢迎你加入一只蝉出售者平台，点我可以了解到使用说明，另外还送你10个蚕豆噢！</p>
+                    <i class="sell-ico ts-ico-bg5 skewer"></i>
+                </div>-->
+                <div class="sell-per-mess">
+                    <div class="sell-per-head fl">
+                        <div class="sell-per-head-pic" id="set_avatar">
+                            <i class="fl">
+                                <img src="<?=$photo?>"  onerror="this.src='/Static/images/avatar.jpg'" >
                             </i>
-                        </div>
-                        <div class="g-toinput_ip2_input">
-                            <span><img src="<?=StaticDir?>style/slice/mj-icon4.png" alt=""/></span>
-                            <input type="text" placeholder="请输入正确的手机号码" id="uemail" value=""/>
-                        </div>
-                    </div>
-                    <div class="g-toinput_ip1 g-toinput_ip2">
-                        <div class="g-toinput_ip1_p">
-                            <span>密码</span>
-                            <i><img src="<?=StaticDir?>style/slice/mj-icon13.png" alt="" style="display:none"/></i>
-                        </div>
-                        <div class="g-toinput_ip2_input">
-                            <span><img src="<?=StaticDir?>style/slice/g-suo.png" alt=""/></span>
-                            <input type="password" id="upass" placeholder="请输入密码（6-20位数字，字母或符号）" maxlength="20"/>
-                        </div>
-                        <div class="g-toinput_tip">
-                            <span>
-                            	<input type="checkbox" name="accord" value="11" class="accord" id="accord"/>自动登录
+                            <span class="tx">
+                                <a addmsg="更换头像" module='个人信息板块'>更换头像</a>
                             </span>
-                            <a href="/lostpassword/">忘记密码</a>
                         </div>
-                        <div class="g-verify">
-                       	  <a href="javascript:;" ctype="e" class="g-ver_a1" id="logver1">登录</a>
-                          <a href="javascript:;" class="g-ver_a2" onClick="return register()">注册</a>
-                        </div>
-                        <a href="javascript:;" class="g-toinput_a" onClick="return register()">还没有账号，立即注册</a>
-                    </div>
-                </div>
-                <!-- 账号登录 end -->
 
-                <!-- 快捷登录 start -->
-                <div class="g-toinput" style="display: none;">
-                    <div class="g-toinput_ip1">
-                        <div class="g-toinput_ip1_p g-toinput_kj_p">
-                            <span>验证即注册，未注册将自动创建蝉窝账号</span>
-                        </div>
-                        <div class="g-toinput_ip1_p">
-                            <span>手机号码</span>
-                            <i id="mTips" style="display: none">
-                                <img src="<?=StaticDir?>style/slice/mj-icon14.png" alt=""/>
-                                <span style="color:#eb5152">手机号格式不正确</span>
-                            </i>
-                        </div>
-                        <div class="g-toinput_ip2_input">
-                            <span><img src="<?=StaticDir?>style/slice/g-pho.png" alt=""/></span>
-                            <input type="text" placeholder="请输入手机号码" id="umobile" maxlength="11" value=""/>
+                        <div class="head-mess fl">
+                            <h3>您好，<?=$nickname?>！</h3>
+                            <p class="name">账户名： <?=$userMobile?>
+				<?if($userInfo['isEmail']==1){?>
+				    <a ><img src="<?=StaticDir?>1.0/images/email.png"></a>
+				<?}else{?>
+				    <a target="_blank" href="<?=MY_URL?>user/changeEmail/" title="点击前往验证" addmsg="点击验证邮箱" module='个人信息板块'><img src="<?=StaticDir?>1.0/images/sell-mess.png"></a>
+				<?}?>
+				
+				<?if($userInfo['isMobile']==1){?>
+				    <a ><img src="<?=StaticDir?>1.0/images/phone.png"></a>
+				<?}else{?>
+				    <a target="_blank" href="<?=MY_URL?>user/changePhone/" title="点击前往验证" addmsg="点击验证手机" module='个人信息板块'><img src="<?=StaticDir?>1.0/images/sell-phon.png"></a>
+				<?}?>
+			    </p><p class="teg"><span class="hint-bg cir">我的蝉豆：<?=$userInfo['total']? $userInfo['total']:0;?></span>
+                            <!--<a href="/exchange" addmsg="用蝉豆兑换奖励" module='个人信息板块'>用蝉豆兑换奖励</a>-->
+                        </p>
                         </div>
                     </div>
-                    <div class="g-toinput_ip1 g-toinput_ip2">
-                        <div class="g-toinput_ip1_p">
-                            <span>验证码</span>
-                        </div>
-                        <div class="g-toinput_ip2_input g-toinput_kj_ip2" style="margin-bottom:15px;">
-                            <span><img src="<?=StaticDir?>style/slice/g-dp.png" alt=""/></span>
-                            <input type="text" placeholder="请输入短信验证码" id="ucode" maxlength="4"/>
-                            <a href="javascript:;" id="getcode" style="font-size:12px">获取验证码</a>
-                        </div>
-                        <div class="g-toinput_tip g-toinput_kj_tip" style="display:none;">
-                            <span><input type="checkbox" name="automobile" />记住手机号码</span>
-                        </div>
-                        <div class="g-verify">
-                            <a href="javascript:;" class="g-ver_a1 g-ver_a3" id="logver2">登录</a>
-                        </div>
+                    <div class="sell-comm-sub fr">
+                        <label>提交商品，获取收益</label>
+                        <a class="sub-btn cir" href="/sell/index/">
+                            提交商品
+                        </a>
+                        <p><a href="/sell/number/"  addmsg="提交商品-商标号" module='个人信息板块'>商标号</a>|<a href="/sell/person/" addmsg="提交商品-申请人" module='个人信息板块'>申请人</a> |<a href="/sell/document/" addmsg="提交商品-文档" module='个人信息板块'>文档</a></p>
                     </div>
                 </div>
-                <!-- 快捷登录 end -->
             </div>
         </div>
+
+        <div class="sell-per-mdl">
+            <div class="sell-my-comm fl">
+                <h3 class="sell-tit">我的商品</h3>
+                <ul>
+                    <li>
+                        <a href="/goods/index/?status=1" addmsg="出售中" module='我的商品'>
+			<div class="sell-state1">
+                        </div>
+			</a>
+                        <p><b>出售中</b><span class="sell-infor cir"><?=$sellCount['one']?></span></p>
+                    </li>
+                    <li>
+                        <a href="/goods/index/?status=2" addmsg="审核中" module='我的商品'>
+			<div class="sell-state2">
+                        </div>
+			</a>
+                        <p><b>审核中</b><span class="sell-infor cir"><?=$sellCount['two']?></span></p>
+                    </li>
+                    <li>
+                        <a href="/goods/index/?status=3" addmsg="未通过" module='我的商品'>
+			<div class="sell-state3">
+                        </div>
+			</a>
+                        <p><b>未通过</b><span class="sell-infor cir"><?=$sellCount['three']?></span></p>
+                    </li>
+                    <li>
+                        <a href="/goods/index/?status=4" addmsg="已失效" module='我的商品'>
+			<div class="sell-state4">
+                        </div>
+			</a>
+                        <p><b>已失效</b><span class="sell-infor cir"><?=$sellCount['four']?></span></p>
+                    </li>
+                </ul>
+            </div>
+            <div class="sell-my-earn fr">
+                <div class="my-earn-top ">
+                    <h3 class="sell-tit fl">最近收益</h3>
+                    <p class="fr"><a href="/income/index/" addmsg="查看历史收益明细" module='最近收益'>查看历史收益明细</a><i><img src="<?=StaticDir?>1.0/images/sell-sf.png"></i></p>
+                </div>
+                <div class="my-earn-show ">
+                    <p>
+                        <label>最近一个月收益</label><br/>
+                        <? if($month_income): ?>
+                        <b><?=$month_income?></b>元
+                        <? else: ?>
+                        <b>暂无</b>
+                        <? endif; ?>
+                    </p>
+                    <a href="<?=SITE_URL?>" addmsg="加入一只蝉助推计划" module='最近收益' target="_blank"></a>
+                </div>
+            </div>
+        </div>
+        <div class="sell-per-btm ">
+            <div class="sell-earn-mess fl ">
+                <div class="my-earn-top">
+                    <h3 class="sell-tit fl">我的商品单</h3>
+                    <a class="fr" href="/quotation/index/" addmsg="全部商品单" module='我的商品单'>全部商品单</a>
+                </div>
+                <!--添加创建商品报价单-->
+                <? if(empty($quotation)): ?>
+                <div class="trans-ind-cj">
+                    <div class="fl">
+                        <h3>您还没有商品报价单</h3>
+                        <p>10秒轻松生成，方便美观！手机也能看哦~</p>
+                    </div>
+                    <a href="/quotation/addgoods" class="cir sear-btn batch-pric fr" addmsg="立即创建" module='我的商品单'>立刻创建</a>
+                </div>
+                <? else: ?>
+                <ul class="trans-catal">
+                    <? foreach($quotation as $item): ?>
+                    <li>
+                        <p class="fl"><a target="_blank" href="<?=$item['view_url']?>" addmsg="<?=$item['title']?>" module='我的商品单'><?=$item['title']?></a></p>
+                        <label class="fr"><?=$item['created']?></label>
+                    </li>
+                    <? endforeach; ?>
+                </ul>
+                <? endif; ?>
+                <div class="my-earn-top ">
+                    <h3 class="sell-tit fl">最新通知</h3>
+                    <a class="fr" href="/messege/index/" addmsg="全部通知" module='最新通知'>全部通知</a>
+                </div>
+                <ul class="">
+                    <? if($msg_list): ?>
+                        <? foreach($msg_list as $item): ?>
+                        <li>
+                            <?php
+                                //判断站内信的类型
+                                if($item['type']==2){
+                                    if($item['content']){
+                                        $link_type = $item['content'];
+                                    }else{
+                                        $link_type = 'javascript:;';
+                                    }
+                                }else{
+                                    $link_type = '/messege/view/?id='.$item['mid'];
+                                }
+                            ?>
+                            <p class="fl"><a class="msg_a" mid="<?=$item['mid']?>" target="_blank" href="<?=$link_type?>" addmsg="<?=$item['title']?>" module='最新通知'><?=$item['title']?></a></p>
+                            <label class="fr"><?=date('Y-m-d H:i:s',$item['date'])?></label>
+                            <div style="display: none">
+                                <a class="msg_s" target="_blank" href="<?=$link_type?>">1</a>
+                            </div>
+                        </li>
+                        <? endforeach; ?>
+                    <? else: ?>
+                        <li><p>暂无未读消息</p></li>
+                    <? endif; ?>
+                </ul>
+            </div>
+            <div class="sell-data-mess fr">
+                <h3 class="sell-tit">数据分享</h3>
+                <div class="sell-data-main">
+                    <p>最近一个月用户热搜词：</p>
+                    <div class="hot-ch" style="width:345px;">
+			<? foreach($keyword_list as $item): 
+			if($item['keyword']=="?"){
+			    $item['keyword'] = "蜂蜜";
+			}
+			elseif($item['keyword']=="??"){
+			    $item['keyword'] = "食品";
+			}
+			elseif($item['keyword']=="???"){
+			    $item['keyword'] = "化妆品";
+			}
+			elseif($item['keyword']=="????"){
+			    $item['keyword'] = "棉";
+			}
+			?>
+			
+                        <span class="cir"><?=$item['keyword']?></span>
+			<? endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
-<!--content end-->
-<?php
-}else{
-?>
-<div class="mj-reCenter">
-    <div class="mj-reC_top">
-        <label></label>
-        <span>登录成功</span>
-        <label></label>
+</section>
+</section>
+  
+<!--设置头像-->
+<div class="price-cpm common-cpm-sty" id="avatar-cont-main">
+    <div class="common-cpm-top">
+        <h3>设置头像</h3>
     </div>
-    <ul>
-        
-    </ul>
+    <div class="common-cpm-cent">
+	<div style="width:600px;float:left;">
+       <form id='bzformupload' action='/index/ajaxUploadPic/' method='post' enctype='multipart/form-data'>
+	    <div class="bzform pics" id="bzform">
+		<input type="button" value="上传头像" id="bzpic" class="info-pic" onclick="bzfile.click();" style="padding:8px;margin: 0px;">
+		<input type="hidden" name="size" value="500" style="display: none;"/>
+		<input type="file" id="bzfile" onchange="uplouadPic()" name="fileName" style="display: none;"/>
+	    </div>
+	</form>
+	</div>
+	<div style="float:left;">
+        <img id="target"  src="<?=$photo?>" style="max-width: 400px;max-height: 400px;display:block" onerror="this.src='/Static/images/avatar.jpg'">
+    </div>
+	<div style="width:48px;height:48px;margin:10px;overflow:hidden; float:left;display: none;" class="hideimg">
+        <img  style="float:left;" id="preview" src="<?=$photo?>" width="48" heigt="48" >
+    </div>
+	<div style="width:100px;height:100px;margin:10px;overflow:hidden; float:left;display: none;" class="hideimg">
+        <img  style="float:left;" id="preview2" src="<?=$photo?>" width="100" heigt="100" >
+    </div>
+	<form action="/index/setAvatar/" method="post" onsubmit="return checkCoords();" id="avatarFrom">
+		<input type="hidden" id="x" name="x" />
+		<input type="hidden" id="y" name="y" />
+		<input type="hidden" id="w" name="w" />
+		<input type="hidden" id="h" name="h" />
+		<input type="hidden" name="path" value="<?=$photo?>" id="picPatch"/>
+		<input type="button" onclick="avatarSubmit()" value="裁剪保存" style="padding:8px;margin-top: 30px;float: right;display: none;" class="hideimg"/>
+	</form>
+    </div>
 </div>
-<?php
-}
-?>
+<script type="text/javascript" src="<?=StaticDir?>1.0/js/jquery.form.js"></script>
 <script type="text/javascript">
-    //登录切换
-    $(".g-login_rg ul>li").click(function(){
-        $(this).addClass("g-mt").siblings("li").removeClass("g-mt");
-        $('.g-login-input>div:eq('+$(this).index()+')').show().siblings().hide();
+
+    $(function(){
+        //给链接类型消息添加已读功能
+        $(".msg_a").click(function(){
+            var id = $(this).attr('mid');
+            if(id<=0 || id=='') return false;
+            var href = $(this).attr('href');
+            var _this = this;
+            //是否第一次点击
+            var flag = $(this).attr('isfirst');
+            var bbbb = true;
+            if(href=='#'){
+                bbbb = false;
+            }
+            if(flag){
+                if(bbbb){
+                    $(_this).closest('li').find('.msg_s').click();
+                }else{
+                    return false;
+                }
+            }else{
+                $.post('/messege/read',{'id':id},function(data){
+                    if(data.code==0){
+                        if(bbbb){
+                            $(_this).closest('td').find('.msg_s').click();
+                        }
+                        //变当前消息为已读
+                        $(_this).attr('isfirst',1);
+                        //消息数减1
+                        $('.msg_t_num').text(function(i,n){
+                            if(n==0){
+                                return 0;
+                            }else{
+                                return n-1;
+                            }
+                        })
+                    }else{
+                        layer.msg('操作失败，请稍后再试', {
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                    if(!bbbb){
+                        return false;
+                    }
+                },'json');
+            }
+        })
     });
-	function register(){
-		window.location = '/register/index/';
+     //剪切头像代码
+    var jcrop_api, boundx, boundy;
+    function updateCoords(c)
+	{
+		$('#x').val(c.x);
+		$('#y').val(c.y);
+		$('#w').val(c.w);
+		$('#h').val(c.h);
+	};
+	function checkCoords()
+	{
+		if (parseInt($('#w').val())) return true;
+		alert('Please select a crop region then press submit.');
+		return false;
+	};
+      function updatePreview(c){
+        if (parseInt(c.w) > 0)
+        {
+          var rx = 48 / c.w;		//小头像预览Div的大小
+          var ry = 48 / c.h;
+
+          $('#preview').css({
+            width: Math.round(rx * boundx) + 'px',
+            height: Math.round(ry * boundy) + 'px',
+            marginLeft: '-' + Math.round(rx * c.x) + 'px',
+            marginTop: '-' + Math.round(ry * c.y) + 'px'
+          });
+        }
+	    {
+          var rx = 109 / c.w;		//大头像预览Div的大小
+          var ry = 109 / c.h;
+          $('#preview2').css({
+            width: Math.round(rx * boundx) + 'px',
+            height: Math.round(ry * boundy) + 'px',
+            marginLeft: '-' + Math.round(rx * c.x) + 'px',
+            marginTop: '-' + Math.round(ry * c.y) + 'px'
+          });
+        }
+      };
+      
+    //上传头像图片
+    function uplouadPic(types){
+	$("#bzformupload").ajaxSubmit({
+	    dataType:  'json',
+	    success: function(data) {
+		if (data.code == 1){
+		    $(".hideimg").show();
+		    $('#picPatch').val(data.img);
+		    $('#target').attr('src', data.img);
+		    $('#preview').attr('src', data.img);
+		    $('#preview2').attr('src', data.img);
+		    $(".jcrop-holder img").attr('src', data.img);
+		    $('#target').Jcrop({
+			minSize: [48,48],
+			setSelect: [0,0,100,100],
+			onChange: updatePreview,
+			onSelect: updatePreview,
+			onSelect: updateCoords,
+			aspectRatio: 1
+		      },
+			function(){
+			// Use the API to get the real image size
+			var bounds = this.getBounds();
+			boundx = bounds[0];
+			boundy = bounds[1];
+			// Store the API in the jcrop_api variable
+			jcrop_api = this;
+		    });
+		}else{
+		    layer.msg(data.msg, {
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+		}
+	    },
+	    error:function(xhr){
+		layer.msg('图片格式不正确或图片过大，请重新上传！', {
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+	    }
+	});
+    };
+    
+  //头像上传弹窗
+    $("#set_avatar").on("click",function(){
+            layer.open({
+                area:["640px","202"],
+                type: 1,
+                title: false,
+                closeBtn:1,
+                shadeClose:false,
+                content:$("#avatar-cont-main")
+
+            });
+    })
+  function avatarSubmit(){
+		$("#avatarFrom").ajaxSubmit({
+			dataType:  'json',
+			success: function(data) {
+				if (data.code == 1){
+					$("#set_avatar img").attr("src",data.msg);
+					layer.closeAll();
+					layer.msg('头像上传成功', {
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				    });
+				    
+				}else{
+				    layer.msg(data.msg, {
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				    });
+				}
+			},
+			error:function(xhr){
+			    layer.msg('文件格式不正确或文件过大，请重新上传！', {
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				    });
+			}
+		});
 	}
+    
+      
+      
+	
+
 </script>
-<? require(ViewDir.'/footer_old.html'); ?>
+<? require(ViewDir.'/public/footer_seller.html'); ?>

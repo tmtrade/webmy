@@ -39,6 +39,7 @@ return array(
                 ),
             ),
             array( 'title' => '我的出售', 'url'   => '/goods/index/', ),
+            array( 'title' => '我的收益', 'url'   => '/income/index/', ),
         ),
     ),
 	2 => array(
@@ -63,13 +64,7 @@ return array(
 //						'/proposer/proposerquerylist/',
 //					)),
 //				array('title'=>'我的顾问', 'url'=>'/user/mystaffmore/',),
-				array(
-					'title'=>'消息中心', 
-					'url'=>'/message/index/',
-					'child'		=> array(
-						'/message/views/',
-					)
-				),
+                array('title'=>'消息中心', 'url'=>'/messege/index/',),
 			),
 	),	
 );
